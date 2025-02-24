@@ -1,4 +1,4 @@
-package edu.vanier.template;
+package project.optics.jfkt;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -28,5 +28,6 @@ public class MainApp extends Application {
         Scene scene = new Scene(root, 300, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
+        //soooo
     }
 }
