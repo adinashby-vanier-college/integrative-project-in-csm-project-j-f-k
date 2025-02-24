@@ -5,7 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
+import project.optics.jfkt.MainView;
 /**
  * This is a JavaFX project template to be used for creating GUI applications.
  * JavaFX 20.0.2 is already linked to this project in the build.gradle file.
@@ -23,9 +23,10 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Group root = new Group();
-        Button btnClickMe = new Button("Click me!");
-        root.getChildren().add(btnClickMe);
-        Scene scene = new Scene(root, 300, 300);
+
+
+        Scene scene = new Scene(new MainView(primaryStage),1800,1000);
+        primaryStage.setFullScreen(true);
         primaryStage.setScene(scene);
         primaryStage.show();
         //this is my test
