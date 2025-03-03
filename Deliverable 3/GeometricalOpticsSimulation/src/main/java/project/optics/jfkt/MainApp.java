@@ -1,11 +1,9 @@
 package project.optics.jfkt;
 
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import project.optics.jfkt.views.MainView;
-import project.optics.jfkt.views.SelectionView;
+import project.optics.jfkt.views.LensView;
 
 /**
  * This is a JavaFX project template to be used for creating GUI applications.
@@ -17,13 +15,13 @@ import project.optics.jfkt.views.SelectionView;
 public class MainApp extends Application {
 
     public static void main(String[] args) {
-        System.out.println("Hello there!");
+        //System.out.println("Hello there!");
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(new SelectionView(),1800,1000);
+        Scene scene = new Scene(new LensView(),1800,1000);
         primaryStage.setFullScreen(true);
         primaryStage.setScene(scene);
         primaryStage.show();
