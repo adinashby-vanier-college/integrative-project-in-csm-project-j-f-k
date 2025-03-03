@@ -1,25 +1,113 @@
 package project.optics.jfkt.views;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.stage.Screen;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class SelectionView extends BorderPane {
 
 
-    public SelectionView() throws Exception{
-
+    public SelectionView() {
+        this.setTop(createTop());
+        this.setCenter(createCenter());
+        this.setBottom(createBottom());
     }
 
     private Region createTop() {
         HBox container = new HBox();
+        container.setBorder(Border.stroke(Paint.valueOf("Black")));
+
+        MenuBar menuBar1 = new MenuBar();
+
+        Menu settings = new Menu("Settings");
+        MenuItem general = new MenuItem("General");
+        MenuItem animation = new MenuItem("Animation");
+        MenuItem theme = new MenuItem("Theme");
+        settings.getItems().addAll(general, animation, theme);
+
+        Menu help = new Menu("Help");
+        Menu aboutUs = new Menu("About Us");
+
+        menuBar1.getMenus().addAll(settings, help, aboutUs);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        MenuBar menuBar2 = new MenuBar();
+        Menu quit = new Menu("Quit");
+        menuBar2.getMenus().add(quit);
+
+
+        container.getChildren().addAll(menuBar1, spacer, menuBar2);
 
         return container;
     }
 
+    private Region createCenter() {
+        VBox vBox = new VBox(100);
+
+        // create images
+        HBox images = new HBox(75);
+        images.setAlignment(Pos.CENTER);
+
+        ImageView oneStar = new ImageView(new Image(this.getClass().getResource("/images/one_star.png").toExternalForm()));
+        oneStar.setLayoutX(1);
+        oneStar.setLayoutY(1);
+        ImageView twoStar = new ImageView(new Image(this.getClass().getResource("/images/two_stars.png").toExternalForm()));
+        twoStar.setLayoutX(1);
+        twoStar.setLayoutY(1);
+        ImageView threeStar = new ImageView(new Image(this.getClass().getResource("/images/three_stars.png").toExternalForm()));
+        threeStar.setLayoutX(1);
+        threeStar.setLayoutY(1);
+
+        Pane container1 = new Pane();
+        Pane container2 = new Pane();
+        Pane container3 = new Pane();
+
+        container1.setBorder(Border.stroke(Color.BLACK));
+        container2.setBorder(Border.stroke(Color.BLACK));
+        container3.setBorder(Border.stroke(Color.BLACK));
+
+        container1.getChildren().add(oneStar);
+        container2.getChildren().add(twoStar);
+        container3.getChildren().add(threeStar);
+
+        images.getChildren().addAll(container1, container2, container3);
+
+        // create buttons to go to different levels
+        HBox buttons = new HBox(150);
+        buttons.setAlignment(Pos.CENTER);
+
+        Button hard = new Button("Hard");
+        Button medium = new Button("Medium");
+        Button easy = new Button("Easy");
+
+        buttons.getChildren().addAll(easy, medium, hard);
+
+        vBox.getChildren().addAll(images, buttons);
+
+        vBox.setAlignment(Pos.CENTER);
+        return vBox;
+    }
+
+    private Region createBottom() {
+        HBox container = new HBox();
+
+        Button back = new Button("Back");
+
+        HBox.setMargin(back, new Insets(0, 0, 100, 100));
+
+        container.getChildren().addAll(back);
+
+        return container;
+    }
 
 }
