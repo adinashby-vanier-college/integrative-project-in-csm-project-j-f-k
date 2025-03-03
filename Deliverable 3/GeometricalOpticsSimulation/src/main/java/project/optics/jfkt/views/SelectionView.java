@@ -11,44 +11,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import project.optics.jfkt.utils.Util;
 
 public class SelectionView extends BorderPane {
+    Util util = new Util();
 
 
     public SelectionView() {
-        this.setTop(createTop());
+        this.setTop(util.createMenu());
         this.setCenter(createCenter());
         this.setBottom(createBottom());
-    }
-
-    private Region createTop() {
-        HBox container = new HBox();
-        container.setBorder(Border.stroke(Paint.valueOf("Black")));
-
-        MenuBar menuBar1 = new MenuBar();
-
-        Menu settings = new Menu("Settings");
-        MenuItem general = new MenuItem("General");
-        MenuItem animation = new MenuItem("Animation");
-        MenuItem theme = new MenuItem("Theme");
-        settings.getItems().addAll(general, animation, theme);
-
-        Menu help = new Menu("Help");
-        Menu aboutUs = new Menu("About Us");
-
-        menuBar1.getMenus().addAll(settings, help, aboutUs);
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        MenuBar menuBar2 = new MenuBar();
-        Menu quit = new Menu("Quit");
-        menuBar2.getMenus().add(quit);
-
-
-        container.getChildren().addAll(menuBar1, spacer, menuBar2);
-
-        return container;
     }
 
     private Region createCenter() {
