@@ -280,8 +280,13 @@
             </Button>
          </children>
       </VBox>
-      <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="85.0" prefWidth="699.0">
+      <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="85.0" prefWidth="1338.0">
         <buttons>
+            <Button fx:id="backtomenubutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="367.0" style="-fx-background-color: Transparent;" text="Back to Menu">
+               <font>
+                  <Font size="39.0" />
+               </font>
+            </Button>
           <Button fx:id="aboutusbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="About Us">
                <font>
                   <Font size="39.0" />
