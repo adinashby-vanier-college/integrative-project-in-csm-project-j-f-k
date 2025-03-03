@@ -282,17 +282,17 @@
       </VBox>
       <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="85.0" prefWidth="699.0">
         <buttons>
-          <Button mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="About Us">
+          <Button fx:id="aboutusbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="About Us">
                <font>
                   <Font size="39.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Help">
+            <Button fx:id="helpbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Help">
                <font>
                   <Font size="39.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: TRANSPARENT;" text="Settings">
+            <Button fx:id="settingsbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: TRANSPARENT;" text="Settings">
                <font>
                   <Font size="39.0" />
                </font>
@@ -301,7 +301,7 @@
       </ButtonBar>
       <ButtonBar layoutX="1615.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="85.0" prefWidth="307.0">
          <buttons>
-            <Button mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Quit">
+            <Button fx:id="quitbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Quit">
                <font>
                   <Font size="39.0" />
                </font>
