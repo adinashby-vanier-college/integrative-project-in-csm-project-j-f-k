@@ -1,4 +1,4 @@
-package project.optics.jfkt;
+package project.optics.jfkt.views;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
