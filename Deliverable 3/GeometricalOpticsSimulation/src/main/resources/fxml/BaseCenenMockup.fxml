@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,9 +13,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="animpane" layoutX="420.0" layoutY="86.0" prefHeight="720.0" prefWidth="1496.0" style="-fx-border-radius: 12; -fx-border-color: BLACk;">
+      <Pane fx:id="animpane" layoutX="420.0" layoutY="72.0" prefHeight="734.0" prefWidth="1501.0" style="-fx-border-radius: 12; -fx-border-color: BLACk;">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -38,7 +40,8 @@
                   </Button>
                </children>
             </HBox>
-         </children></Pane>
+         </children>
+      </Pane>
       <VBox alignment="CENTER" layoutX="900.0" layoutY="807.0" prefHeight="277.0" prefWidth="386.0" spacing="20.0">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="461.0" spacing="12.0">
@@ -126,12 +129,7 @@
             </HBox>
          </children>
       </VBox>
-      <Button fx:id="backbutton" layoutX="6.0" layoutY="6.0" mnemonicParsing="false" prefHeight="77.0" prefWidth="212.0" text="Back to Menu">
-         <font>
-            <Font size="27.0" />
-         </font>
-      </Button>
-      <Pane layoutX="-2.0" layoutY="86.0" prefHeight="720.0" prefWidth="422.0" style="-fx-border-color: BLACK; -fx-border-width: 1; -fx-border-radius: 6;">
+      <Pane layoutX="-2.0" layoutY="74.0" prefHeight="732.0" prefWidth="422.0" style="-fx-border-color: BLACK; -fx-border-width: 1; -fx-border-radius: 6;">
          <children>
             <Text layoutX="10.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Parameters:" underline="true" wrappingWidth="400.13671875">
                <font>
@@ -284,5 +282,33 @@
             </Button>
          </children>
       </VBox>
+      <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="73.0" prefWidth="716.0">
+        <buttons>
+          <Button mnemonicParsing="false" prefHeight="73.0" prefWidth="338.0" style="-fx-background-color: Transparent;" text="About Us">
+               <font>
+                  <Font size="34.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="78.0" prefWidth="181.0" style="-fx-background-color: transparent;" text="Help">
+               <font>
+                  <Font size="34.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="73.0" prefWidth="181.0" style="-fx-background-color: Transparent;" text="Settings">
+               <font>
+                  <Font size="34.0" />
+               </font>
+            </Button>
+        </buttons>
+      </ButtonBar>
+      <ButtonBar layoutX="1161.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="73.0" prefWidth="759.0">
+         <buttons>
+            <Button mnemonicParsing="false" prefHeight="73.0" prefWidth="223.0" style="-fx-background-color: transparent;" text="Quit">
+               <font>
+                  <Font size="34.0" />
+               </font>
+            </Button>
+         </buttons>
+      </ButtonBar>
    </children>
 </AnchorPane>
