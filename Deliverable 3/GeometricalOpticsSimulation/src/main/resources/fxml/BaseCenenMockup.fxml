@@ -280,35 +280,35 @@
             </Button>
          </children>
       </VBox>
-      <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="85.0" prefWidth="1338.0">
+      <ButtonBar layoutY="4.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="85.0" prefWidth="1016.0">
         <buttons>
-            <Button fx:id="backtomenubutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="367.0" style="-fx-background-color: Transparent;" text="Back to Menu">
+            <Button fx:id="backtomenubutton" mnemonicParsing="false" onAction="#backtomenuaction" prefHeight="85.0" prefWidth="367.0" style="-fx-background-color: Transparent;" text="Back to Menu">
                <font>
-                  <Font size="39.0" />
+                  <Font size="28.0" />
                </font>
             </Button>
-          <Button fx:id="aboutusbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="About Us">
+          <Button fx:id="aboutusbutton" mnemonicParsing="false" onAction="#aboutusaction" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="About Us">
                <font>
-                  <Font size="39.0" />
+                  <Font size="28.0" />
                </font>
             </Button>
-            <Button fx:id="helpbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Help">
+            <Button fx:id="helpbutton" mnemonicParsing="false" onAction="#helpaction" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Help">
                <font>
-                  <Font size="39.0" />
+                  <Font size="28.0" />
                </font>
             </Button>
-            <Button fx:id="settingsbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: TRANSPARENT;" text="Settings">
+            <Button fx:id="settingsbutton" mnemonicParsing="false" onAction="#settingsaction" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: TRANSPARENT;" text="Settings">
                <font>
-                  <Font size="39.0" />
+                  <Font size="28.0" />
                </font>
             </Button>
         </buttons>
       </ButtonBar>
       <ButtonBar layoutX="1615.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="85.0" prefWidth="307.0">
          <buttons>
-            <Button fx:id="quitbutton" mnemonicParsing="false" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Quit">
+            <Button fx:id="quitbutton" mnemonicParsing="false" onAction="#quitaction" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Quit">
                <font>
-                  <Font size="39.0" />
+                  <Font size="28.0" />
                </font>
             </Button>
          </buttons>
