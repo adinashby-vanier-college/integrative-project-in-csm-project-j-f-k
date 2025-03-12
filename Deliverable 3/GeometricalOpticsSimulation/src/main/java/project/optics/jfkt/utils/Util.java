@@ -1,18 +1,20 @@
 package project.optics.jfkt.utils;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 
 import java.awt.*;
 
 public class Util {
+
+
+
 
     public Region createMenu() {
         HBox container = new HBox();
@@ -55,4 +57,7 @@ public class Util {
 
         return container;
     }
+
+
+
 }
