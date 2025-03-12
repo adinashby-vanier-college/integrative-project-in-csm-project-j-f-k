@@ -24,6 +24,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         Scene scene = new Scene(new MainView(primaryStage),1800,1000);
         primaryStage.setFullScreen(true);
+        primaryStage.setTitle("Geometrical Optics Simulation");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
