@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane fx:id="animpane" layoutX="420.0" layoutY="86.0" prefHeight="720.0" prefWidth="1496.0" style="-fx-border-radius: 12; -fx-border-color: BLACk;">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="zoominbutton" mnemonicParsing="false" prefHeight="108.0" prefWidth="100.0">
+                     <graphic>
+                        <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/64/Magnifying-Glass-Add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="zoomoutbutton" mnemonicParsing="false" prefHeight="108.0" prefWidth="100.0">
+                     <graphic>
+                        <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/64/Magnifying-Glass-Reduce.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+         </children></Pane>
+      <VBox alignment="CENTER" layoutX="900.0" layoutY="807.0" prefHeight="277.0" prefWidth="386.0" spacing="20.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="461.0" spacing="12.0">
+               <children>
+                  <Button fx:id="playbutton" mnemonicParsing="false" prefHeight="17.0" prefWidth="118.0">
+                     <font>
+                        <Font size="35.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/64/Play.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="pausebutton" mnemonicParsing="false" prefHeight="95.0" prefWidth="118.0">
+                     <font>
+                        <Font size="35.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/64/Pause.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="redobutton" mnemonicParsing="false" prefHeight="17.0" prefWidth="118.0">
+                     <font>
+                        <Font size="35.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/64/Redo.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="367.0" spacing="12.0">
+               <children>
+                  <Button fx:id="slowbutton" mnemonicParsing="false" prefHeight="60.0" prefWidth="97.0">
+                     <font>
+                        <Font size="35.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="50.0" fitWidth="114.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/64/Double-Chevron-Arrow-Left.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="normalbutton" mnemonicParsing="false" prefHeight="60.0" prefWidth="97.0">
+                     <font>
+                        <Font size="35.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="50.0" fitWidth="114.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/64/Next.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="speedbutton" mnemonicParsing="false" prefHeight="60.0" prefWidth="97.0">
+                     <font>
+                        <Font size="35.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="50.0" fitWidth="114.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/64/Double-Chevron-Arrow-Right.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </HBox>
+         </children>
+      </VBox>
+      <Pane layoutX="-2.0" layoutY="86.0" prefHeight="720.0" prefWidth="422.0" style="-fx-border-color: BLACK; -fx-border-width: 1; -fx-border-radius: 6;">
+         <children>
+            <Text layoutX="10.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Parameters:" underline="true" wrappingWidth="400.13671875">
+               <font>
+                  <Font size="41.0" />
+               </font>
+            </Text>
+            <VBox fx:id="paramvbox" alignment="TOP_CENTER" layoutX="7.0" layoutY="64.0" prefHeight="644.0" prefWidth="408.0">
+               <children>
+                  <HBox fx:id="paramtemplate" alignment="CENTER" prefHeight="100.0" prefWidth="456.0" spacing="40.0">
+                     <children>
+                        <Text fx:id="paramtemptext" strokeType="OUTSIDE" strokeWidth="0.0" text="Param1:" wrappingWidth="126.13671875">
+                           <font>
+                              <Font size="35.0" />
+                           </font>
+                        </Text>
+                        <TextField fx:id="paramtempfield" prefHeight="62.0" prefWidth="169.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+      <Pane layoutX="1345.0" layoutY="805.0" prefHeight="275.0" prefWidth="573.0" style="-fx-border-color: black; -fx-border-radius: 12;">
+         <children>
+            <HBox layoutX="129.0" prefHeight="273.0" prefWidth="436.0">
+               <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="43.0" layoutY="8.0" mnemonicParsing="false" prefHeight="183.0" prefWidth="100.0" style="-fx-background-color: TRANSPARENT;">
+                           <graphic>
+                              <ImageView fx:id="choiceimage1" fitHeight="195.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </Button>
+                        <Text fx:id="choicetext1" layoutX="40.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choice1">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="choiceimage2" layoutX="43.0" layoutY="8.0" mnemonicParsing="false" prefHeight="183.0" prefWidth="100.0" style="-fx-background-color: TRANSPARENT;">
+                           <graphic>
+                              <ImageView fitHeight="195.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </Button>
+                        <Text fx:id="choicetext2" layoutX="40.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choice2">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+               </children>
+            </HBox>
+            <Text layoutX="12.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mirrors:" wrappingWidth="137.685546875">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane layoutX="240.0" layoutY="806.0" prefHeight="273.0" prefWidth="613.0" style="-fx-border-color: BLACK; -fx-border-width: 1;">
+         <children>
+            <Text layoutX="5.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Objects:">
+               <font>
+                  <Font size="34.0" />
+               </font>
+            </Text>
+            <HBox layoutY="42.0" prefHeight="230.0" prefWidth="672.0">
+               <children>
+                  <Pane prefHeight="169.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="43.0" layoutY="8.0" mnemonicParsing="false" prefHeight="183.0" prefWidth="100.0" style="-fx-background-color: TRANSPARENT;">
+                           <graphic>
+                              <ImageView fx:id="objectimage1" fitHeight="183.0" fitWidth="115.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/64Shadow/Cart.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Text fx:id="objecttext1" layoutX="45.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Object 1">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="169.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="43.0" layoutY="8.0" mnemonicParsing="false" prefHeight="183.0" prefWidth="100.0" style="-fx-background-color: TRANSPARENT;">
+                           <graphic>
+                              <ImageView fx:id="objectimage2" fitHeight="183.0" fitWidth="115.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/64Shadow/Bag.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Text fx:id="objecttext2" layoutX="45.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Object 2">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="169.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="43.0" layoutY="8.0" mnemonicParsing="false" prefHeight="183.0" prefWidth="100.0" style="-fx-background-color: TRANSPARENT;">
+                           <graphic>
+                              <ImageView fx:id="objectimage3" fitHeight="183.0" fitWidth="115.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/64Shadow/Person.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Text fx:id="objecttext3" layoutX="45.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Object 3">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+      <VBox layoutX="-3.0" layoutY="802.0" prefHeight="281.0" prefWidth="241.0">
+         <children>
+            <Button fx:id="rulerbutton" mnemonicParsing="false" prefHeight="149.0" prefWidth="241.0" style="-fx-background-color: TRANSPARENT;">
+               <graphic>
+                  <ImageView fitHeight="211.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/rulerpng.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="149.0" prefWidth="241.0" style="-fx-background-color: TRANSPARENT;">
+               <graphic>
+                  <ImageView fx:id="anglebutton" fitHeight="211.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/angle.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </VBox>
+      <ButtonBar layoutY="4.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="85.0" prefWidth="1016.0">
+        <buttons>
+            <Button fx:id="backtomenubutton" mnemonicParsing="false" onAction="#backtomenuaction" prefHeight="85.0" prefWidth="367.0" style="-fx-background-color: Transparent;" text="Back to Menu">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+          <Button fx:id="aboutusbutton" mnemonicParsing="false" onAction="#aboutusaction" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="About Us">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+            <Button fx:id="helpbutton" mnemonicParsing="false" onAction="#helpaction" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Help">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+            <Button fx:id="settingsbutton" mnemonicParsing="false" onAction="#settingsaction" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: TRANSPARENT;" text="Settings">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+        </buttons>
+      </ButtonBar>
+      <ButtonBar layoutX="1615.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="85.0" prefWidth="307.0">
+         <buttons>
+            <Button fx:id="quitbutton" mnemonicParsing="false" onAction="#quitaction" prefHeight="85.0" prefWidth="278.0" style="-fx-background-color: Transparent;" text="Quit">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+         </buttons>
+      </ButtonBar>
+   </children>
+</AnchorPane>
