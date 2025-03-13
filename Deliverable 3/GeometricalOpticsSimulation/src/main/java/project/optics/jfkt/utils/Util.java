@@ -1,5 +1,6 @@
 package project.optics.jfkt.utils;
 
+import com.sun.tools.javac.Main;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -8,13 +9,19 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import project.optics.jfkt.MainApp;
 
 import java.awt.*;
 
 public class Util {
 
 
-
+    public void switchScene(Scene newScene) {
+        MainApp.primaryStage.setScene(newScene);
+        MainApp.primaryStage.setFullScreen(true);
+        MainApp.primaryStage.show();
+        MainApp.primaryStage.centerOnScreen();
+    }
 
     public Region createMenu() {
         HBox container = new HBox();

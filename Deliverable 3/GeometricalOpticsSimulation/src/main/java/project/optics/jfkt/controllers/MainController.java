@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import project.optics.jfkt.utils.Util;
 import project.optics.jfkt.views.*;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class MainController {
     public MainController(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
+    private final Util util = new Util();
 
 
     public void onQuitButtonPressed() {
@@ -34,46 +36,31 @@ public class MainController {
     public void onAboutUsPressed() {
         VBox vbox1 = new VBox();
         Scene scene = new Scene(vbox1);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
+        util.switchScene(scene);
     }
 
     public void onHelpPressed() {
         VBox vbox1 = new VBox();
         Scene scene = new Scene(vbox1);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
+        util.switchScene(scene);
     }
 
     public void onThemeButtonPressed() {
         ThemeView themeView = new ThemeView();
         Scene scene = new Scene(themeView);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
+        util.switchScene(scene);
     }
 
     public void onAnimationButtonPressed() {
         AnimationView animationView = new AnimationView();
         Scene scene = new Scene(animationView);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
+        util.switchScene(scene);
     }
 
     public void onGeneralSettingsButtonPressed() {
         GeneralSettingView generalSettingView = new GeneralSettingView();
         Scene scene = new Scene(generalSettingView);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
+        util.switchScene(scene);
     }
 
 
@@ -81,18 +68,12 @@ public class MainController {
     public void onEducationButtonPressed() {
         SelectionView selectionView = new SelectionView();
         Scene scene = new Scene(selectionView);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
+        util.switchScene(scene);
     }
 
     public void onThinLensesPressed() throws IOException {
         LensView lensView = new LensView();
         Scene scene = new Scene(lensView);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
+        util.switchScene(scene);
     }
 }
