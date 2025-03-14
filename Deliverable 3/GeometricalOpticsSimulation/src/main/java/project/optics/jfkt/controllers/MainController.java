@@ -76,4 +76,8 @@ public class MainController {
         Scene scene = new Scene(lensView);
         util.switchScene(scene);
     }
+
+    public void onRefractionButtonPressed() {
+        util.switchScene(new Scene(new RefractionView()));
+    }
 }

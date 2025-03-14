@@ -93,7 +93,7 @@ private Stage primaryStage;
 
         Button refractionButton = new Button("Refraction");
         refractionButton.setPrefSize(200, 20);
-
+        refractionButton.setOnAction(event -> mainController.onRefractionButtonPressed());
 
         Button thinLensesButton = new Button("Thin Lenses");
         thinLensesButton.setPrefSize(200, 20);
