@@ -1,6 +1,8 @@
 package project.optics.jfkt.views;
 
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -10,14 +12,20 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
+import project.optics.jfkt.controllers.RefractionController;
+import project.optics.jfkt.enums.Material;
 import project.optics.jfkt.utils.Util;
 
 import java.util.ArrayList;
 
 public class RefractionView extends VBox {
+    private final RefractionController refractionController = new RefractionController();
     private final Util util = new Util();
     private double layerLength;
     private static final double ANIMATION_PANE_HEIGHT = 900;
+    private int currentLayer = 1;
+    private Material chosenLayer;
+    private double currentRefractionIndex;
 
     public RefractionView() {
         layerLength = ANIMATION_PANE_HEIGHT;
@@ -36,17 +44,17 @@ public class RefractionView extends VBox {
         frame.setPrefHeight(ANIMATION_PANE_HEIGHT);
         frame.setBorder(Border.stroke(Color.BLACK));
 
-        ArrayList<VBox> layers = new ArrayList<>();
+        ArrayList<HBox> layers = new ArrayList<>();
 
-        VBox layer1 = new VBox();
+        HBox layer1 = new HBox();
         layer1.setBorder(Border.stroke(Color.BLACK));
         VBox.setVgrow(layer1, Priority.ALWAYS);
 
-        VBox layer2 = new VBox();
+        HBox layer2 = new HBox();
         layer1.setBorder(Border.stroke(Color.BLACK));
         VBox.setVgrow(layer2, Priority.ALWAYS);
 
-        VBox layer3 = new VBox();
+        HBox layer3 = new HBox();
         layer1.setBorder(Border.stroke(Color.BLACK));
         VBox.setVgrow(layer3, Priority.ALWAYS);
 
@@ -56,19 +64,28 @@ public class RefractionView extends VBox {
 
         Button newLayer = new Button();
         newLayer.setGraphic(new StackPane(drawPlusSign()));
-
         newLayer.setStyle("-fx-background-color: transparent; " +
                 "-fx-border-color: transparent; " +
                 "-fx-cursor: hand;");
 
-        HBox container = new HBox(newLayer);
-        container.setAlignment(Pos.CENTER);
 
-        VBox.setVgrow(container, Priority.ALWAYS);
+        HBox plusSignLayer = new HBox(newLayer);
+        plusSignLayer.setAlignment(Pos.CENTER);
 
-        layer1.getChildren().add(container);
+        VBox.setVgrow(plusSignLayer, Priority.ALWAYS);
 
-        frame.getChildren().add(layer1);
+        frame.getChildren().add(plusSignLayer);
+
+        newLayer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (currentLayer < 4) {
+                    refractionController.onNewLayerButtonPressed(RefractionView.this, layers, frame, currentLayer, plusSignLayer);
+                }
+
+                currentLayer++;
+            }
+        });
 
         return frame;
     }
@@ -191,4 +208,11 @@ public class RefractionView extends VBox {
         return container;
     }
 
+    public void setChosenLayer(Material chosenLayer) {
+        this.chosenLayer = chosenLayer;
+    }
+
+    public void setCurrentRefractionIndex(double currentRefractionIndex) {
+        this.currentRefractionIndex = currentRefractionIndex;
+    }
 }
