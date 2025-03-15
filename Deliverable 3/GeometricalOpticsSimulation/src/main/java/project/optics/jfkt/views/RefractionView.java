@@ -6,6 +6,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
@@ -14,6 +16,7 @@ import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import project.optics.jfkt.controllers.RefractionController;
 import project.optics.jfkt.enums.Material;
+import project.optics.jfkt.models.Question;
 import project.optics.jfkt.utils.Util;
 
 import java.util.ArrayList;
@@ -109,7 +112,7 @@ public class RefractionView extends VBox {
         HBox container = new HBox();
 
         Region parameters = createParameters();
-        parameters.setPrefWidth(380);
+        parameters.setPrefWidth(340);
         Region animationSpeedButtons = createAnimationSpeedButtons();
         Region pausePlayAndRestartButtons = createPausePlayAndRestartButtons();
 
@@ -129,9 +132,20 @@ public class RefractionView extends VBox {
     }
 
     private Region createPausePlayAndRestartButtons() {
-        Button pause = new Button("Pause");
+        Image pauseImg = new Image(this.getClass().getResource("/images/64/Pause.png").toExternalForm());
+        ImageView pauseImgView = new ImageView(pauseImg);
+        Button pause = new Button();
+        pause.setGraphic(pauseImgView);
+
+        Image playImg = new Image(this.getClass().getResource("/images/64/Play.png").toExternalForm());
+        ImageView playImgView = new ImageView(playImg);
         Button play = new Button();
+        play.setGraphic(playImgView);
+
+        Image restartImg = new Image(this.getClass().getResource("/images/64/Redo.png").toExternalForm());
+        ImageView restartImgView = new ImageView(restartImg);
         Button restart = new Button();
+        restart.setGraphic(restartImgView);
 
         HBox container = new HBox(20, pause, play, restart);
 

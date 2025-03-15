@@ -8,12 +8,19 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import project.optics.jfkt.enums.Difficulty;
+import project.optics.jfkt.models.Question;
 import project.optics.jfkt.utils.Util;
+
+import java.util.ArrayList;
 
 public class EducationModeView extends BorderPane {
     private final Util util = new Util();
+    private Difficulty difficulty;
+    private ArrayList<Question> questionBank;
 
-    public EducationModeView() {
+    public EducationModeView(Difficulty difficulty) {
+        this.difficulty = difficulty;
         // Top: menu bar
         this.setTop(createTop());
         // Center: main question area with top and bottom buttons
@@ -38,12 +45,29 @@ public class EducationModeView extends BorderPane {
         topButtons.setAlignment(Pos.CENTER_LEFT);
         topButtons.setSpacing(10);
         topButtons.setPrefHeight(50);
-        VBox.setMargin(topButtons, new Insets(10, 0, 0, 0));
+        HBox.setMargin(topButtons, new Insets(10, 0, 0, 0));
 
-        Text hintArea = new Text("hint");
+        // Hint area
+        StackPane hintArea = new StackPane();
+        hintArea.setPrefSize(300, 100);
+        hintArea.setBorder(Border.stroke(Color.BLACK));
+        Text hint = new Text("hint test");
+        hint.setWrappingWidth(280);  // 300px width - 10px padding each side
+        hintArea.setPadding(new Insets(5));  // Add internal padding
+        hintArea.getChildren().add(hint);
+        HBox.setMargin(hintArea, new Insets(10, 0, 0, 0));
 
-        HBox topRegion = new HBox(300, topButtons, hintArea);
+        // Answer area
+        StackPane answerArea = new StackPane();
+        answerArea.setPrefSize(300, 100);
+        answerArea.setBorder(Border.stroke(Color.BLACK));
+        Text answer = new Text("Answer test");
+        answer.setWrappingWidth(280);
+        answerArea.setPadding(new Insets(5));
+        answerArea.getChildren().add(answer);
+        HBox.setMargin(answerArea, new Insets(10, 0, 0, 0));
 
+        HBox topRegion = new HBox(300, topButtons, hintArea, answerArea);
         // The question pane
         Region questionPane = createQuestionPane();
         VBox.setVgrow(questionPane, Priority.ALWAYS);
@@ -54,13 +78,13 @@ public class EducationModeView extends BorderPane {
         bottomButtons.setPadding(new Insets(10));
 
         Button submit = new Button("Submit");
-        Button hint = new Button("Hint");
-        Button answer = new Button("Answer");
+        Button hintButton = new Button("Hint");
+        Button answerButton = new Button("Answer");
 
         submit.setPrefWidth(100);
-        hint.setPrefWidth(100);
-        answer.setPrefWidth(100);
-        bottomButtons.getChildren().addAll(submit, hint, answer);
+        hintButton.setPrefWidth(100);
+        answerButton.setPrefWidth(100);
+        bottomButtons.getChildren().addAll(submit, hintButton, answerButton);
 
         container.getChildren().addAll(topRegion, questionPane, bottomButtons);
         return container;

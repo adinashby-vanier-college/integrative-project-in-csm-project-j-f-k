@@ -11,11 +11,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import project.optics.jfkt.controllers.SelectionController;
 import project.optics.jfkt.utils.Util;
 
 public class SelectionView extends BorderPane {
-    Util util = new Util();
-
+    private final Util util = new Util();
+    private final SelectionController selectionController = new SelectionController();
 
     public SelectionView() {
         this.setTop(util.createMenu());
@@ -62,6 +63,10 @@ public class SelectionView extends BorderPane {
         Button medium = new Button("Medium");
         Button easy = new Button("Easy");
 
+        hard.setOnAction(event -> selectionController.onHardButtonPressed());
+        medium.setOnAction(event -> selectionController.onMediumButtonPressed());
+        easy.setOnAction(event -> selectionController.onEasyButtonPressed());
+
         buttons.getChildren().addAll(easy, medium, hard);
 
         vBox.getChildren().addAll(images, buttons);
@@ -74,6 +79,7 @@ public class SelectionView extends BorderPane {
         HBox container = new HBox();
 
         Button back = new Button("Back");
+        back.setOnAction(event -> selectionController.onBackButtonPressed());
 
         HBox.setMargin(back, new Insets(0, 0, 100, 100));
 

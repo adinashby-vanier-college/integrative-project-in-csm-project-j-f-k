@@ -10,12 +10,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import project.optics.jfkt.MainApp;
+import project.optics.jfkt.views.MainView;
 
 import java.awt.*;
 
 public class Util {
-
-
     public void switchScene(Scene newScene) {
         MainApp.primaryStage.setScene(newScene);
         MainApp.primaryStage.setFullScreen(true);
@@ -59,6 +58,7 @@ public class Util {
         Button zoomIn = new Button("Zoom In");
         Button zoomOut = new Button("Zoom Out");
         Button back = new Button("Back");
+        back.setOnAction(event -> switchScene(new Scene(new MainView(MainApp.primaryStage))));
 
         container.getChildren().addAll(zoomIn, zoomOut, back);
 
