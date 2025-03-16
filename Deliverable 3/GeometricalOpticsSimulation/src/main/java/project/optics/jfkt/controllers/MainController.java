@@ -208,18 +208,7 @@ public class MainController {
     public void onMirrorPressed(){
         MirrorView mirrorView = new MirrorView();
         Scene scene = new Scene(mirrorView);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
+        util.switchScene(scene);
     }
 
-    public void onRefractionPressed(){
-        RefractionView refractionView = new RefractionView();
-        Scene scene = new Scene(refractionView);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        primaryStage.centerOnScreen();
-    }
 }

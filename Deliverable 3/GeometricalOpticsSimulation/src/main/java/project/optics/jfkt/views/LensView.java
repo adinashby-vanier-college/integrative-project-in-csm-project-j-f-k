@@ -7,11 +7,11 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
-public class LensView extends BorderPane {
-Parent root;
+public class LensView extends BaseView {
 
-    public LensView() throws IOException {
-        this.setCenter(FXMLLoader.load(getClass().getResource("/fxml/lensuifxml.fxml")));
+
+    public LensView() {
+        super("Lenses");
     }
 
 }
