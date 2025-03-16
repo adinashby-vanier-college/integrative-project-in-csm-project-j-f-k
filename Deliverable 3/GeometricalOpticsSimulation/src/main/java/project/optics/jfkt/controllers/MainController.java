@@ -25,6 +25,8 @@ public class MainController {
     }
     private final Util util = new Util();
     private ThemeController themeController = new ThemeController();
+    private GeneralSettingsController generalSettingsController = new GeneralSettingsController();
+    private AnimationController animationController = new AnimationController();
 
 
 
@@ -174,13 +176,13 @@ public class MainController {
     }
 
     public void onAnimationButtonPressed() {
-        AnimationView animationView = new AnimationView();
+        AnimationView animationView = new AnimationView(animationController);
         Scene scene = new Scene(animationView);
         util.switchScene(scene);
     }
 
     public void onGeneralSettingsButtonPressed() {
-        GeneralSettingView generalSettingView = new GeneralSettingView();
+        GeneralSettingView generalSettingView = new GeneralSettingView(generalSettingsController);
         Scene scene = new Scene(generalSettingView);
         util.switchScene(scene);
     }

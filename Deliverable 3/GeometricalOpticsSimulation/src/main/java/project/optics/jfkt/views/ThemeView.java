@@ -16,16 +16,16 @@ import project.optics.jfkt.controllers.ThemeController;
 public class ThemeView extends BorderPane {
 
     public ThemeView(ThemeController controller) {
-        // Create a VBox layout for the theme settings
+
         VBox themeSettingsBox = new VBox(20);
         themeSettingsBox.setAlignment(Pos.CENTER);
         themeSettingsBox.setPadding(new Insets(20));
 
-        // Label to display sample text
+
         Label sampleText = new Label("Sample Text");
         sampleText.setFont(Font.font(16));
 
-        // ComboBox for font selection
+
         ComboBox<String> fontComboBox = new ComboBox<>();
         fontComboBox.getItems().addAll("Arial", "Times New Roman", "Courier New", "Verdana", "Comic Sans MS");
         fontComboBox.setValue("Arial"); // Default font
@@ -34,7 +34,7 @@ public class ThemeView extends BorderPane {
             sampleText.setFont(Font.font(selectedFont, 16));
         });
 
-        // ColorPicker for background color selection
+
         ColorPicker colorPicker = new ColorPicker(Color.WHITE); // Default color
         colorPicker.setOnAction(e -> {
             Color selectedColor = colorPicker.getValue();
@@ -43,7 +43,7 @@ public class ThemeView extends BorderPane {
 
         // Create a back button
         Button backButton = new Button("Back");
-        backButton.setOnAction(e -> controller.onBackButtonPressed()); // Delegate to the controller
+        backButton.setOnAction(e -> controller.onBackButtonPressed());
 
         // Add components to the VBox
         themeSettingsBox.getChildren().addAll(
@@ -55,7 +55,7 @@ public class ThemeView extends BorderPane {
                 backButton
         );
 
-        // Set the VBox as the center of the BorderPane
+
         this.setCenter(themeSettingsBox);
     }
 
