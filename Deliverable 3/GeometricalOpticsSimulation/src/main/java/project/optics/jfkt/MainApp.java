@@ -3,8 +3,7 @@ package project.optics.jfkt;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import project.optics.jfkt.views.LensView;
-import project.optics.jfkt.views.MainView;
+import project.optics.jfkt.views.*;
 
 /**
  * This is a JavaFX project template to be used for creating GUI applications.
@@ -15,6 +14,8 @@ import project.optics.jfkt.views.MainView;
  */
 public class MainApp extends Application {
 
+    public static Stage primaryStage;
+
     public static void main(String[] args) {
         //System.out.println("Hello there!");
         launch(args);
@@ -22,10 +23,11 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(new MainView(primaryStage),1800,1000);
+        Scene scene = new Scene(new MainView(primaryStage));
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("Geometrical Optics Simulation");
         primaryStage.setScene(scene);
         primaryStage.show();
+        MainApp.primaryStage = primaryStage;
     }
 }

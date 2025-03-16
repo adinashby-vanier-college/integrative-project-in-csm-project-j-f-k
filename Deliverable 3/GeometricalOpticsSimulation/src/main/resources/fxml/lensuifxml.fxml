@@ -17,19 +17,40 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-
-<VBox maxHeight="1080.0" maxWidth="1920.0" minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="1080.0" maxWidth="1920.0" minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.optics.jfkt.controllers.LensesController">
    <children>
       <MenuBar depthTest="DISABLE" maxWidth="1920.0" prefHeight="0.0" prefWidth="1920.0">
          <menus>
-            <Menu mnemonicParsing="false" text="Unspecified Menu">
+            <Menu mnemonicParsing="false" text="Settings">
               <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="General" />
+                  <MenuItem mnemonicParsing="false" text="Theme" />
+                  <MenuItem mnemonicParsing="false" text="Animation" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Blank" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="About Us">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Blank" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Quit" />
          </menus>
       </MenuBar>
-      <BorderPane maxHeight="800.0" minHeight="0.0" prefHeight="800.0" prefWidth="1920.0" />
+      <BorderPane maxHeight="800.0" minHeight="0.0" prefHeight="800.0" prefWidth="1920.0">
+         <top>
+            <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="zoomInButton" mnemonicParsing="false" onAction="#handleZoomIn" text="Zoom in" />
+                  <Button fx:id="zoomOutButton" layoutX="10.0" layoutY="16.0" mnemonicParsing="false" onAction="#handleZoomOut" text="Zoom out" />
+                  <Button fx:id="backtoMainButton" layoutX="71.0" layoutY="16.0" mnemonicParsing="false" onAction="#handleBackToMain" text="Back To Main" />
+               </children>
+            </HBox>
+         </top></BorderPane>
       <HBox maxHeight="216.0" minHeight="216.0" prefHeight="216.0" prefWidth="1920.0" spacing="40.0" style="-fx-alignment: center;">
          <children>
             <VBox alignment="CENTER" maxHeight="200.0">
@@ -37,7 +58,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-alignment: center;">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tools" wrappingWidth="33.336700439453125" />
-                        <Button mnemonicParsing="false" prefHeight="58.4">
+                        <Button fx:id="rulerButton" mnemonicParsing="false" onAction="#handleRuler" prefHeight="58.4">
                            <graphic>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -49,7 +70,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button layoutX="68.0" layoutY="10.0" mnemonicParsing="false">
+                        <Button fx:id="protractorButton" layoutX="68.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleProtractor">
                            <graphic>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -66,12 +87,12 @@
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0" style="-fx-alignment: left;">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Lenses" wrappingWidth="71.7367148399353" />
-                        <ImageView fitHeight="53.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="82.0" fitWidth="85.0" pickOnBounds="true">
                            <image>
                               <Image url="@../../../../../../../../Downloads/convexe.png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="53.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="88.0" fitWidth="72.0" pickOnBounds="true">
                            <image>
                               <Image url="@../../../../../../../../Downloads/concave.png" />
                            </image>
@@ -99,12 +120,12 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Focal Length" wrappingWidth="88.24537658691406" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Object Distance" wrappingWidth="101.84536743164062" GridPane.rowIndex="1" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Object Height" wrappingWidth="79.44534301757812" GridPane.rowIndex="2" />
-                        <TextField prefHeight="30.0" prefWidth="40.0" GridPane.columnIndex="1" />
-                        <TextField prefHeight="30.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField prefHeight="30.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="focalLengthField" prefHeight="30.0" prefWidth="40.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="objectDistanceField" prefHeight="30.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="objectHeightField" prefHeight="30.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Text layoutX="10.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Magnification" wrappingWidth="79.44534301757812" GridPane.rowIndex="3" />
-                        <TextField layoutX="48.0" layoutY="56.0" prefHeight="30.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField layoutX="144.0" layoutY="116.0" prefHeight="30.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="magnificationField" layoutX="48.0" layoutY="56.0" prefHeight="30.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="numberOfRaysField" layoutX="144.0" layoutY="116.0" prefHeight="30.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Text layoutX="24.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of rays" wrappingWidth="101.8453369140625" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
@@ -112,8 +133,9 @@
             </VBox>
             <GridPane alignment="CENTER" prefHeight="145.0" prefWidth="325.0" style="-fx-alignment: center;">
                <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="113.33332061767578" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="119.99996795654297" minWidth="10.0" prefWidth="102.39998779296874" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="113.33332061767578" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0000244140625" minWidth="0.0" prefWidth="87.8000732421875" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="119.99996795654297" minWidth="10.0" prefWidth="86.19992675781248" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="98.66678466796878" minWidth="10.0" prefWidth="81.60001220703128" />
                </columnConstraints>
                <rowConstraints>
@@ -121,26 +143,16 @@
                   <RowConstraints maxHeight="50.0" minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" GridPane.rowIndex="1">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic>
-                  </Button>
-                  <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="123.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" text="Button" GridPane.columnIndex="2" />
-                  <Button layoutX="132.0" layoutY="123.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" text="Button" GridPane.columnIndex="2" />
-                  <Button layoutX="244.0" layoutY="123.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" text="Fast" GridPane.columnIndex="2" />
-                  <Button layoutX="244.0" layoutY="72.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" text="Normal" GridPane.columnIndex="1" />
-                  <Button layoutX="132.0" layoutY="72.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" text="Slow" />
+                  <Button fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handlePlay" prefHeight="41.0" prefWidth="78.0" text="Play" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#handlePause" prefHeight="41.0" prefWidth="78.0" text="Pause" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="restartButton" mnemonicParsing="false" onAction="#handleRestart" prefHeight="41.0" prefWidth="78.0" text="Restart" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="123.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" text="Button" GridPane.columnIndex="3" />
+                  <Button layoutX="132.0" layoutY="123.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="78.0" text="Button" GridPane.columnIndex="3" />
+                  <Button fx:id="fastButton" layoutX="244.0" layoutY="123.0" mnemonicParsing="false" onAction="#handleFast" prefHeight="41.0" prefWidth="78.0" text="Fast" GridPane.columnIndex="3" />
+                  <Button fx:id="normalButton" layoutX="244.0" layoutY="72.0" mnemonicParsing="false" onAction="#handleNormal" prefHeight="41.0" prefWidth="78.0" text="Normal" GridPane.columnIndex="2" />
+                  <Button fx:id="slowButton" layoutX="132.0" layoutY="72.0" mnemonicParsing="false" onAction="#handleSlow" prefHeight="41.0" prefWidth="78.0" text="Slow" GridPane.columnIndex="1" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Speed" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Animation" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>
