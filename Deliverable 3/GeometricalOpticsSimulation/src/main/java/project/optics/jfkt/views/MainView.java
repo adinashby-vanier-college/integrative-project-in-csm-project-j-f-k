@@ -93,6 +93,7 @@ private Stage primaryStage;
 
         Button refractionButton = new Button("Refraction");
         refractionButton.setPrefSize(200, 20);
+        refractionButton.setOnAction(e-> mainController.onRefractionPressed());
 
 
         Button thinLensesButton = new Button("Thin Lenses");
@@ -108,6 +109,7 @@ private Stage primaryStage;
 
         Button mirrorButton = new Button("Mirror");
         mirrorButton.setPrefSize(200, 20);
+        mirrorButton.setOnAction(e-> mainController.onMirrorPressed());
 
 
 
