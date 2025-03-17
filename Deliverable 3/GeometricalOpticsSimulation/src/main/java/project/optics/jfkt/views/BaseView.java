@@ -33,7 +33,7 @@ public class BaseView extends BorderPane{
         this.setBottom(createBottom());
     }
 
-    private Region createCenter(){
+    Region createCenter(){
         Pane mainpane = new Pane();
         mainpane.setPrefSize(1920,1080);
 
@@ -56,6 +56,8 @@ public class BaseView extends BorderPane{
         ImageView zoomoutImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Reduce.png").toExternalForm()));
         Button zoomin = new Button("", zoominImage);
         Button zoomout = new Button("", zoomoutImage);
+        Button backmenu = new Button("Back To Main Menu");
+        backmenu.setPrefSize(150, 50);
         animpane.setPrefSize(1500,720);
         animpane.setLayoutX(420);
         animpane.setStyle("-fx-border-color: black; -fx-border-width: 4px;");
@@ -65,7 +67,7 @@ public class BaseView extends BorderPane{
         zoomhbox.setPrefSize(200,100);
         zoomhbox.setLayoutX(4);
         zoomhbox.setLayoutY(4);
-        zoomhbox.getChildren().addAll(zoomin,zoomout);
+        zoomhbox.getChildren().addAll(zoomin,zoomout,backmenu);
         animpane.getChildren().addAll(animtext,zoomhbox);
 
 
@@ -169,7 +171,7 @@ public class BaseView extends BorderPane{
 
     }
 
-    private HBox createParamHbox(String Text){
+    HBox createParamHbox(String Text){
         HBox paramhbox = new HBox();
         paramhbox.setSpacing(40);
         paramhbox.setPrefSize(400,100);
