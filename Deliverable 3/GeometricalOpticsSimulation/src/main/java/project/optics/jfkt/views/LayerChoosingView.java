@@ -7,14 +7,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import project.optics.jfkt.controllers.LayerChoosingController;
 
 import java.util.ArrayList;
 
 public class LayerChoosingView extends VBox {
-    public LayerChoosingView(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer) {
-        LayerChoosingController layerChoosingController = new LayerChoosingController(refractionView, stage, layers, frame, currentLayer, plusSignLayer);
+    public LayerChoosingView(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer, Line line12, Line line23) {
+        LayerChoosingController layerChoosingController = new LayerChoosingController(refractionView, stage, layers, frame, currentLayer, plusSignLayer, line12, line23);
 
         HBox air = new HBox();
         air.setBackground(Background.fill(Color.web("#FFFFFF")));

@@ -1,6 +1,9 @@
 package project.optics.jfkt.views;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,13 +13,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import project.optics.jfkt.controllers.RefractionController;
 import project.optics.jfkt.enums.Material;
-import project.optics.jfkt.models.Question;
 import project.optics.jfkt.utils.Util;
 
 import java.util.ArrayList;
@@ -29,6 +33,9 @@ public class RefractionView extends VBox {
     private int currentLayer = 1;
     private Material chosenLayer;
     private double currentRefractionIndex;
+    private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty();
+    private Circle incidentPoint;
+    private SimpleDoubleProperty incidentAngle = new SimpleDoubleProperty();
 
     public RefractionView() {
         layerLength = ANIMATION_PANE_HEIGHT;
@@ -43,6 +50,7 @@ public class RefractionView extends VBox {
     }
 
     private VBox createAnimationPane() {
+        // layers related
         VBox frame = new VBox();
         frame.setPrefHeight(ANIMATION_PANE_HEIGHT);
         frame.setBorder(Border.stroke(Color.BLACK));
@@ -54,26 +62,49 @@ public class RefractionView extends VBox {
         VBox.setVgrow(layer1, Priority.ALWAYS);
 
         HBox layer2 = new HBox();
-        layer1.setBorder(Border.stroke(Color.BLACK));
+        layer2.setBorder(Border.stroke(Color.BLACK));
         VBox.setVgrow(layer2, Priority.ALWAYS);
 
         HBox layer3 = new HBox();
-        layer1.setBorder(Border.stroke(Color.BLACK));
+        layer3.setBorder(Border.stroke(Color.BLACK));
         VBox.setVgrow(layer3, Priority.ALWAYS);
 
         layers.add(layer1);
         layers.add(layer2);
         layers.add(layer3);
 
+        // create new lines between layers for detection of change in layer during animation
+        Line line12 = new Line(0, ANIMATION_PANE_HEIGHT / 3, 0, ANIMATION_PANE_HEIGHT / 3);
+        line12.setFill(Color.YELLOW);
+        line12.setStroke(Color.YELLOW);
+        line12.setManaged(false);
+
+        Line line23 = new Line(0, ANIMATION_PANE_HEIGHT / 3 * 2, 0, ANIMATION_PANE_HEIGHT / 3 * 2);
+        line23.setFill(Color.YELLOW);
+        line23.setStroke(Color.YELLOW);
+        line23.setManaged(false);
+
+        this.widthProperty().addListener((obs, oldVal, newVal) -> {
+            line12.setEndX(newVal.doubleValue());
+            line23.setEndX(newVal.doubleValue());
+        });
+
+        frame.getChildren().addAll(line12, line23);
+
+        // plus sign set up
         Button newLayer = new Button();
-        newLayer.setGraphic(new StackPane(drawPlusSign()));
+        StackPane plusGraphic = new StackPane(drawPlusSign());
+        plusGraphic.setPrefSize(0, 0);
+        newLayer.setGraphic(plusGraphic);
         newLayer.setStyle("-fx-background-color: transparent; " +
                 "-fx-border-color: transparent; " +
-                "-fx-cursor: hand;");
-
+                "-fx-cursor: hand; " +
+                "-fx-pref-width: 0; -fx-pref-height: 0; " + // Zero preferred size
+                "-fx-min-width: 0; -fx-min-height: 0; " );
 
         HBox plusSignLayer = new HBox(newLayer);
         plusSignLayer.setAlignment(Pos.CENTER);
+//        plusSignLayer.setPrefHeight(0);
 
         VBox.setVgrow(plusSignLayer, Priority.ALWAYS);
 
@@ -83,12 +114,26 @@ public class RefractionView extends VBox {
             @Override
             public void handle(ActionEvent event) {
                 if (currentLayer < 4) {
-                    refractionController.onNewLayerButtonPressed(RefractionView.this, layers, frame, currentLayer, plusSignLayer);
+                    refractionController.onNewLayerButtonPressed(RefractionView.this, layers, frame, currentLayer, plusSignLayer, line12, line23);
                 }
 
                 currentLayer++;
             }
         });
+
+        // incident point
+        incidentPoint = new Circle(3);
+        incidentPoint.setStroke(Color.BLUE);
+        incidentPoint.setFill(Color.BLUE);
+        incidentPoint.setManaged(false);
+
+        // incidentPoint's X position dynamically change with the incident location slider
+        incidentLocation.addListener((observable, oldValue, newValue) -> refractionController.onIncidentLocationChanged(newValue, incidentPoint));
+
+        // initialization center Y value of incident point
+        incidentPoint.setCenterY(0);
+
+        frame.getChildren().add(incidentPoint);
 
         return frame;
     }
@@ -188,6 +233,9 @@ public class RefractionView extends VBox {
         angleSlider.setSnapToTicks(true);
         angleSlider.setBlockIncrement(0.5);
 
+        // update incident angle with the angle slider dynamically
+        angleSlider.valueProperty().addListener((observable, oldValue, newValue) -> incidentAngle.set(newValue.doubleValue()));
+
         Text angleValue = new Text();
 
         StringConverter<Number> converter = new NumberStringConverter();
@@ -210,6 +258,12 @@ public class RefractionView extends VBox {
         });
         locationSlider.setBlockIncrement(1);
         locationSlider.setMin(0);
+        locationSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                incidentLocation.set(newValue.doubleValue());
+            }
+        });
 
         Text locationValue = new Text();
 

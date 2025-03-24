@@ -5,6 +5,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import project.optics.jfkt.enums.Material;
 import project.optics.jfkt.views.RefractionView;
@@ -21,14 +22,18 @@ public class LayerChoosingController {
     private HBox layer1;
     private HBox layer2;
     private HBox layer3;
+    private Line line12;
+    private Line line23;
 
-    public LayerChoosingController(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer) {
+    public LayerChoosingController(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer, Line line12, Line line23) {
         this.refractionView = refractionView;
         this.stage = stage;
         this.layers = layers;
         this.frame = frame;
         this.currentLayer = currentLayer;
         this.plusSignLayer = plusSignLayer;
+        this.line12 = line12;
+        this.line23 = line23;
 
         // retrieve all layers
         layer1 = layers.get(0);
@@ -78,12 +83,12 @@ public class LayerChoosingController {
             case 2:
                 updateLayer(layer2, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
-                frame.getChildren().addAll(layer1, layer2, plusSignLayer);
+                frame.getChildren().addAll(layer1, layer2, plusSignLayer, line12, line23);
                 break;
             case 3:
                 updateLayer(layer3, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
-                frame.getChildren().addAll(layer1, layer2, layer3);
+                frame.getChildren().addAll(layer1, layer2, layer3, line12, line23);
         }
 
         stage.close();
