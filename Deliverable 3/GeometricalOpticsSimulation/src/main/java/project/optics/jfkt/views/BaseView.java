@@ -1,5 +1,6 @@
 package project.optics.jfkt.views;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -9,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import project.optics.jfkt.controllers.BaseViewController;
 import project.optics.jfkt.utils.Util;
 
 
@@ -17,6 +19,8 @@ public class BaseView extends BorderPane{
     private String type;
     private String option1;
     private String option2;
+    private Pane animpane;
+    private BaseViewController baseViewController;
 
     public BaseView(String type){
         if (type.contentEquals("Mirrors")){
@@ -28,6 +32,7 @@ public class BaseView extends BorderPane{
             option1 = "Converging";
             option2 = "Diverging";
         }
+        baseViewController = new BaseViewController();
         this.setTop(util.createMenu());
         this.setCenter(createCenter());
         this.setBottom(createBottom());
@@ -49,16 +54,14 @@ public class BaseView extends BorderPane{
         paramvbox.getChildren().addAll(createParamHbox("Focal Length"),createParamHbox("Image Distance"),createParamHbox("Image Height"));
 
 
-        Pane animpane = new Pane();
+        animpane = new Pane();
         Text animtext = new Text();
         HBox zoomhbox =new HBox();
         ImageView zoominImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Add.png").toExternalForm()));
         ImageView zoomoutImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Reduce.png").toExternalForm()));
         Button zoomin = new Button("", zoominImage);
         Button zoomout = new Button("", zoomoutImage);
-        Button backmenu = new Button("Back To Main Menu");
-        backmenu.setPrefSize(150, 50);
-        animpane.setPrefSize(1500,720);
+        animpane.setPrefSize(1400,720);
         animpane.setLayoutX(420);
         animpane.setStyle("-fx-border-color: black; -fx-border-width: 4px;");
         animtext.setText("Animation View");
@@ -67,7 +70,7 @@ public class BaseView extends BorderPane{
         zoomhbox.setPrefSize(200,100);
         zoomhbox.setLayoutX(4);
         zoomhbox.setLayoutY(4);
-        zoomhbox.getChildren().addAll(zoomin,zoomout,backmenu);
+        zoomhbox.getChildren().addAll(zoomin,zoomout);
         animpane.getChildren().addAll(animtext,zoomhbox);
 
 
@@ -81,7 +84,7 @@ public class BaseView extends BorderPane{
     private Region createBottom(){
         HBox mainhbox = new HBox();
         mainhbox.setAlignment(Pos.CENTER);
-        mainhbox.setSpacing(30);
+        mainhbox.setSpacing(80);
 
         VBox animbuttonvbox = new VBox();
         animbuttonvbox.setPrefSize(380,280);
@@ -162,10 +165,16 @@ public class BaseView extends BorderPane{
         choicehbox.setLayoutX(choicetext.getBoundsInLocal().getWidth());
         choicepane.getChildren().addAll(choicetext,choicehbox);
 
+        Button backmenu = new Button("Back To Main Menu");
+        backmenu.setPrefSize(150, 50);
+        backmenu.setPadding(new Insets(20));
+        backmenu.setOnAction(e -> {
+            baseViewController.onBackButtonPressed();
+        });
 
 
 
-        mainhbox.getChildren().addAll(animbuttonvbox, choicepane);
+        mainhbox.getChildren().addAll(backmenu, animbuttonvbox, choicepane);
 
         return  mainhbox;
 
@@ -194,5 +203,10 @@ public class BaseView extends BorderPane{
 
 
         return paramhbox;
+    }
+
+
+    public Pane getAnimpane(){
+        return animpane;
     }
 }
