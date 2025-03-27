@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import project.optics.jfkt.controllers.EducationModeController;
 import project.optics.jfkt.enums.Difficulty;
@@ -20,7 +21,7 @@ public class EducationModeView extends BorderPane {
     private Difficulty difficulty;
     private ArrayList<Question> questionBank;
 
-    // UI elements stored as fields
+    // UI elements
     private Text questionText;
     private Text hintText;
     private Text answerText;
@@ -30,14 +31,22 @@ public class EducationModeView extends BorderPane {
     private Button answerButton;
     private Button newQuestionButton;
 
+    // Radio button groups
+    private ToggleGroup modeGroup;
+    private ToggleGroup sizeGroup;
+    private ToggleGroup orientationGroup;
+
+    // Font sizes
+    private static final double QUESTION_FONT_SIZE = 18.0;
+    private static final double HINT_FONT_SIZE = 16.0;
+    private static final double ANSWER_FONT_SIZE = 16.0;
+    private static final double INPUT_FONT_SIZE = 14.0;
+
     public EducationModeView(Difficulty difficulty) {
         this.difficulty = difficulty;
-        // Initialize UI components
         this.setTop(createTop());
         this.setCenter(createCenter());
         this.setRight(createRight());
-
-        // Initialize controller
         new EducationModeController(this, difficulty);
     }
 
@@ -51,7 +60,6 @@ public class EducationModeView extends BorderPane {
         container.setPadding(new Insets(20));
         container.setBorder(Border.stroke(Color.BLACK));
 
-        // Top buttons and hint/answer areas
         HBox topButtons = util.createZoomAndBackButtons();
         topButtons.setAlignment(Pos.CENTER_LEFT);
         topButtons.setSpacing(10);
@@ -63,6 +71,7 @@ public class EducationModeView extends BorderPane {
         hintArea.setPrefSize(300, 100);
         hintArea.setBorder(Border.stroke(Color.BLACK));
         hintText = new Text();
+        hintText.setFont(new Font(HINT_FONT_SIZE));
         hintText.setWrappingWidth(280);
         hintArea.setPadding(new Insets(5));
         hintArea.getChildren().add(hintText);
@@ -72,6 +81,7 @@ public class EducationModeView extends BorderPane {
         answerArea.setPrefSize(300, 100);
         answerArea.setBorder(Border.stroke(Color.BLACK));
         answerText = new Text();
+        answerText.setFont(new Font(ANSWER_FONT_SIZE));
         answerText.setWrappingWidth(280);
         answerArea.setPadding(new Insets(5));
         answerArea.getChildren().add(answerText);
@@ -106,9 +116,9 @@ public class EducationModeView extends BorderPane {
         questionPane.setBorder(Border.stroke(Color.BLACK));
 
         questionText = new Text("Select 'New' to get a question");
+        questionText.setFont(new Font(QUESTION_FONT_SIZE));
         questionPane.setTop(questionText);
 
-        // Image display pane
         Pane imagePane = new Pane();
         imagePane.setPrefSize(300, 200);
         imagePane.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: rgb(128,128,128);");
@@ -124,35 +134,38 @@ public class EducationModeView extends BorderPane {
         container.setPrefWidth(250);
 
         // Radio button groups
-        ToggleGroup groupMode = new ToggleGroup();
-        Node virtualOption = createCustomRadioOption("Virtual", groupMode);
-        Node realOption = createCustomRadioOption("Real", groupMode);
-        VBox modeGroup = new VBox(10, virtualOption, realOption);
+        modeGroup = new ToggleGroup();
+        Node virtualOption = createCustomRadioOption("Virtual", modeGroup);
+        Node realOption = createCustomRadioOption("Real", modeGroup);
+        VBox modeGroupBox = new VBox(10, virtualOption, realOption);
 
-        ToggleGroup groupSize = new ToggleGroup();
-        Node biggerOption = createCustomRadioOption("Bigger", groupSize);
-        Node smallerOption = createCustomRadioOption("Smaller", groupSize);
-        VBox sizeGroup = new VBox(10, biggerOption, smallerOption);
+        sizeGroup = new ToggleGroup();
+        Node biggerOption = createCustomRadioOption("Bigger", sizeGroup);
+        Node smallerOption = createCustomRadioOption("Smaller", sizeGroup);
+        VBox sizeGroupBox = new VBox(10, biggerOption, smallerOption);
 
-        ToggleGroup groupOrientation = new ToggleGroup();
-        Node uprightOption = createCustomRadioOption("Upright", groupOrientation);
-        Node invertedOption = createCustomRadioOption("Inverted", groupOrientation);
-        VBox orientationGroup = new VBox(10, uprightOption, invertedOption);
+        orientationGroup = new ToggleGroup();
+        Node uprightOption = createCustomRadioOption("Upright", orientationGroup);
+        Node invertedOption = createCustomRadioOption("Inverted", orientationGroup);
+        VBox orientationGroupBox = new VBox(10, uprightOption, invertedOption);
 
         // User input and new question button
         userInputField = new TextField();
-        userInputField.setPromptText("Enter your answer");
+        userInputField.setFont(new Font(INPUT_FONT_SIZE));
+        userInputField.setPromptText("Enter distance answer");
         userInputField.setMaxWidth(Double.MAX_VALUE);
 
         newQuestionButton = new Button("New Question");
         newQuestionButton.setMaxWidth(Double.MAX_VALUE);
 
-        container.getChildren().addAll(modeGroup, sizeGroup, orientationGroup, userInputField, newQuestionButton);
+        container.getChildren().addAll(modeGroupBox, sizeGroupBox, orientationGroupBox, userInputField, newQuestionButton);
         return container;
     }
 
     private Node createCustomRadioOption(String text, ToggleGroup group) {
         Label label = new Label(text);
+        label.setFont(new Font(INPUT_FONT_SIZE));
+
         RadioButton rb = new RadioButton();
         rb.setToggleGroup(group);
         rb.setStyle("-fx-opacity: 0; -fx-padding: 0; -fx-min-width: 0; -fx-min-height: 0;");
@@ -171,12 +184,35 @@ public class EducationModeView extends BorderPane {
         optionContainer.getChildren().addAll(label, spacer, square, rb);
         rb.setManaged(false);
         rb.setVisible(false);
-        optionContainer.setOnMouseClicked(e -> rb.setSelected(true));
 
+        // Store the container in the radio button's user data
+        rb.setUserData(optionContainer);
+
+        optionContainer.setOnMouseClicked(e -> rb.setSelected(true));
         return optionContainer;
     }
 
-    // Getters for UI elements
+    public void setRadioButtonsEnabled(boolean enabled) {
+        modeGroup.getToggles().forEach(toggle -> {
+            HBox container = (HBox) toggle.getUserData();
+            container.setDisable(!enabled);
+            container.setOpacity(enabled ? 1.0 : 0.5);
+        });
+
+        sizeGroup.getToggles().forEach(toggle -> {
+            HBox container = (HBox) toggle.getUserData();
+            container.setDisable(!enabled);
+            container.setOpacity(enabled ? 1.0 : 0.5);
+        });
+
+        orientationGroup.getToggles().forEach(toggle -> {
+            HBox container = (HBox) toggle.getUserData();
+            container.setDisable(!enabled);
+            container.setOpacity(enabled ? 1.0 : 0.5);
+        });
+    }
+
+    // Getters
     public Text getQuestionText() { return questionText; }
     public Text getHintText() { return hintText; }
     public Text getAnswerText() { return answerText; }
@@ -185,4 +221,7 @@ public class EducationModeView extends BorderPane {
     public Button getHintButton() { return hintButton; }
     public Button getAnswerButton() { return answerButton; }
     public Button getNewQuestionButton() { return newQuestionButton; }
+    public ToggleGroup getModeGroup() { return modeGroup; }
+    public ToggleGroup getSizeGroup() { return sizeGroup; }
+    public ToggleGroup getOrientationGroup() { return orientationGroup; }
 }

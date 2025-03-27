@@ -1,7 +1,6 @@
 package project.optics.jfkt.models;
 
 import project.optics.jfkt.enums.Difficulty;
-
 import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,8 @@ public class Question {
     private String image;
     private int id;
 
-    public Question(String hint, String answer, Difficulty difficulty, String description, String image) {
+    public Question(String hint, String answer, Difficulty difficulty,
+                    String description, String image) {
         this.hint = hint;
         this.answer = answer;
         this.difficulty = difficulty;
@@ -24,20 +24,52 @@ public class Question {
         this.id = nextId++;
     }
 
-    // Sample questions
+    // Sample questions with PROPERLY FORMATTED answer strings
     public static final Question CONCAVE_MIRROR_QUESTION = new Question(
-            "Use the mirror equation: 1/f = 1/do + 1/di",
-            "20",
+            "Use the mirror equation: 1/f = 1/dₒ + 1/dᵢ",
+            "20 cm,real,any,inverted",  // Format: distance,mode,size,orientation
             Difficulty.EASY,
             "A concave mirror has a focal length of 10 cm. If an object is placed 20 cm in front of it, where is the image formed?",
             null
     );
 
     public static final Question REFRACTION_QUESTION = new Question(
-            "Use Snell's Law: n₁ sin(θ₁) = n₂ sin(θ₂)",
-            "48.6",
+            "Use Snell's Law: n₁sinθ₁ = n₂sinθ₂",
+            "48.6°",
             Difficulty.EASY,
-            "A light ray traveling in glass (n = 1.5) enters the air (n = 1.0) at an angle of 30° from the normal. What is the angle of refraction?",
+            "A light ray traveling in glass (n₁ = 1.5) enters the air (n₂ = 1.0) at an angle of 30° from the normal. What is the angle of refraction?",
+            null
+    );
+
+    public static final Question FISH_DEPTH_QUESTION = new Question(
+            "Use the formula: d = n × d' where d is real depth and d' is apparent depth",
+            "3.99 m",
+            Difficulty.EASY,
+            "A fish appears closer to the surface than it really is due to refraction. If the refractive index of water is n = 1.33 and the apparent depth is d' = 3m, find the real depth (d).",
+            null
+    );
+
+    public static final Question MIRROR_TYPE_QUESTION = new Question(
+            "Only one type of mirror always produces virtual, upright, and reduced images",
+            "Convex mirror",
+            Difficulty.EASY,
+            "A mirror forms a virtual, upright, and reduced image. What type of mirror is it?",
+            null
+    );
+
+    public static final Question CONVEX_MIRROR_QUESTION = new Question(
+            "Use the mirror equation: 1/f = 1/dₒ + 1/dᵢ (remember f is negative for convex mirrors)",
+            "-10 cm,virtual,smaller,upright",  // Format: distance,mode,size,orientation
+            Difficulty.EASY,
+            "A convex mirror has a focal length of -15 cm. An object is placed 30 cm in front of it. Find the image distance.",
+            null
+    );
+
+    public static final Question LIGHT_SPEED_QUESTION = new Question(
+            "The speed of light inside a medium is given by v = c/n where c = 3×10⁸ m/s",
+            "2×10⁸ m/s",
+            Difficulty.EASY,
+            "A light ray enters a glass prism (n = 1.5) at an angle of 40°. What is the speed of light inside the prism?",
             null
     );
 
@@ -45,7 +77,15 @@ public class Question {
         List<Question> samples = new ArrayList<>();
         samples.add(CONCAVE_MIRROR_QUESTION);
         samples.add(REFRACTION_QUESTION);
+        samples.add(FISH_DEPTH_QUESTION);
+        samples.add(MIRROR_TYPE_QUESTION);
+        samples.add(CONVEX_MIRROR_QUESTION);
+        samples.add(LIGHT_SPEED_QUESTION);
         return samples;
+    }
+
+    public boolean isMirrorQuestion() {
+        return this == CONCAVE_MIRROR_QUESTION || this == CONVEX_MIRROR_QUESTION;
     }
 
     // Getters and setters
