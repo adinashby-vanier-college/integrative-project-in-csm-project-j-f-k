@@ -3,6 +3,8 @@ package project.optics.jfkt.models;
 import project.optics.jfkt.enums.Difficulty;
 
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Question {
     private String hint;
@@ -19,62 +21,59 @@ public class Question {
         this.difficulty = difficulty;
         this.description = description;
         this.image = image;
-        id = nextId++;
+        this.id = nextId++;
     }
 
-    public String getHint() {
-        return hint;
+    // Sample questions
+    public static final Question CONCAVE_MIRROR_QUESTION = new Question(
+            "Use the mirror equation: 1/f = 1/do + 1/di",
+            "20",
+            Difficulty.EASY,
+            "A concave mirror has a focal length of 10 cm. If an object is placed 20 cm in front of it, where is the image formed?",
+            null
+    );
+
+    public static final Question REFRACTION_QUESTION = new Question(
+            "Use Snell's Law: n₁ sin(θ₁) = n₂ sin(θ₂)",
+            "48.6",
+            Difficulty.EASY,
+            "A light ray traveling in glass (n = 1.5) enters the air (n = 1.0) at an angle of 30° from the normal. What is the angle of refraction?",
+            null
+    );
+
+    public static List<Question> getSampleQuestions() {
+        List<Question> samples = new ArrayList<>();
+        samples.add(CONCAVE_MIRROR_QUESTION);
+        samples.add(REFRACTION_QUESTION);
+        return samples;
     }
 
-    public void setHint(String hint) {
-        this.hint = hint;
-    }
+    // Getters and setters
+    public String getHint() { return hint; }
+    public String getAnswer() { return answer; }
+    public Difficulty getDifficulty() { return difficulty; }
+    public String getDescription() { return description; }
+    public String getImage() { return image; }
+    public int getId() { return id; }
 
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setHint(String hint) { this.hint = hint; }
+    public void setAnswer(String answer) { this.answer = answer; }
+    public void setDifficulty(Difficulty difficulty) { this.difficulty = difficulty; }
+    public void setDescription(String description) { this.description = description; }
+    public void setImage(String image) { this.image = image; }
+    public void setId(int id) { this.id = id; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Question question = (Question) o;
-        return id == question.id && Objects.equals(hint, question.hint) && Objects.equals(answer, question.answer) && difficulty == question.difficulty && Objects.equals(description, question.description) && Objects.equals(image, question.image);
+        return id == question.id &&
+                Objects.equals(hint, question.hint) &&
+                Objects.equals(answer, question.answer) &&
+                difficulty == question.difficulty &&
+                Objects.equals(description, question.description) &&
+                Objects.equals(image, question.image);
     }
 
     @Override
@@ -85,12 +84,12 @@ public class Question {
     @Override
     public String toString() {
         return "Question{" +
-                "hint='" + hint + '\'' +
-                ", answer='" + answer + '\'' +
-                ", difficulty=" + difficulty +
+                "id=" + id +
                 ", description='" + description + '\'' +
+                ", difficulty=" + difficulty +
+                ", hint='" + hint + '\'' +
+                ", answer='" + answer + '\'' +
                 ", image='" + image + '\'' +
-                ", id=" + id +
                 '}';
     }
 }

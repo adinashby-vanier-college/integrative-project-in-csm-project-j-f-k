@@ -15,7 +15,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="animpane" layoutX="420.0" layoutY="86.0" prefHeight="720.0" prefWidth="1496.0" style="-fx-border-radius: 12; -fx-border-color: BLACk;">
+      <Pane fx:id="animpane" layoutX="420.0" layoutY="86.0" prefHeight="720.0" prefWidth="1500.0" style="-fx-border-radius: 12; -fx-border-color: BLACk;">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -40,11 +40,11 @@
                </children>
             </HBox>
          </children></Pane>
-      <VBox alignment="CENTER" layoutX="900.0" layoutY="807.0" prefHeight="277.0" prefWidth="386.0" spacing="20.0">
+      <VBox alignment="CENTER" layoutX="900.0" layoutY="807.0" prefHeight="280.0" prefWidth="380.0" spacing="20.0">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="461.0" spacing="12.0">
                <children>
-                  <Button fx:id="playbutton" mnemonicParsing="false" prefHeight="17.0" prefWidth="118.0">
+                  <Button fx:id="playbutton" mnemonicParsing="false" prefHeight="20.0" prefWidth="120.0">
                      <font>
                         <Font size="35.0" />
                      </font>
@@ -82,9 +82,9 @@
                   </Button>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="367.0" spacing="12.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="360.0" spacing="12.0">
                <children>
-                  <Button fx:id="slowbutton" mnemonicParsing="false" prefHeight="60.0" prefWidth="97.0">
+                  <Button fx:id="slowbutton" mnemonicParsing="false" prefHeight="20.0" prefWidth="98.0">
                      <font>
                         <Font size="35.0" />
                      </font>
@@ -127,30 +127,30 @@
             </HBox>
          </children>
       </VBox>
-      <Pane layoutX="-2.0" layoutY="86.0" prefHeight="720.0" prefWidth="422.0" style="-fx-border-color: BLACK; -fx-border-width: 1; -fx-border-radius: 6;">
+      <VBox fx:id="paramvbox" alignment="TOP_CENTER" layoutY="86.0" prefHeight="718.0" prefWidth="408.0">
          <children>
-            <Text layoutX="10.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Parameters:" underline="true" wrappingWidth="400.13671875">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Parameters:" textAlignment="CENTER" underline="true" wrappingWidth="400.13671875">
                <font>
                   <Font size="41.0" />
                </font>
             </Text>
-            <VBox fx:id="paramvbox" alignment="TOP_CENTER" layoutX="7.0" layoutY="64.0" prefHeight="644.0" prefWidth="408.0">
+            <HBox fx:id="paramtemplate" alignment="CENTER" prefHeight="100.0" prefWidth="400.0" spacing="40.0">
                <children>
-                  <HBox fx:id="paramtemplate" alignment="CENTER" prefHeight="100.0" prefWidth="456.0" spacing="40.0">
-                     <children>
-                        <Text fx:id="paramtemptext" strokeType="OUTSIDE" strokeWidth="0.0" text="Param1:" wrappingWidth="126.13671875">
-                           <font>
-                              <Font size="35.0" />
-                           </font>
-                        </Text>
-                        <TextField fx:id="paramtempfield" prefHeight="62.0" prefWidth="169.0" />
-                     </children>
-                  </HBox>
+                  <Text fx:id="paramtemptext" strokeType="OUTSIDE" strokeWidth="0.0" text="Param1:" wrappingWidth="126.13671875">
+                     <font>
+                        <Font size="35.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="paramtempfield" alignment="CENTER" prefHeight="60.0" prefWidth="160.0" promptText="was">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </TextField>
                </children>
-            </VBox>
+            </HBox>
          </children>
-      </Pane>
-      <Pane layoutX="1345.0" layoutY="805.0" prefHeight="275.0" prefWidth="573.0" style="-fx-border-color: black; -fx-border-radius: 12;">
+      </VBox>
+      <Pane layoutX="1345.0" layoutY="805.0" prefHeight="275.0" prefWidth="574.0" style="-fx-border-color: black; -fx-border-radius: 12;">
          <children>
             <HBox layoutX="129.0" prefHeight="273.0" prefWidth="436.0">
                <children>
