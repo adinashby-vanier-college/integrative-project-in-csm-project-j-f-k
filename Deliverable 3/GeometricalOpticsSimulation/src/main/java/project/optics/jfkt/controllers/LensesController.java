@@ -8,13 +8,19 @@ public class LensesController {
     private LensesModel model;
     private LensView view;
 
-    public LensesController(LensesModel model, LensView view){
+    public LensesController(LensesModel model, LensView view) {
         this.model = model;
-        this.view=view;
+        this.view = view;
+        setupViewListeners();
         updateView();
     }
 
-    public void setParameters(int numRays, double objectDistance, double objectHeight, double magnification, double focalLength) {
+    private void setupViewListeners() {
+        // needs to connect to ui elements over weekend
+    }
+
+    public void setParameters(int numRays, double objectDistance, double objectHeight,
+                              double magnification, double focalLength) {
         model.setNumRays(numRays);
         model.setObjectDistance(objectDistance);
         model.setObjectHeight(objectHeight);
@@ -22,8 +28,19 @@ public class LensesController {
         model.setFocalLength(focalLength);
         updateView();
     }
+
     public void addExtraLens(double position) {
         model.addExtraLens(position);
+        updateView();
+    }
+
+    public void removeExtraLens(int index) {
+        model.getExtraLenses().remove(index);
+        updateView();
+    }
+
+    public void clearExtraLenses() {
+        model.getExtraLenses().clear();
         updateView();
     }
 
