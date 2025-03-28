@@ -24,9 +24,10 @@ public class Question {
         this.id = nextId++;
     }
 
+    // Easy questions
     public static final Question CONCAVE_MIRROR_QUESTION = new Question(
             "Use the mirror equation: 1/f = 1/dₒ + 1/dᵢ",
-            "20 cm,real,any,inverted",  // Format: distance,mode,size,orientation
+            "20 cm,real,any,inverted",
             Difficulty.EASY,
             "A concave mirror has a focal length of 10 cm. If an object is placed 20 cm in front of it, where is the image formed?",
             null
@@ -44,7 +45,7 @@ public class Question {
             "Use Snell's Law: n₁sinθ₁ = n₂sinθ₂",
             "32.1",
             Difficulty.EASY,
-            "Light travels from air  (n₁ = 1.0) into water (n₂ = 1.33) at an angle of incidence of 45°. What is the angle of refraction?",
+            "Light travels from air (n₁ = 1.0) into water (n₂ = 1.33) at an angle of incidence of 45°. What is the angle of refraction?",
             null
     );
 
@@ -66,7 +67,7 @@ public class Question {
 
     public static final Question CONVEX_MIRROR_QUESTION = new Question(
             "Use the mirror equation: 1/f = 1/dₒ + 1/dᵢ (remember f is negative for convex mirrors)",
-            "-10 cm,virtual,smaller,upright",  // Format: distance,mode,size,orientation
+            "-10 cm,virtual,smaller,upright",
             Difficulty.EASY,
             "A convex mirror has a focal length of -15 cm. An object is placed 30 cm in front of it. Find the image distance.",
             null
@@ -98,14 +99,97 @@ public class Question {
 
     public static final Question CONVERGING_LENS_QUESTION = new Question(
             "Use the thin lens equation: 1/f = 1/dₒ + 1/dᵢ and the magnification equation: -dᵢ/dₒ",
-            "-1,real,any,inverted",  // Format: distance,mode,size,orientation
+            "-1,real,any,inverted",
             Difficulty.EASY,
-            " A converging lens has a focal length of 15 cm. An object is placed 30 cm away. What are the image characteristics (real/virtual, upright/inverted) and find the magnification?",
+            "A converging lens has a focal length of 15 cm. An object is placed 30 cm away. What are the image characteristics (real/virtual, upright/inverted) and find the magnification?",
+            null
+    );
+
+    // Medium questions
+    public static final Question CRITICAL_ANGLE_QUESTION = new Question(
+            "Use the critical angle formula: θc = sin⁻¹(n₂/n₁)",
+            "62.5",
+            Difficulty.MEDIUM,
+            "A light ray travels from glass (n = 1.5) to water (n = 1.33). What is the critical angle at which total internal reflection occurs?",
+            null
+    );
+
+    public static final Question TELESCOPE_MAGNIFICATION_QUESTION = new Question(
+            "M = fₒ/fₑ",
+            "20",
+            Difficulty.MEDIUM,
+            "A telescope has an objective lens (f = 100 cm) and eyepiece (f = 5 cm). What is the angular magnification?",
+            null
+    );
+
+    public static final Question SIMPLE_MAGNIFIER_QUESTION = new Question(
+            "M = 1 + D/f where D is near point distance (25 cm)",
+            "3.5",
+            Difficulty.MEDIUM,
+            "A simple magnifier has a focal length of 10 cm. What is its angular magnification for a normal eye?",
+            null
+    );
+
+    public static final Question MICROSCOPE_MAGNIFICATION_QUESTION = new Question(
+            "M = Mₒ × Mₑ = (L/fₒ) × (D/fₑ)",
+            "500",
+            Difficulty.MEDIUM,
+            "A microscope has an objective lens of focal length 4 mm and an eyepiece lens of focal length 20 mm. What is the total magnification if the tube length is 160 mm?",
+            null
+    );
+
+    public static final Question TELESCOPE_FOCAL_LENGTH_QUESTION = new Question(
+            "Telescope magnification depends on focal length",
+            "Magnification increases",
+            Difficulty.MEDIUM,
+            "If the focal length of an objective lens in a telescope is increased, what happens to its magnification?",
+            null
+    );
+
+    public static final Question CONVEX_LENS_IMAGE_QUESTION = new Question(
+            "Use the lens equation: 1/f = 1/dₒ + 1/dᵢ",
+            "7.5 cm",
+            Difficulty.MEDIUM,
+            "A converging lens of focal length 5 cm is used as a magnifier. If the object is placed at 3 cm, find the image distance.",
+            null
+    );
+
+    public static final Question MAGNIFIER_POSITION_QUESTION = new Question(
+            "The object must be placed where the image remains virtual",
+            "Inside the focal point",
+            Difficulty.MEDIUM,
+            "If a converging lens is used as a magnifier, should the object be placed inside or outside the focal point?",
+            null
+    );
+
+    public static final Question SIMPLE_MAGNIFIER_IMAGE_QUESTION = new Question(
+            "The image is always on the same side as the object",
+            "virtual,bigger,upright",
+            Difficulty.MEDIUM,
+            "What kind of image does a simple magnifier produce?",
+            null
+    );
+
+    // New questions
+    public static final Question MAGNIFIER_FOCAL_LENGTH_QUESTION = new Question(
+            "Rearrange the formula M = 1 + D/f to solve for f",
+            "6.25 cm",
+            Difficulty.MEDIUM,
+            "A simple magnifier provides a 5× magnification. If the near point is 25 cm, what is the focal length of the lens?",
+            null
+    );
+
+    public static final Question LENS_MAGNIFICATION_QUESTION = new Question(
+            "First find di using the lens equation, then use M = -di/do",
+            "2",
+            Difficulty.MEDIUM,
+            "What is the magnification if an object is placed 5 cm in front of a convex lens with a focal length of 10 cm?",
             null
     );
 
     public static List<Question> getSampleQuestions() {
         List<Question> samples = new ArrayList<>();
+        // Easy questions
         samples.add(CONCAVE_MIRROR_QUESTION);
         samples.add(REFRACTION_QUESTION);
         samples.add(FISH_DEPTH_QUESTION);
@@ -116,13 +200,30 @@ public class Question {
         samples.add(DIAMOND_QUESTION);
         samples.add(CONVERGING_LENS_QUESTION);
         samples.add(REFRACTION2_QUESTION);
+
+        // Medium questions
+        samples.add(CRITICAL_ANGLE_QUESTION);
+        samples.add(TELESCOPE_MAGNIFICATION_QUESTION);
+        samples.add(SIMPLE_MAGNIFIER_QUESTION);
+        samples.add(MICROSCOPE_MAGNIFICATION_QUESTION);
+        samples.add(TELESCOPE_FOCAL_LENGTH_QUESTION);
+        samples.add(CONVEX_LENS_IMAGE_QUESTION);
+        samples.add(MAGNIFIER_POSITION_QUESTION);
+        samples.add(SIMPLE_MAGNIFIER_IMAGE_QUESTION);
+        samples.add(MAGNIFIER_FOCAL_LENGTH_QUESTION);
+        samples.add(LENS_MAGNIFICATION_QUESTION);
+
         return samples;
     }
 
     public boolean isMirrorQuestion() {
         return this == CONCAVE_MIRROR_QUESTION ||
                 this == CONVEX_MIRROR_QUESTION ||
-                this == CONVERGING_LENS_QUESTION;  // Added to button-based questions
+                this == CONVERGING_LENS_QUESTION;
+    }
+
+    public boolean isButtonOnlyQuestion() {
+        return this == SIMPLE_MAGNIFIER_IMAGE_QUESTION;
     }
 
     // Getters and setters

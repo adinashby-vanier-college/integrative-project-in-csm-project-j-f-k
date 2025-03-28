@@ -212,6 +212,11 @@ public class EducationModeView extends BorderPane {
         });
     }
 
+    public void setUserInputDisabled(boolean disabled) {
+        userInputField.setDisable(disabled);
+        userInputField.setOpacity(disabled ? 0.5 : 1.0);
+    }
+
     // Getters
     public Text getQuestionText() { return questionText; }
     public Text getHintText() { return hintText; }

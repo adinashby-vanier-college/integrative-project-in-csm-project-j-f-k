@@ -60,7 +60,11 @@ public class EducationModeController {
         view.getAnswerText().setFill(Color.BLACK);
 
         boolean isMirrorQuestion = currentQuestion.isMirrorQuestion();
-        view.setRadioButtonsEnabled(isMirrorQuestion);
+        boolean isButtonOnlyQuestion = currentQuestion.isButtonOnlyQuestion();
+
+        view.setRadioButtonsEnabled(isMirrorQuestion || isButtonOnlyQuestion);
+        view.setUserInputDisabled(isButtonOnlyQuestion);
+        view.getUserInputField().setPromptText(isButtonOnlyQuestion ? "Select options below" : "Enter distance answer");
 
         // Clear previous selections
         view.getModeGroup().getToggles().forEach(t -> t.setSelected(false));
@@ -70,10 +74,65 @@ public class EducationModeController {
 
     private void checkAnswer() {
         try {
-            if (currentQuestion.isMirrorQuestion()) {
+            if (currentQuestion.isButtonOnlyQuestion()) {
+                checkButtonOnlyQuestionAnswer();
+            } else if (currentQuestion.isMirrorQuestion()) {
                 checkMirrorQuestionAnswer();
             } else {
                 checkStandardQuestionAnswer();
+            }
+        } catch (Exception e) {
+            view.getAnswerText().setText("Error checking answer. Please try again.");
+            view.getAnswerText().setFill(Color.RED);
+            e.printStackTrace();
+        }
+    }
+
+    private void checkButtonOnlyQuestionAnswer() {
+        try {
+            String[] correctParts = currentQuestion.getAnswer().split(",");
+
+            if (correctParts.length < 3) {
+                view.getAnswerText().setText("Invalid question configuration");
+                view.getAnswerText().setFill(Color.RED);
+                return;
+            }
+
+            String correctMode = correctParts[0].trim();
+            String correctSize = correctParts[1].trim();
+            String correctOrientation = correctParts[2].trim();
+
+            String selectedMode = getSelectedMode();
+            String selectedSize = getSelectedSize();
+            String selectedOrientation = getSelectedOrientation();
+
+            StringBuilder feedback = new StringBuilder();
+
+            // Check mode
+            boolean modeCorrect = correctMode.equalsIgnoreCase(selectedMode);
+            if (!modeCorrect) {
+                feedback.append("Incorrect image type. ");
+            }
+
+            // Check size
+            boolean sizeCorrect = correctSize.equalsIgnoreCase(selectedSize);
+            if (!sizeCorrect) {
+                feedback.append("Incorrect size. ");
+            }
+
+            // Check orientation
+            boolean orientationCorrect = correctOrientation.equalsIgnoreCase(selectedOrientation);
+            if (!orientationCorrect) {
+                feedback.append("Incorrect orientation. ");
+            }
+
+            // Final validation
+            if (modeCorrect && sizeCorrect && orientationCorrect) {
+                view.getAnswerText().setText("Correct! " + currentQuestion.getAnswer());
+                view.getAnswerText().setFill(Color.GREEN);
+            } else {
+                view.getAnswerText().setText(feedback.toString().trim());
+                view.getAnswerText().setFill(Color.RED);
             }
         } catch (Exception e) {
             view.getAnswerText().setText("Error checking answer. Please try again.");
