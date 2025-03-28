@@ -81,14 +81,20 @@ public class LayerChoosingController {
                 frame.getChildren().addAll(layer1, plusSignLayer);
                 break;
             case 2:
+                line12.setStartY(line12.getStartY() + 5);
+                line12.setEndY(line12.getEndY() + 5);
+
                 updateLayer(layer2, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
-                frame.getChildren().addAll(layer1, layer2, plusSignLayer, line12, line23);
+                frame.getChildren().addAll(layer1, layer2, plusSignLayer, line12, line23, refractionView.getIncidentPoint());
                 break;
             case 3:
+                line12.setStartY(line12.getStartY() - 5);
+                line12.setEndY(line12.getEndY() - 5);
+
                 updateLayer(layer3, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
-                frame.getChildren().addAll(layer1, layer2, layer3, line12, line23);
+                frame.getChildren().addAll(layer1, layer2, layer3, line12, line23, refractionView.getIncidentPoint());
         }
 
         stage.close();

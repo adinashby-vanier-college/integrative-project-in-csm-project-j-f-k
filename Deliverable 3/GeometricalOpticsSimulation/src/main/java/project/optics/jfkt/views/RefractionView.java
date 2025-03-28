@@ -28,17 +28,18 @@ import java.util.ArrayList;
 public class RefractionView extends VBox {
     private final RefractionController refractionController = new RefractionController();
     private final Util util = new Util();
-    private double layerLength;
     private static final double ANIMATION_PANE_HEIGHT = 900;
     private int currentLayer = 1;
     private Material chosenLayer;
-    private double currentRefractionIndex;
     private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty();
     private Circle incidentPoint;
     private SimpleDoubleProperty incidentAngle = new SimpleDoubleProperty();
+    private Line line12; // line between layer 1 and layer 2
+    private Line line23; // line between layer 2 and layer 3
+    private VBox frame;
 
     public RefractionView() {
-        layerLength = ANIMATION_PANE_HEIGHT;
+        createNewLines();
         Region menu = util.createMenu();
         HBox topButtons = util.createZoomAndBackButtons();
         topButtons.setAlignment(Pos.CENTER_LEFT);
@@ -46,7 +47,26 @@ public class RefractionView extends VBox {
         topButtons.setPrefHeight(50);
         VBox.setMargin(topButtons, new Insets(10, 0, 0, 0));
 
-        this.getChildren().addAll(menu, topButtons, createAnimationPane(), createBottom());
+        frame = createAnimationPane();
+
+        this.getChildren().addAll(menu, topButtons, frame, createBottom());
+    }
+
+    private void createNewLines() {
+        line12 = new Line(0, ANIMATION_PANE_HEIGHT / 3, 0, ANIMATION_PANE_HEIGHT / 3);
+        line12.setFill(Color.YELLOW);
+        line12.setStroke(Color.YELLOW);
+        line12.setManaged(false);
+
+        line23 = new Line(0, ANIMATION_PANE_HEIGHT / 3 * 2, 0, ANIMATION_PANE_HEIGHT / 3 * 2);
+        line23.setFill(Color.YELLOW);
+        line23.setStroke(Color.YELLOW);
+        line23.setManaged(false);
+
+        this.widthProperty().addListener((obs, oldVal, newVal) -> {
+            line12.setEndX(newVal.doubleValue());
+            line23.setEndX(newVal.doubleValue());
+        });
     }
 
     private VBox createAnimationPane() {
@@ -73,23 +93,23 @@ public class RefractionView extends VBox {
         layers.add(layer2);
         layers.add(layer3);
 
-        // create new lines between layers for detection of change in layer during animation
-        Line line12 = new Line(0, ANIMATION_PANE_HEIGHT / 3, 0, ANIMATION_PANE_HEIGHT / 3);
-        line12.setFill(Color.YELLOW);
-        line12.setStroke(Color.YELLOW);
-        line12.setManaged(false);
-
-        Line line23 = new Line(0, ANIMATION_PANE_HEIGHT / 3 * 2, 0, ANIMATION_PANE_HEIGHT / 3 * 2);
-        line23.setFill(Color.YELLOW);
-        line23.setStroke(Color.YELLOW);
-        line23.setManaged(false);
-
-        this.widthProperty().addListener((obs, oldVal, newVal) -> {
-            line12.setEndX(newVal.doubleValue());
-            line23.setEndX(newVal.doubleValue());
-        });
-
+        // add animation detection lines to the pane
+        createNewLines();
         frame.getChildren().addAll(line12, line23);
+
+        // incident point
+        incidentPoint = new Circle(3);
+        incidentPoint.setStroke(Color.BLUE);
+        incidentPoint.setFill(Color.BLUE);
+        incidentPoint.setManaged(false);
+
+        // incidentPoint's X position dynamically change with the incident location slider
+        incidentLocation.addListener((observable, oldValue, newValue) -> refractionController.onIncidentLocationChanged(newValue, incidentPoint));
+
+        // initialization center Y value of incident point
+        incidentPoint.setCenterY(0);
+
+        frame.getChildren().add(incidentPoint);
 
         // plus sign set up
         Button newLayer = new Button();
@@ -104,7 +124,6 @@ public class RefractionView extends VBox {
 
         HBox plusSignLayer = new HBox(newLayer);
         plusSignLayer.setAlignment(Pos.CENTER);
-//        plusSignLayer.setPrefHeight(0);
 
         VBox.setVgrow(plusSignLayer, Priority.ALWAYS);
 
@@ -120,20 +139,6 @@ public class RefractionView extends VBox {
                 currentLayer++;
             }
         });
-
-        // incident point
-        incidentPoint = new Circle(3);
-        incidentPoint.setStroke(Color.BLUE);
-        incidentPoint.setFill(Color.BLUE);
-        incidentPoint.setManaged(false);
-
-        // incidentPoint's X position dynamically change with the incident location slider
-        incidentLocation.addListener((observable, oldValue, newValue) -> refractionController.onIncidentLocationChanged(newValue, incidentPoint));
-
-        // initialization center Y value of incident point
-        incidentPoint.setCenterY(0);
-
-        frame.getChildren().add(incidentPoint);
 
         return frame;
     }
@@ -186,6 +191,7 @@ public class RefractionView extends VBox {
         ImageView playImgView = new ImageView(playImg);
         Button play = new Button();
         play.setGraphic(playImgView);
+        play.setOnAction(event -> refractionController.onPlayButtonPressed(this));
 
         Image restartImg = new Image(this.getClass().getResource("/images/64/Redo.png").toExternalForm());
         ImageView restartImgView = new ImageView(restartImg);
@@ -280,7 +286,39 @@ public class RefractionView extends VBox {
         this.chosenLayer = chosenLayer;
     }
 
-    public void setCurrentRefractionIndex(double currentRefractionIndex) {
-        this.currentRefractionIndex = currentRefractionIndex;
+    public Circle getIncidentPoint() {
+        return incidentPoint;
+    }
+
+    public double getIncidentAngle() {
+        return incidentAngle.get();
+    }
+
+    public SimpleDoubleProperty incidentAngleProperty() {
+        return incidentAngle;
+    }
+
+    public Line getLine12() {
+        return line12;
+    }
+
+    public void setLine12(Line line12) {
+        this.line12 = line12;
+    }
+
+    public Line getLine23() {
+        return line23;
+    }
+
+    public void setLine23(Line line23) {
+        this.line23 = line23;
+    }
+
+    public int getCurrentLayer() {
+        return currentLayer;
+    }
+
+    public VBox getFrame() {
+        return frame;
     }
 }
