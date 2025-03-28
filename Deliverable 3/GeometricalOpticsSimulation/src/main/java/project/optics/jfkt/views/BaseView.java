@@ -7,6 +7,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -51,11 +53,10 @@ public class BaseView extends BorderPane{
         paramheadertext.setUnderline(true);
         paramvbox.setPrefSize(420,720);
         paramvbox.getChildren().add(paramheadertext);
-        paramvbox.getChildren().addAll(createParamHbox("Focal Length"),createParamHbox("Image Distance"),createParamHbox("Image Height"));
+        paramvbox.getChildren().addAll(createParamHbox("Focal Length"),createParamHbox("Object Distance"),createParamHbox("Object Height"));
 
 
         animpane = new Pane();
-        Text animtext = new Text();
         HBox zoomhbox =new HBox();
         ImageView zoominImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Add.png").toExternalForm()));
         ImageView zoomoutImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Reduce.png").toExternalForm()));
@@ -64,14 +65,14 @@ public class BaseView extends BorderPane{
         animpane.setPrefSize(1400,720);
         animpane.setLayoutX(420);
         animpane.setStyle("-fx-border-color: black; -fx-border-width: 4px;");
-        animtext.setText("Animation View");
-        animtext.setLayoutX(750);
-        animtext.setLayoutY(360);
+        Line opticalAxis = new Line(0, animpane.getPrefHeight()/2, animpane.getPrefWidth(), animpane.getPrefHeight()/2);
+        opticalAxis.setStroke(Color.BLACK);
+        opticalAxis.setStrokeWidth(1);
         zoomhbox.setPrefSize(200,100);
         zoomhbox.setLayoutX(4);
         zoomhbox.setLayoutY(4);
         zoomhbox.getChildren().addAll(zoomin,zoomout);
-        animpane.getChildren().addAll(animtext,zoomhbox);
+        animpane.getChildren().addAll(opticalAxis,zoomhbox);
 
 
 
