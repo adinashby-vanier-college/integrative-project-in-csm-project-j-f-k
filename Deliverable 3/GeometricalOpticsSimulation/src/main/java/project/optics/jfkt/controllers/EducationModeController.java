@@ -109,7 +109,7 @@ public class EducationModeController {
             // Check mode
             boolean modeCorrect = correctMode.equalsIgnoreCase(selectedMode);
             if (!modeCorrect) {
-                feedback.append("Incorrect image type (should be ").append(correctMode).append("). ");
+                feedback.append("Incorrect image type. ");
             }
 
             // Check size
@@ -120,14 +120,14 @@ public class EducationModeController {
                 if (correctSize.equals("any")) {
                     feedback.append("Please select an image size. ");
                 } else {
-                    feedback.append("Incorrect size (should be ").append(correctSize).append("). ");
+                    feedback.append("Incorrect size. ");
                 }
             }
 
             // Check orientation
             boolean orientationCorrect = correctOrientation.equalsIgnoreCase(selectedOrientation);
             if (!orientationCorrect) {
-                feedback.append("Incorrect orientation (should be ").append(correctOrientation).append("). ");
+                feedback.append("Incorrect orientation. ");
             }
 
             // Final validation
