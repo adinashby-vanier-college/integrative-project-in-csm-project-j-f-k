@@ -30,6 +30,7 @@ public class EducationModeView extends BorderPane {
     private Button hintButton;
     private Button answerButton;
     private Button newQuestionButton;
+    private Pane imagePane;
 
     // Radio button groups
     private ToggleGroup modeGroup;
@@ -119,10 +120,21 @@ public class EducationModeView extends BorderPane {
         questionText.setFont(new Font(QUESTION_FONT_SIZE));
         questionPane.setTop(questionText);
 
-        Pane imagePane = new Pane();
-        imagePane.setPrefSize(300, 200);
-        imagePane.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: rgb(128,128,128);");
-        questionPane.setCenter(imagePane);
+        // Create a StackPane as the image container to center content
+        StackPane imageContainer = new StackPane();
+        imageContainer.setMinSize(600, 400);
+        imageContainer.setPrefSize(600, 400);
+        imageContainer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Fixed this line
+        imageContainer.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: rgb(128,128,128);");
+
+        // The actual image pane that will hold the image
+        imagePane = new Pane();
+        imagePane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        imagePane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        imagePane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+        imageContainer.getChildren().add(imagePane);
+        questionPane.setCenter(imageContainer);
 
         return questionPane;
     }
@@ -229,4 +241,5 @@ public class EducationModeView extends BorderPane {
     public ToggleGroup getModeGroup() { return modeGroup; }
     public ToggleGroup getSizeGroup() { return sizeGroup; }
     public ToggleGroup getOrientationGroup() { return orientationGroup; }
+    public Pane getImagePane() {return imagePane;}
 }

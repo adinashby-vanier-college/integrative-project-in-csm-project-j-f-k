@@ -1,12 +1,22 @@
 package project.optics.jfkt.controllers;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import project.optics.jfkt.enums.Difficulty;
 import project.optics.jfkt.models.Question;
 import project.optics.jfkt.views.EducationModeView;
 
+import java.io.InputStream;
 import java.util.*;
 
 public class EducationModeController {
@@ -38,6 +48,10 @@ public class EducationModeController {
     }
 
     private void loadNewQuestion() {
+        if (view.getImagePane() == null) {
+            System.err.println("Image pane not initialized!");
+            return;
+        }
         if (availableQuestions.isEmpty()) {
             if (questionBank.isEmpty()) {
                 view.getQuestionText().setText("No questions available for this difficulty");
@@ -59,6 +73,8 @@ public class EducationModeController {
         view.getUserInputField().clear();
         view.getAnswerText().setFill(Color.BLACK);
 
+        loadQuestionImage();
+
         boolean isMirrorQuestion = currentQuestion.isMirrorQuestion();
         boolean isButtonOnlyQuestion = currentQuestion.isButtonOnlyQuestion();
 
@@ -70,6 +86,95 @@ public class EducationModeController {
         view.getModeGroup().getToggles().forEach(t -> t.setSelected(false));
         view.getSizeGroup().getToggles().forEach(t -> t.setSelected(false));
         view.getOrientationGroup().getToggles().forEach(t -> t.setSelected(false));
+    }
+    private void loadQuestionImage() {
+        Pane imagePane = view.getImagePane();
+        if (imagePane == null) {
+            System.err.println("Image pane is null!");
+            return;
+        }
+
+        imagePane.getChildren().clear();
+
+        if (currentQuestion.getImage() != null && !currentQuestion.getImage().isEmpty()) {
+            try {
+                InputStream imageStream = getClass().getResourceAsStream(currentQuestion.getImage());
+                if (imageStream != null) {
+                    Image image = new Image(imageStream);
+                    ImageView imageView = new ImageView(image);
+
+                    // Preserve aspect ratio
+                    imageView.setPreserveRatio(true);
+
+                    // Calculate available space using the parent container's bounds
+                    Region parentContainer = (Region) imagePane.getParent();
+                    double maxWidth = parentContainer.getWidth() - 40;
+                    double maxHeight = parentContainer.getHeight() - 40;
+
+                    // Add listener to handle layout changes
+                    parentContainer.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
+                        double containerWidth = newVal.getWidth() - 40;
+                        double containerHeight = newVal.getHeight() - 40;
+
+                        // Scale to fit while maintaining aspect ratio
+                        if (image.getWidth() > containerWidth || image.getHeight() > containerHeight) {
+                            double scaleFactor = Math.min(
+                                    containerWidth / image.getWidth(),
+                                    containerHeight / image.getHeight()
+                            );
+                            imageView.setFitWidth(image.getWidth() * scaleFactor);
+                            imageView.setFitHeight(image.getHeight() * scaleFactor);
+                        } else {
+                            // Use original size if smaller than available space
+                            imageView.setFitWidth(image.getWidth());
+                            imageView.setFitHeight(image.getHeight());
+                        }
+
+                        // Center the image in the pane
+                        imageView.setTranslateX((containerWidth - imageView.getFitWidth()) / 2);
+                        imageView.setTranslateY((containerHeight - imageView.getFitHeight()) / 2);
+                    });
+
+                    // Trigger initial layout
+                    parentContainer.requestLayout();
+
+                    imagePane.getChildren().add(imageView);
+                } else {
+                    System.err.println("Image not found: " + currentQuestion.getImage());
+                    showPlaceholder(imagePane);
+                }
+            } catch (Exception e) {
+                System.err.println("Error loading image: " + e.getMessage());
+                showPlaceholder(imagePane);
+            }
+        } else {
+            showPlaceholder(imagePane);
+        }
+    }
+
+    private void showPlaceholder(Pane imagePane) {
+        Region parentContainer = (Region) imagePane.getParent();
+        double width = parentContainer.getWidth() - 40;
+        double height = parentContainer.getHeight() - 40;
+
+        Rectangle placeholder = new Rectangle(width, height, Color.LIGHTGRAY);
+        placeholder.setStroke(Color.DARKGRAY);
+        placeholder.setArcWidth(10);
+        placeholder.setArcHeight(10);
+
+        // Add listener to handle layout changes
+        parentContainer.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
+            double containerWidth = newVal.getWidth() - 40;
+            double containerHeight = newVal.getHeight() - 40;
+
+            placeholder.setWidth(containerWidth);
+            placeholder.setHeight(containerHeight);
+        });
+
+        // Trigger initial layout
+        parentContainer.requestLayout();
+
+        imagePane.getChildren().addAll(placeholder);
     }
 
     private void checkAnswer() {

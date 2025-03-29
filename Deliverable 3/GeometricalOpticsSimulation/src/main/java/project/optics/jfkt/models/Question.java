@@ -30,7 +30,7 @@ public class Question {
             "20 cm,real,any,inverted",
             Difficulty.EASY,
             "A concave mirror has a focal length of 10 cm. If an object is placed 20 cm in front of it, where is the image formed?",
-            null
+            "/images/easy2.png"
     );
 
     public static final Question REFRACTION_QUESTION = new Question(
@@ -38,7 +38,7 @@ public class Question {
             "48.6",
             Difficulty.EASY,
             "A light ray traveling in glass (n₁ = 1.5) enters the air (n₂ = 1.0) at an angle of 30° from the normal. What is the angle of refraction?",
-            null
+            "/images/easy1.png"
     );
 
     public static final Question REFRACTION2_QUESTION = new Question(
@@ -46,7 +46,7 @@ public class Question {
             "32.1",
             Difficulty.EASY,
             "Light travels from air (n₁ = 1.0) into water (n₂ = 1.33) at an angle of incidence of 45°. What is the angle of refraction?",
-            null
+            "/images/easy3.png"
     );
 
     public static final Question FISH_DEPTH_QUESTION = new Question(
@@ -54,7 +54,7 @@ public class Question {
             "3.99 m",
             Difficulty.EASY,
             "A fish appears closer to the surface than it really is due to refraction. If the refractive index of water is n = 1.33 and the apparent depth is d' = 3m, find the real depth (d).",
-            null
+            "/images/easy4.png"
     );
 
     public static final Question MIRROR_TYPE_QUESTION = new Question(
@@ -62,7 +62,7 @@ public class Question {
             "Convex mirror",
             Difficulty.EASY,
             "A mirror forms a virtual, upright, and reduced image. What type of mirror is it?",
-            null
+            "/images/easy5.png"
     );
 
     public static final Question CONVEX_MIRROR_QUESTION = new Question(
