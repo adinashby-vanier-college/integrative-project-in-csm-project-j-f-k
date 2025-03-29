@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 public class LensView extends BaseView {
+    private LensesController controller;
+
     private static final double DEFAULT_SCALE = 50.0;
     private double scale = DEFAULT_SCALE;
     private double centerY;
@@ -52,6 +54,9 @@ public class LensView extends BaseView {
         super("Lenses");
         initializeView();
         setupZoomControls();
+
+        this.controller = new LensesController(new LensesModel(3, 8.0, 2.0, -0.5, 4.0), this);
+        //setupViewListeners();
         showDefaultLensSystem();
     }
 

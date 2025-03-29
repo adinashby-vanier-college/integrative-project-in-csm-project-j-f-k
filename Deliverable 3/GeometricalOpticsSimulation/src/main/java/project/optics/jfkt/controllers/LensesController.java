@@ -13,10 +13,12 @@ public class LensesController {
     private final LensesModel model;
     private final LensView view;
 
+
     public LensesController(LensesModel model, LensView view) {
         this.model = model;
         this.view = view;
         initialize();
+        System.out.println("LensesController initialized");
     }
 
     private void initialize() {
@@ -26,7 +28,9 @@ public class LensesController {
 
     private void setupViewListeners() {
         // Connect UI actions to controller methods
-        view.getApplyButton().setOnAction(e -> applyParameters());
+        view.getApplyButton().setOnAction(e -> {System.out.println("Apply button clicked!");
+        applyParameters();
+        });
         view.getConvergingButton().setOnAction(e -> addConvergingLens());
         view.getDivergingButton().setOnAction(e -> addDivergingLens());
     }
@@ -63,6 +67,13 @@ public class LensesController {
             model.setNumRays(numRays);
 
             updateView();
+
+            System.out.println("Applying parameters:");
+            System.out.println("Object Distance: " + objectDistance);
+            System.out.println("Object Height: " + objectHeight);
+            System.out.println("Focal Length: " + focalLength);
+            System.out.println("Magnification: " + magnification);
+            System.out.println("Number of Rays: " + numRays);
 
         } catch (NumberFormatException e) {
             view.showError("Please enter valid numbers in all fields");
