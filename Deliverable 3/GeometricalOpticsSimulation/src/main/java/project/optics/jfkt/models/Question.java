@@ -70,7 +70,7 @@ public class Question {
             "-10 cm,virtual,smaller,upright",
             Difficulty.EASY,
             "A convex mirror has a focal length of -15 cm. An object is placed 30 cm in front of it. Find the image distance.",
-            null
+            "/images/easy6.png"
     );
 
     public static final Question LIGHT_SPEED_QUESTION = new Question(
@@ -78,7 +78,7 @@ public class Question {
             "2x10^8 m/s",
             Difficulty.EASY,
             "A light ray enters a glass prism (n = 1.5) at an angle of 40°. What is the speed of light inside the prism?",
-            null
+            "/images/easy7.png"
     );
 
     public static final Question PLANE_MIRROR_QUESTION = new Question(
@@ -86,7 +86,7 @@ public class Question {
             "3 m",
             Difficulty.EASY,
             "A person stands 1.5 meters in front of a plane mirror. How far is their image from them?",
-            null
+            "/images/easy8.png"
     );
 
     public static final Question DIAMOND_QUESTION = new Question(
@@ -94,7 +94,7 @@ public class Question {
             "1.24x10^8 m/s",
             Difficulty.EASY,
             "The refractive index of diamond is 2.42. What is the speed of light inside the diamond? (Speed of light in vacuum: 3×10⁸ m/s)",
-            null
+            "/images/easy9.png"
     );
 
     public static final Question CONVERGING_LENS_QUESTION = new Question(
@@ -102,7 +102,7 @@ public class Question {
             "-1,real,any,inverted",
             Difficulty.EASY,
             "A converging lens has a focal length of 15 cm. An object is placed 30 cm away. What are the image characteristics (real/virtual, upright/inverted) and find the magnification?",
-            null
+            "/images/easy10.png"
     );
 
     // ========== MEDIUM QUESTIONS ========== //
@@ -111,7 +111,7 @@ public class Question {
             "62.5",
             Difficulty.MEDIUM,
             "A light ray travels from glass (n = 1.5) to water (n = 1.33). What is the critical angle at which total internal reflection occurs?",
-            null
+            "/images/medium1.png"
     );
 
     public static final Question TELESCOPE_MAGNIFICATION_QUESTION = new Question(
@@ -119,7 +119,7 @@ public class Question {
             "20",
             Difficulty.MEDIUM,
             "A telescope has an objective lens (f = 100 cm) and eyepiece (f = 5 cm). What is the angular magnification?",
-            null
+            "/images/medium2.png"
     );
 
     public static final Question SIMPLE_MAGNIFIER_QUESTION = new Question(
@@ -127,7 +127,7 @@ public class Question {
             "3.5",
             Difficulty.MEDIUM,
             "A simple magnifier has a focal length of 10 cm. What is its angular magnification for a normal eye?",
-            null
+            "/images/medium3.png"
     );
 
     public static final Question MICROSCOPE_MAGNIFICATION_QUESTION = new Question(
@@ -135,7 +135,7 @@ public class Question {
             "500",
             Difficulty.MEDIUM,
             "A microscope has an objective lens of focal length 4 mm and an eyepiece lens of focal length 20 mm. What is the total magnification if the tube length is 160 mm?",
-            null
+            "/images/medium4.png"
     );
 
     public static final Question TELESCOPE_FOCAL_LENGTH_QUESTION = new Question(
@@ -143,7 +143,7 @@ public class Question {
             "Magnification increases",
             Difficulty.MEDIUM,
             "If the focal length of an objective lens in a telescope is increased, what happens to its magnification?",
-            null
+            "/images/medium5.png"
     );
 
     public static final Question CONVEX_LENS_IMAGE_QUESTION = new Question(
@@ -151,7 +151,7 @@ public class Question {
             "7.5 cm",
             Difficulty.MEDIUM,
             "A converging lens of focal length 5 cm is used as a magnifier. If the object is placed at 3 cm, find the image distance.",
-            null
+            "/images/medium6.png"
     );
 
     public static final Question MAGNIFIER_POSITION_QUESTION = new Question(
@@ -159,7 +159,7 @@ public class Question {
             "Inside the focal point",
             Difficulty.MEDIUM,
             "If a converging lens is used as a magnifier, should the object be placed inside or outside the focal point?",
-            null
+            "/images/medium7.png"
     );
 
     public static final Question SIMPLE_MAGNIFIER_IMAGE_QUESTION = new Question(
@@ -167,7 +167,7 @@ public class Question {
             "virtual,bigger,upright",
             Difficulty.MEDIUM,
             "What kind of image does a simple magnifier produce?",
-            null
+            "/images/medium8.png"
     );
 
     public static final Question MAGNIFIER_FOCAL_LENGTH_QUESTION = new Question(
@@ -175,7 +175,7 @@ public class Question {
             "6.25 cm",
             Difficulty.MEDIUM,
             "A simple magnifier provides a 5× magnification. If the near point is 25 cm, what is the focal length of the lens?",
-            null
+            "/images/medium9.png"
     );
 
     public static final Question LENS_MAGNIFICATION_QUESTION = new Question(
@@ -183,7 +183,7 @@ public class Question {
             "2",
             Difficulty.MEDIUM,
             "What is the magnification if an object is placed 5 cm in front of a convex lens with a focal length of 10 cm?",
-            null
+            "/images/medium10.png"
     );
 
     // ========== HARD QUESTIONS ========== //
