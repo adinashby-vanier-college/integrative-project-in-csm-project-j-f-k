@@ -18,7 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import project.optics.jfkt.controllers.LensesController;
-import project.optics.jfkt.models.Lens;
+//import project.optics.jfkt.models.Lens;
 import project.optics.jfkt.models.LensesModel;
 
 import java.util.ArrayList;

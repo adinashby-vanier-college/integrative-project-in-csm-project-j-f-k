@@ -2,7 +2,7 @@ package project.optics.jfkt.controllers;
 
 
 import javafx.scene.control.Alert;
-import project.optics.jfkt.models.Lens;
+//import project.optics.jfkt.models.Lens;
 import project.optics.jfkt.models.LensesModel;
 import project.optics.jfkt.views.LensView;
 
