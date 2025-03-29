@@ -15,6 +15,8 @@ import javafx.scene.text.TextAlignment;
 import project.optics.jfkt.controllers.BaseViewController;
 import project.optics.jfkt.utils.Util;
 
+import java.util.ArrayList;
+
 
 public class BaseView extends BorderPane{
     Util util = new Util();
@@ -23,6 +25,9 @@ public class BaseView extends BorderPane{
     private String option2;
     private Pane animpane;
     private BaseViewController baseViewController;
+    private Button optionbutton1;
+    private Button optionbutton2;
+    private ArrayList<TextField> textInputs = new ArrayList<>();
 
     public BaseView(String type){
         if (type.contentEquals("Mirrors")){
@@ -139,10 +144,10 @@ public class BaseView extends BorderPane{
         choicehbox.setAlignment(Pos.CENTER);
         Pane optionpane1 = new Pane();
         Text optiontext1 = new Text();
-        Button optionbutton1 = new Button("", null);
+        optionbutton1 = new Button("", null);
         Pane optionpane2 = new Pane();
         Text optiontext2 = new Text();
-        Button optionbutton2 = new Button("", null);
+        optionbutton2 = new Button("", null);
 
         optionpane1.setPrefSize(160,160);
         optiontext1.setText(option1);
@@ -199,6 +204,7 @@ public class BaseView extends BorderPane{
         paramtextfield.setAlignment(Pos.CENTER);
         paramtextfield.setPrefSize(160,60);
         paramtextfield.setFont(fieldfont);
+        textInputs.add(paramtextfield);
 
         paramhbox.getChildren().add(paramtextfield);
 
@@ -209,5 +215,17 @@ public class BaseView extends BorderPane{
 
     public Pane getAnimpane(){
         return animpane;
+    }
+
+    public Button getOptionbutton1() {
+        return optionbutton1;
+    }
+
+    public Button getOptionbutton2() {
+        return optionbutton2;
+    }
+
+    public ArrayList<TextField> getTextInputs() {
+        return textInputs;
     }
 }
