@@ -2,7 +2,6 @@ package project.optics.jfkt.controllers;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -21,10 +20,8 @@ import project.optics.jfkt.models.Refraction;
 import project.optics.jfkt.views.LayerChoosingView;
 import project.optics.jfkt.views.RefractionView;
 
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RefractionController {
     private Refraction refraction;
@@ -107,129 +104,86 @@ public class RefractionController {
         return true;
     }
 
-    /**
-     *
-     * @return a list of points that the object goes through (path of animation) when there are three layers
-     */
-//    private List<Point2D> calculate3() {
-//        List<Point2D> path = new ArrayList<>();
-//
-//        // Convert the incident angle (in degrees relative to vertical) to radians.
-//        double incidentAngleRad = Math.toRadians(refraction.getInitialAngle());
-//        double currentX = refraction.getInitialLocation();
-//        double currentY = 0;
-//
-//        // Get the layers and their dimensions.
-//        HBox layer1 = refraction.getLayer1();
-//        HBox layer2 = refraction.getLayer2();
-//        HBox layer3 = refraction.getLayer3();
-//        double[] layerHeights = { layer1.getHeight(), layer2.getHeight(), layer3.getHeight() };
-//        double[] n = { refraction.getN1(), refraction.getN2(), refraction.getN3() };
-//
-//        // Start with the incident point.
-//        path.add(new Point2D(currentX, currentY));
-//
-//        for (int i = 0; i < 3; i++) {
-//            double layerHeight = layerHeights[i];
-//            double nCurrent = n[i];
-//
-//            // Calculate horizontal displacement: dx = layerHeight * tan(incidentAngle)
-//            double dx = layerHeight * Math.tan(incidentAngleRad);
-//            double nextX = currentX + dx;
-//            double nextY = currentY + layerHeight;
-//            path.add(new Point2D(nextX, nextY));
-//
-//            // If not the last layer, use Snell's law to compute the new incident angle.
-//            if (i < 2) {
-//                double nNext = n[i + 1];
-//                double sinIncident = Math.sin(incidentAngleRad);
-//                double sinRefracted = (nCurrent / nNext) * sinIncident;
-//                if (Math.abs(sinRefracted) > 1) {
-//                    // Total internal reflection: stop simulation.
-//                    break;
-//                }
-//                incidentAngleRad = Math.asin(sinRefracted);
-//            }
-//            // Update the current position for the next layer.
-//            currentX = nextX;
-//            currentY = nextY;
-//        }
-//
-//        return path;
-//    }
-
     private List<Point2D> calculate3() {
         List<Point2D> path = new ArrayList<>();
 
         // Starting conditions: initial position and incident angle (degrees relative to vertical)
         // A positive angle means the ray’s horizontal component is to the right; negative means to the left.
-        double theta = Math.toRadians(refraction.getInitialAngle());
+        double incidentAngleRad = Math.toRadians(refraction.getInitialAngle());
         double currentX = refraction.getInitialLocation();
         double currentY = 0;
         path.add(new Point2D(currentX, currentY)); // starting point
 
-        // Retrieve layers and their refraction indices.
+        // Retrieve layers, their refraction indices and their heights
         HBox layer1 = refraction.getLayer1();
         HBox layer2 = refraction.getLayer2();
         HBox layer3 = refraction.getLayer3();
         double n1 = refraction.getN1();
         double n2 = refraction.getN2();
         double n3 = refraction.getN3();
+        double h1 = layer1.getHeight();
+        double h2 = layer2.getHeight();
+        double h3 = layer3.getHeight();
 
         // ------------------------------
         // Interface 1: Transition from layer1 to layer2
         // ------------------------------
-        double h1 = layer1.getHeight();
         // Calculate the intersection point at the bottom of layer1.
-        double dx = h1 * Math.tan(theta);
-        double interX = currentX + dx;
-        double interY = currentY + h1;
-        path.add(new Point2D(interX, interY)); // add interface point
+        double dx = h1 * Math.tan(incidentAngleRad);
+        double nextX = currentX + dx;
+        double nextY = currentY + h1;
+        path.add(new Point2D(nextX, nextY)); // add interface point
 
         // Determine the new angle for transition from layer1 to layer2 using Snell's law.
-        double sinTheta = Math.sin(theta);
-        double sinRefracted = (n1 / n2) * sinTheta;
-        double newTheta;
-        if (Math.abs(sinRefracted) <= 1) {
-            // Normal refraction
-            newTheta = Math.asin(sinRefracted);
-        } else {
+        double sinIncident = Math.sin(incidentAngleRad);
+        double sinRefracted = (n1 / n2) * sinIncident;
+        if (Math.abs(sinRefracted) > 1) {
             // Total internal reflection at interface 1:
-            // Instead of refracting, we flip the horizontal component.
-            newTheta = -theta;
+            double reflectedX = nextX + dx; // reflected, so plus dx
+            double reflectedY = currentY; // reflected back to the initial height
+
+            path.add(new Point2D(reflectedX, reflectedY));
+            return path;
         }
+
         // Update for next layer.
-        currentX = interX;
-        currentY = interY;
-        theta = newTheta;
+        currentX = nextX;
+        currentY = nextY;
+        incidentAngleRad = Math.asin(sinRefracted);
 
         // ------------------------------
         // Interface 2: Transition from layer2 to layer3
         // ------------------------------
-        double h2 = layer2.getHeight();
-        dx = h2 * Math.tan(theta);
-        interX = currentX + dx;
-        interY = currentY + h2;
-        path.add(new Point2D(interX, interY)); // add interface point
+        dx = h2 * Math.tan(incidentAngleRad);
+        nextX = currentX + dx;
+        nextY = currentY + h2;
+        path.add(new Point2D(nextX, nextY)); // add interface point
 
-        sinTheta = Math.sin(theta);
-        sinRefracted = (n2 / n3) * sinTheta;
-        if (Math.abs(sinRefracted) <= 1) {
-            newTheta = Math.asin(sinRefracted);
-        } else {
-            // TIR at interface 2: flip horizontal direction.
-            newTheta = -theta;
+        sinIncident = Math.sin(incidentAngleRad);
+        sinRefracted = (n2 / n3) * sinIncident;
+        if (Math.abs(sinRefracted) > 1) {
+            // TIR occurs, first reflected to the interface between layer1 and layer2
+            double reflectedX = nextX + dx;
+            double reflectedY = currentY;
+            path.add(new Point2D(reflectedX, reflectedY));
+
+            // Then, refracted back to y = 0;
+            double refractedX = nextX * 2; // just double the midpoint's x because it's symmetric
+            double refractedY = 0;
+            path.add(new Point2D(refractedX, refractedY));
+
+            return path;
         }
+
         // Update for layer3.
-        currentX = interX;
-        currentY = interY;
-        theta = newTheta;
+        currentX = nextX;
+        currentY = nextY;
+        incidentAngleRad = Math.asin(sinRefracted);
 
         // ------------------------------
         // Exit from layer3: the bottom of the third layer.
         // ------------------------------
-        double h3 = layer3.getHeight();
-        dx = h3 * Math.tan(theta);
+        dx = h3 * Math.tan(incidentAngleRad);
         double exitX = currentX + dx;
         double exitY = currentY + h3;
         path.add(new Point2D(exitX, exitY)); // final exit point

@@ -33,7 +33,7 @@ public class RefractionView extends VBox {
     private Material chosenLayer;
     private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty();
     private Circle object;
-    private SimpleDoubleProperty incidentAngle = new SimpleDoubleProperty();
+    private SimpleDoubleProperty incidentAngle = new SimpleDoubleProperty(45);
     private Line line12; // line between layer 1 and layer 2
     private Line line23; // line between layer 2 and layer 3
     private VBox frame;
