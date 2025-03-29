@@ -24,7 +24,7 @@ public class Question {
         this.id = nextId++;
     }
 
-    // Easy questions
+    // ========== EASY QUESTIONS ========== //
     public static final Question CONCAVE_MIRROR_QUESTION = new Question(
             "Use the mirror equation: 1/f = 1/dₒ + 1/dᵢ",
             "20 cm,real,any,inverted",
@@ -105,7 +105,7 @@ public class Question {
             null
     );
 
-    // Medium questions
+    // ========== MEDIUM QUESTIONS ========== //
     public static final Question CRITICAL_ANGLE_QUESTION = new Question(
             "Use the critical angle formula: θc = sin⁻¹(n₂/n₁)",
             "62.5",
@@ -170,7 +170,6 @@ public class Question {
             null
     );
 
-    // New questions
     public static final Question MAGNIFIER_FOCAL_LENGTH_QUESTION = new Question(
             "Rearrange the formula M = 1 + D/f to solve for f",
             "6.25 cm",
@@ -187,8 +186,90 @@ public class Question {
             null
     );
 
+    // ========== HARD QUESTIONS ========== //
+    public static final Question TWO_LENS_SYSTEM_QUESTION = new Question(
+            "Solve for the intermediate location using the lens equation: 1/f = 1/do + 1/di",
+            "100 cm",
+            Difficulty.HARD,
+            "A two-lens system consists of a convex lens (f = 10 cm) placed 30 cm in front of an object. A second convex lens (f = 20 cm) is placed 40 cm behind the first lens. Where is the final image?",
+            null
+    );
+
+    public static final Question DIVERGING_CONVERGING_LENS_QUESTION = new Question(
+            "Use the lens equation for both lenses, solving for the first image location, then use that as the object for the second lens",
+            "15.88 cm",
+            Difficulty.HARD,
+            "A diverging lens (f = -15 cm) is placed 20 cm from an object. A convex lens (f = 10 cm) is placed 30 cm behind the first lens. Where is the final image?",
+            null
+    );
+
+    public static final Question MICROSCOPE_IMAGE_LOCATION_QUESTION = new Question(
+            "Solve for the first image location using the lens equation, then use that as the object for the second lens",
+            "infinity",
+            Difficulty.HARD,
+            "A microscope has an objective lens (f = 2 cm) and an eyepiece lens (f = 5 cm). The object is placed 2.5 cm from the objective lens. Where is the final image located?",
+            null
+    );
+
+    public static final Question MULTI_MEDIUM_REFRACTION_QUESTION = new Question(
+            "Use Snell's Law: n₁sinθ₁ = n₂sinθ₂",
+            "32.1",
+            Difficulty.HARD,
+            "A light ray passes from air (n = 1.00) into glass (n = 1.5) and then into water (n = 1.33). If the initial angle of incidence is 45°, find the final angle in water.",
+            null
+    );
+
+    public static final Question LASER_BEAM_REFRACTION_QUESTION = new Question(
+            "Use Snell's Law: n₁sinθ₁ = n₂sinθ₂",
+            "35.4",
+            Difficulty.HARD,
+            "A laser beam travels from air (n = 1.00) into oil (n = 1.46) and then into a polymer (n = 1.25). The initial angle is 50°. What is the final angle in the polymer?",
+            null
+    );
+
+    public static final Question LENS_MIRROR_SYSTEM_QUESTION = new Question(
+            "Find the image formed by the lens using the lens equation. Treat that image as the object for the mirror.",
+            "4.3 cm",
+            Difficulty.HARD,
+            "A convex lens (f = 15 cm) is placed 30 cm away from a concave mirror (f = -10 cm). An object is placed 45 cm in front of the convex lens. Where is the final image located?",
+            null
+    );
+
+    public static final Question TELESCOPE_LENS_SEPARATION_QUESTION = new Question(
+            "In normal adjustment, the final image is at infinity, meaning the intermediate image is at the focal point of the eyepiece.",
+            "105 cm",
+            Difficulty.HARD,
+            "A telescope has an objective lens (f = 100 cm) and an eyepiece (f = 5 cm). If the object is at infinity, what is the separation between the lenses for normal adjustment?",
+            null
+    );
+
+    public static final Question CONCAVE_MIRROR_LENS_SYSTEM_QUESTION = new Question(
+            "Solve for the first image using the lens equation. Use that image as the object for the concave mirror.",
+            "16.67 cm",
+            Difficulty.HARD,
+            "A concave mirror (f = -20 cm) is placed 50 cm behind a convex lens (f = 25 cm). An object is 30 cm in front of the convex lens. Where is the final image?",
+            null
+    );
+
+    public static final Question DIVERGING_LENS_MIRROR_SYSTEM_QUESTION = new Question(
+            "Solve for the first image using the mirror equation. Use that image as the object for the diverging lens.",
+            "3.53 cm",
+            Difficulty.HARD,
+            "A diverging lens (f = -30 cm) is placed 20 cm behind a convex mirror (f = -40 cm). An object is placed 60 cm in front of the mirror. Where is the final image?",
+            null
+    );
+
+    public static final Question CONCAVE_MIRROR_LENS_SYSTEM2_QUESTION = new Question(
+            "Use the lens equation to find the first image. Use the mirror equation for the second image.",
+            "2.86 cm",
+            Difficulty.HARD,
+            "A concave mirror (f = -25 cm) is placed 40 cm behind a converging lens (f = 30 cm). An object is placed 20 cm in front of the lens. Where is the final image?",
+            null
+    );
+
     public static List<Question> getSampleQuestions() {
         List<Question> samples = new ArrayList<>();
+
         // Easy questions
         samples.add(CONCAVE_MIRROR_QUESTION);
         samples.add(REFRACTION_QUESTION);
@@ -212,6 +293,18 @@ public class Question {
         samples.add(SIMPLE_MAGNIFIER_IMAGE_QUESTION);
         samples.add(MAGNIFIER_FOCAL_LENGTH_QUESTION);
         samples.add(LENS_MAGNIFICATION_QUESTION);
+
+        // Hard questions
+        samples.add(TWO_LENS_SYSTEM_QUESTION);
+        samples.add(DIVERGING_CONVERGING_LENS_QUESTION);
+        samples.add(MICROSCOPE_IMAGE_LOCATION_QUESTION);
+        samples.add(MULTI_MEDIUM_REFRACTION_QUESTION);
+        samples.add(LASER_BEAM_REFRACTION_QUESTION);
+        samples.add(LENS_MIRROR_SYSTEM_QUESTION);
+        samples.add(TELESCOPE_LENS_SEPARATION_QUESTION);
+        samples.add(CONCAVE_MIRROR_LENS_SYSTEM_QUESTION);
+        samples.add(DIVERGING_LENS_MIRROR_SYSTEM_QUESTION);
+        samples.add(CONCAVE_MIRROR_LENS_SYSTEM2_QUESTION);
 
         return samples;
     }
