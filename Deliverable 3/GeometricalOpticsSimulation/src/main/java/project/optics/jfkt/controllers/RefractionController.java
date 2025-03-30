@@ -10,7 +10,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -31,7 +30,7 @@ public class RefractionController {
         this.refractionView = refractionView;
     }
 
-    public void onNewLayerButtonPressed(RefractionView refractionView, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer, Line line12, Line line23) {
+    public void onNewLayerButtonPressed(RefractionView refractionView, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer) {
         if (refractionView.getCurrentLayer() < 4) {
             Stage stage = new Stage();
             stage.initOwner(MainApp.primaryStage);
@@ -39,7 +38,7 @@ public class RefractionController {
             stage.setResizable(false); // Disable resizing
             stage.initStyle(StageStyle.UTILITY); // Hide minimize/maximize buttons
             stage.setTitle("Material selection");
-            stage.setScene(new Scene(new LayerChoosingView(refractionView, stage, layers, frame, currentLayer, plusSignLayer, line12, line23)));
+            stage.setScene(new Scene(new LayerChoosingView(refractionView, stage, layers, frame, currentLayer, plusSignLayer)));
             stage.setFullScreen(false);
             stage.show();
         }
@@ -268,8 +267,6 @@ public class RefractionController {
         } else if (color.equals(Color.web("#F0F8FF"))) { // Glass
             return 1.52;
         } else {
-            // Optionally, you can handle unknown colors differently,
-            // for example, by returning a default value or throwing an exception.
             throw new IllegalArgumentException("Unknown Layer");
         }
     }
@@ -341,6 +338,4 @@ public class RefractionController {
         System.out.println("Bug somewhere, because impossible to reach this statement");
         return true;
     }
-
-
 }

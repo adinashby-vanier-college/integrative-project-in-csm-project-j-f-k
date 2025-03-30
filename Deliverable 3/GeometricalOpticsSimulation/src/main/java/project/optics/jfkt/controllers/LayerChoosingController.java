@@ -22,18 +22,14 @@ public class LayerChoosingController {
     private HBox layer1;
     private HBox layer2;
     private HBox layer3;
-    private Line line12;
-    private Line line23;
 
-    public LayerChoosingController(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer, Line line12, Line line23) {
+    public LayerChoosingController(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer) {
         this.refractionView = refractionView;
         this.stage = stage;
         this.layers = layers;
         this.frame = frame;
         this.currentLayer = currentLayer;
         this.plusSignLayer = plusSignLayer;
-        this.line12 = line12;
-        this.line23 = line23;
 
         // retrieve all layers
         layer1 = layers.get(0);
@@ -81,20 +77,14 @@ public class LayerChoosingController {
                 frame.getChildren().addAll(layer1, plusSignLayer);
                 break;
             case 2:
-                line12.setStartY(line12.getStartY() + 5);
-                line12.setEndY(line12.getEndY() + 5);
-
                 updateLayer(layer2, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
-                frame.getChildren().addAll(layer1, layer2, plusSignLayer, line12, line23, refractionView.getObject());
+                frame.getChildren().addAll(layer1, layer2, plusSignLayer, refractionView.getObject());
                 break;
             case 3:
-                line12.setStartY(line12.getStartY() - 5);
-                line12.setEndY(line12.getEndY() - 5);
-
                 updateLayer(layer3, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
-                frame.getChildren().addAll(layer1, layer2, layer3, line12, line23, refractionView.getObject());
+                frame.getChildren().addAll(layer1, layer2, layer3, refractionView.getObject());
         }
 
         stage.close();

@@ -34,13 +34,10 @@ public class RefractionView extends VBox {
     private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty();
     private Circle object;
     private SimpleDoubleProperty incidentAngle = new SimpleDoubleProperty(45);
-    private Line line12; // line between layer 1 and layer 2
-    private Line line23; // line between layer 2 and layer 3
     private VBox frame;
     private ArrayList<HBox> layers;
 
     public RefractionView() {
-        createNewLines();
         Region menu = util.createMenu();
         HBox topButtons = util.createZoomAndBackButtons();
         topButtons.setAlignment(Pos.CENTER_LEFT);
@@ -51,23 +48,6 @@ public class RefractionView extends VBox {
         frame = createAnimationPane();
 
         this.getChildren().addAll(menu, topButtons, frame, createBottom());
-    }
-
-    private void createNewLines() {
-        line12 = new Line(0, ANIMATION_PANE_HEIGHT / 3, 0, ANIMATION_PANE_HEIGHT / 3);
-        line12.setFill(Color.YELLOW);
-        line12.setStroke(Color.YELLOW);
-        line12.setManaged(false);
-
-        line23 = new Line(0, ANIMATION_PANE_HEIGHT / 3 * 2, 0, ANIMATION_PANE_HEIGHT / 3 * 2);
-        line23.setFill(Color.YELLOW);
-        line23.setStroke(Color.YELLOW);
-        line23.setManaged(false);
-
-        this.widthProperty().addListener((obs, oldVal, newVal) -> {
-            line12.setEndX(newVal.doubleValue());
-            line23.setEndX(newVal.doubleValue());
-        });
     }
 
     private void initializeLayers() {
@@ -98,10 +78,6 @@ public class RefractionView extends VBox {
 
         // create layers
         initializeLayers();
-
-        // add animation detection lines to the pane
-        createNewLines();
-        frame.getChildren().addAll(line12, line23);
 
         // incident point
         object = new Circle(3);
@@ -135,7 +111,7 @@ public class RefractionView extends VBox {
 
         frame.getChildren().add(plusSignLayer);
 
-        newLayer.setOnAction(event -> refractionController.onNewLayerButtonPressed(RefractionView.this, layers, frame, currentLayer, plusSignLayer, line12, line23));
+        newLayer.setOnAction(event -> refractionController.onNewLayerButtonPressed(RefractionView.this, layers, frame, currentLayer, plusSignLayer));
 
         return frame;
     }
@@ -293,22 +269,6 @@ public class RefractionView extends VBox {
 
     public SimpleDoubleProperty incidentAngleProperty() {
         return incidentAngle;
-    }
-
-    public Line getLine12() {
-        return line12;
-    }
-
-    public void setLine12(Line line12) {
-        this.line12 = line12;
-    }
-
-    public Line getLine23() {
-        return line23;
-    }
-
-    public void setLine23(Line line23) {
-        this.line23 = line23;
     }
 
     public int getCurrentLayer() {

@@ -14,8 +14,8 @@ import project.optics.jfkt.controllers.LayerChoosingController;
 import java.util.ArrayList;
 
 public class LayerChoosingView extends VBox {
-    public LayerChoosingView(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer, Line line12, Line line23) {
-        LayerChoosingController layerChoosingController = new LayerChoosingController(refractionView, stage, layers, frame, currentLayer, plusSignLayer, line12, line23);
+    public LayerChoosingView(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer) {
+        LayerChoosingController layerChoosingController = new LayerChoosingController(refractionView, stage, layers, frame, currentLayer, plusSignLayer);
 
         HBox air = new HBox();
         air.setBackground(Background.fill(Color.web("#FFFFFF")));
