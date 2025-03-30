@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -28,13 +29,15 @@ public class RefractionView extends VBox {
     private final RefractionController refractionController = new RefractionController(refraction, this);
     private final Util util = new Util();
     private static final double ANIMATION_PANE_HEIGHT = 900;
-    private int currentLayer = 1;
     private Material chosenLayer;
     private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty(0);
     private Circle object;
     private SimpleDoubleProperty incidentAngle = new SimpleDoubleProperty(45);
-    private VBox frame;
+    private VBox layerPane;
     private ArrayList<HBox> layers;
+    private StackPane animationPane;
+    private Pane trailPane;
+    private Rectangle rectangleClip;
 
     public RefractionView() {
         Region menu = util.createMenu();
@@ -43,10 +46,10 @@ public class RefractionView extends VBox {
         topButtons.setSpacing(10);
         topButtons.setPrefHeight(50);
         VBox.setMargin(topButtons, new Insets(10, 0, 0, 0));
+        this.getChildren().addAll(menu, topButtons, createAnimationPane(), createBottom());
 
-        frame = createAnimationPane();
-
-        this.getChildren().addAll(menu, topButtons, frame, createBottom());
+        // resize the clipping area
+        refraction.layerCountProperty().addListener((observable, oldValue, newValue) -> refractionController.onLayerCountChanged(newValue.intValue()));
     }
 
     private void initializeLayers() {
@@ -69,16 +72,39 @@ public class RefractionView extends VBox {
         layers.add(layer3);
     }
 
-    private VBox createAnimationPane() {
+    private StackPane createAnimationPane() {
+        // The outerPane including the layers and the trail of animation
+        StackPane animationPane = new StackPane();
+        this.animationPane = animationPane;
+
+        // The pane displaying the trail and the object of animation
+        Pane trailPane = new Pane();
+        trailPane.setMouseTransparent(true);
+        animationPane.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                trailPane.setPrefHeight(newValue.doubleValue());
+            }
+        });
+        animationPane.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                trailPane.setPrefWidth(newValue.doubleValue());
+            }
+        });
+
+        this.trailPane = trailPane;
+
         // initialize the pane
-        VBox frame = new VBox();
-        frame.setPrefHeight(ANIMATION_PANE_HEIGHT);
-        frame.setBorder(Border.stroke(Color.BLACK));
+        VBox layerPane = new VBox();
+        layerPane.setPrefHeight(ANIMATION_PANE_HEIGHT);
+        layerPane.setBorder(Border.stroke(Color.BLACK));
+        this.layerPane = layerPane;
 
-        // create layers
-        initializeLayers();
+        animationPane.getChildren().addAll(layerPane, trailPane);
+        trailPane.toFront();
 
-        // incident point
+        // create the object of animation
         object = new Circle(3);
         object.setStroke(Color.BLUE);
         object.setFill(Color.BLUE);
@@ -88,9 +114,22 @@ public class RefractionView extends VBox {
         incidentLocation.addListener((observable, oldValue, newValue) -> refractionController.onIncidentLocationChanged(newValue, object));
 
         // initialization center Y value of incident point
-        object.setCenterY(0);
+        object.setTranslateY(0);
 
-        frame.getChildren().add(object);
+        trailPane.getChildren().add(object);
+
+        // hide overflowed elements of the pane
+        Rectangle clip = new Rectangle();
+
+        clip.widthProperty().bind(animationPane.widthProperty());
+        clip.heightProperty().bind(animationPane.heightProperty());
+
+        this.rectangleClip = clip;
+
+        trailPane.setClip(clip);
+
+        // create layers
+        initializeLayers();
 
         // plus sign set up
         Button newLayer = new Button();
@@ -108,11 +147,11 @@ public class RefractionView extends VBox {
 
         VBox.setVgrow(plusSignLayer, Priority.ALWAYS);
 
-        frame.getChildren().add(plusSignLayer);
+        layerPane.getChildren().add(plusSignLayer);
 
-        newLayer.setOnAction(event -> refractionController.onNewLayerButtonPressed(RefractionView.this, layers, frame, currentLayer, plusSignLayer));
+        newLayer.setOnAction(event -> refractionController.onNewLayerButtonPressed(RefractionView.this, layers, layerPane, plusSignLayer));
 
-        return frame;
+        return animationPane;
     }
 
     public SVGPath drawPlusSign() {
@@ -215,6 +254,7 @@ public class RefractionView extends VBox {
         angleSlider.valueProperty().addListener((observable, oldValue, newValue) -> incidentAngle.set(newValue.doubleValue()));
 
         Text angleValue = new Text();
+        angleValue.setWrappingWidth(45);
 
         StringConverter<Number> converter = new NumberStringConverter();
 
@@ -231,6 +271,7 @@ public class RefractionView extends VBox {
         locationSlider.setMajorTickUnit(15);
         locationSlider.setMinorTickCount(5);
         locationSlider.setSnapToTicks(true);
+
         this.widthProperty().addListener((obs, oldVal, newVal) -> {
             locationSlider.setMax(newVal.doubleValue());
         });
@@ -244,7 +285,7 @@ public class RefractionView extends VBox {
         });
 
         Text locationValue = new Text();
-        locationValue.setWrappingWidth(40);
+        locationValue.setWrappingWidth(60);
 
         StringConverter<Number> converter = new NumberStringConverter();
 
@@ -271,16 +312,8 @@ public class RefractionView extends VBox {
         return incidentAngle;
     }
 
-    public int getCurrentLayer() {
-        return currentLayer;
-    }
-
-    public VBox getFrame() {
-        return frame;
-    }
-
-    public void setCurrentLayer(int currentLayer) {
-        this.currentLayer = currentLayer;
+    public VBox getlayerPane() {
+        return layerPane;
     }
 
     public Material getChosenLayer() {
@@ -301,5 +334,29 @@ public class RefractionView extends VBox {
 
     public SimpleDoubleProperty incidentLocationProperty() {
         return incidentLocation;
+    }
+
+    public StackPane getAnimationPane() {
+        return animationPane;
+    }
+
+    public void setAnimationPane(StackPane animationPane) {
+        this.animationPane = animationPane;
+    }
+
+    public Pane getTrailPane() {
+        return trailPane;
+    }
+
+    public void setTrailPane(Pane trailPane) {
+        this.trailPane = trailPane;
+    }
+
+    public Rectangle getRectangleClip() {
+        return rectangleClip;
+    }
+
+    public void setRectangleClip(Rectangle rectangleClip) {
+        this.rectangleClip = rectangleClip;
     }
 }

@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import project.optics.jfkt.enums.Material;
+import project.optics.jfkt.models.Refraction;
 import project.optics.jfkt.views.RefractionView;
 
 import java.util.ArrayList;
@@ -17,19 +18,21 @@ public class LayerChoosingController {
     private final Stage stage;
     private ArrayList<HBox> layers;
     private VBox frame;
-    private int currentLayer;
+    private int layerCount;
     private HBox plusSignLayer;
     private HBox layer1;
     private HBox layer2;
     private HBox layer3;
+    private Refraction refraction;
 
-    public LayerChoosingController(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer) {
+    public LayerChoosingController(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int layerCount, HBox plusSignLayer, Refraction refraction) {
         this.refractionView = refractionView;
         this.stage = stage;
         this.layers = layers;
         this.frame = frame;
-        this.currentLayer = currentLayer;
+        this.layerCount = layerCount;
         this.plusSignLayer = plusSignLayer;
+        this.refraction = refraction;
 
         // retrieve all layers
         layer1 = layers.get(0);
@@ -70,23 +73,27 @@ public class LayerChoosingController {
     private void handleMaterialSelection(Material material, String colorHex, String labelText) {
         refractionView.setChosenLayer(material);
 
-        switch (currentLayer) {
-            case 1:
+        switch (layerCount) {
+            case 0:
                 updateLayer(layer1, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
                 frame.getChildren().addAll(layer1, plusSignLayer);
+                refraction.setLayer1(layer1);
                 break;
-            case 2:
+            case 1:
                 updateLayer(layer2, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
                 frame.getChildren().addAll(layer1, layer2, plusSignLayer, refractionView.getObject());
+                refraction.setLayer2(layer2);
                 break;
-            case 3:
+            case 2:
                 updateLayer(layer3, Color.web(colorHex), labelText);
                 frame.getChildren().clear();
                 frame.getChildren().addAll(layer1, layer2, layer3, refractionView.getObject());
+                refraction.setLayer3(layer3);
         }
 
         stage.close();
+        refraction.setLayerCount(refraction.getLayerCount() + 1);
     }
 }

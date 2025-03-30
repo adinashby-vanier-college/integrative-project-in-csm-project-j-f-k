@@ -3,15 +3,18 @@ package project.optics.jfkt.controllers;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polyline;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -33,20 +36,18 @@ public class RefractionController {
         this.refractionView = refractionView;
     }
 
-    public void onNewLayerButtonPressed(RefractionView refractionView, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer) {
-        if (refractionView.getCurrentLayer() < 4) {
+    public void onNewLayerButtonPressed(RefractionView refractionView, ArrayList<HBox> layers, VBox frame, HBox plusSignLayer) {
+        if (refraction.getLayerCount() < 4) {
             Stage stage = new Stage();
             stage.initOwner(MainApp.primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setResizable(false); // Disable resizing
             stage.initStyle(StageStyle.UTILITY); // Hide minimize/maximize buttons
             stage.setTitle("Material selection");
-            stage.setScene(new Scene(new LayerChoosingView(refractionView, stage, layers, frame, currentLayer, plusSignLayer)));
+            stage.setScene(new Scene(new LayerChoosingView(refractionView, stage, layers, frame, refraction.getLayerCount(), plusSignLayer, refraction)));
             stage.setFullScreen(false);
             stage.show();
         }
-
-        refractionView.setCurrentLayer(refractionView.getCurrentLayer() + 1);
     }
 
     public void onIncidentLocationChanged(Number incidentLocation, Circle incidentPoint) {
@@ -170,7 +171,7 @@ public class RefractionController {
             path.add(new Point2D(reflectedX, reflectedY));
 
             // Then, refracted back to y = 0;
-            double refractedX = nextX * 2; // just double the midpoint's x because it's symmetric
+            double refractedX = (nextX - refraction.getInitialLocation()) * 2 + refraction.getInitialLocation(); // just double the midpoint's x because it's symmetric
             double refractedY = -5;
             path.add(new Point2D(refractedX, refractedY));
 
@@ -278,7 +279,7 @@ public class RefractionController {
         Timeline timeline = new Timeline();
 
         if (path.size() < 2) {
-            return timeline; // No movement needed
+            return timeline; // No movement
         }
 
         Circle object = refractionView.getObject();
@@ -287,14 +288,29 @@ public class RefractionController {
         object.setTranslateX(start.getX());
         object.setTranslateY(start.getY());
 
-        // Calculate time per segment (a layer's length)
+        // Create a dotted trail using a Polyline.
+        Polyline trail = new Polyline();
+        for (Point2D point : path) {
+            trail.getPoints().addAll(point.getX(), point.getY());
+        }
+        trail.setStroke(Color.BLACK);
+        trail.setStrokeWidth(2);
+        trail.getStrokeDashArray().addAll(5.0, 5.0); // create a dashed pattern (5px dash, 5px gap)
+
+        // Add the trail to the animation pane
+        Pane trailPane = refractionView.getTrailPane();
+
+        trailPane.getChildren().clear();
+        trailPane.getChildren().add(0, trail);
+        trailPane.getChildren().add(refractionView.getObject());
+
+        // Calculate time per segment
         int segmentCount = path.size() - 1;
         double segmentDuration = totalDuration.toMillis() / segmentCount;
 
-        // Add keyframes for each point in the path
+        // Create keyframes to animate the object along the path.
         for (int i = 1; i < path.size(); i++) {
             Point2D target = path.get(i);
-
             double time = i * segmentDuration;
 
             KeyFrame keyFrame = new KeyFrame(
@@ -307,7 +323,7 @@ public class RefractionController {
 
         timeline.setCycleCount(1);
 
-        // stop the animation when goes out of bounds
+        // Stop the animation when the object goes out of bounds.
         object.translateXProperty().addListener((observable, oldValue, newValue) -> {
             double screenWidth = Screen.getPrimary().getBounds().getWidth();
             double totalHeight = 0;
@@ -330,37 +346,27 @@ public class RefractionController {
         return timeline;
     }
 
-    private boolean isInTheRange(Circle object) {
-        VBox restrictionZone = refractionView.getFrame();
-        int currentLayer = refractionView.getCurrentLayer();
+    public void onLayerCountChanged(int newValue) {
+        Rectangle clip = refractionView.getRectangleClip();
+        ArrayList<HBox> layers = refractionView.getLayers();
+        StackPane animationPane = refractionView.getAnimationPane();
 
-        if (currentLayer == 2) {
-            double twoThirdsHeight = (2.0 / 3) * restrictionZone.getHeight();
-
-            if (object.getCenterY() > twoThirdsHeight) {
-                return false; // Out of valid range
-            }
-
-            if (object.getCenterY() < 0) {
-                return false;
-            }
-
-            return true; // Within valid range
+        if (animationPane == null) {
+            return;
         }
 
-        if (currentLayer == 3) {
-            if (object.getCenterY() > restrictionZone.getHeight()) {
-                return false;
-            }
+        clip.widthProperty().unbind();
+        clip.heightProperty().unbind();
 
-            if (object.getCenterY() < 0) {
-                return false;
-            }
+        if (newValue == 2) {
+            HBox layer1 = layers.get(0);
+            HBox layer2 = layers.get(1);
 
-            return true;
+            clip.heightProperty().bind(layer1.heightProperty().add(layer2.heightProperty()));
+            clip.widthProperty().bind(animationPane.widthProperty());
+        } else {
+            clip.heightProperty().bind(animationPane.heightProperty());
+            clip.widthProperty().bind(animationPane.widthProperty());
         }
-
-        System.out.println("Bug somewhere, because impossible to reach this statement");
-        return true;
     }
 }

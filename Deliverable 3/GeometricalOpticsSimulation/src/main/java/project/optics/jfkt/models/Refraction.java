@@ -1,5 +1,7 @@
 package project.optics.jfkt.models;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.HBox;
 
 import java.util.Objects;
@@ -14,6 +16,7 @@ public class Refraction {
     private double initialAngle;
     private double initialLocation;
     private int layerCount;
+    private IntegerProperty layerCountProperty = new SimpleIntegerProperty();
 
     public Refraction(HBox layer1, HBox layer2, HBox layer3, double n1, double n2, double n3, double initialAngle, double initialLocation, int layerCount) {
         this.layer1 = layer1;
@@ -25,9 +28,15 @@ public class Refraction {
         this.initialAngle = initialAngle;
         this.initialLocation = initialLocation;
         this.layerCount = layerCount;
+        this.layerCountProperty.set(layerCount);
     }
 
-    public Refraction() {}
+    public Refraction() {
+        this.layer1 = new HBox();
+        this.layer2 = new HBox();
+        this.layer3 = new HBox();
+        layerCount = 0;
+    }
 
     public HBox getLayer1() {
         return layer1;
@@ -77,14 +86,6 @@ public class Refraction {
         this.n3 = n3;
     }
 
-    public int getLayerCount() {
-        return layerCount;
-    }
-
-    public void setLayerCount(int layerCount) {
-        this.layerCount = layerCount;
-    }
-
     public double getInitialAngle() {
         return initialAngle;
     }
@@ -99,6 +100,18 @@ public class Refraction {
 
     public void setInitialLocation(double initialLocation) {
         this.initialLocation = initialLocation;
+    }
+
+    public int getLayerCount() {
+        return layerCountProperty.get();
+    }
+
+    public IntegerProperty layerCountProperty() {
+        return layerCountProperty;
+    }
+
+    public void setLayerCount(int layerCountProperty) {
+        this.layerCountProperty.set(layerCountProperty);
     }
 
     @Override

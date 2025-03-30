@@ -10,12 +10,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import project.optics.jfkt.controllers.LayerChoosingController;
+import project.optics.jfkt.models.Refraction;
 
 import java.util.ArrayList;
 
 public class LayerChoosingView extends VBox {
-    public LayerChoosingView(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int currentLayer, HBox plusSignLayer) {
-        LayerChoosingController layerChoosingController = new LayerChoosingController(refractionView, stage, layers, frame, currentLayer, plusSignLayer);
+    public LayerChoosingView(RefractionView refractionView, Stage stage, ArrayList<HBox> layers, VBox frame, int layerCount, HBox plusSignLayer, Refraction refraction) {
+        LayerChoosingController layerChoosingController = new LayerChoosingController(refractionView, stage, layers, frame, layerCount, plusSignLayer, refraction);
 
         HBox air = new HBox();
         air.setBackground(Background.fill(Color.web("#FFFFFF")));
