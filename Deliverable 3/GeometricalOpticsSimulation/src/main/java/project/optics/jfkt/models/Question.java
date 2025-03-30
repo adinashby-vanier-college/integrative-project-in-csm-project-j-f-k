@@ -191,16 +191,16 @@ public class Question {
             "Solve for the intermediate location using the lens equation: 1/f = 1/do + 1/di",
             "100 cm",
             Difficulty.HARD,
-            "A two-lens system consists of a convex lens (f = 10 cm) placed 30 cm in front of an object. A second convex lens (f = 20 cm) is placed 40 cm behind the first lens. Where is the final image?",
-            null
+            "A two-lens system consists of a converging lens (f = 10 cm) placed 30 cm in front of an object. A converging lens (f = 20 cm) is placed 40 cm behind the first lens. Where is the final image?",
+            "/images/hard1.png"
     );
 
     public static final Question DIVERGING_CONVERGING_LENS_QUESTION = new Question(
             "Use the lens equation for both lenses, solving for the first image location, then use that as the object for the second lens",
             "15.88 cm",
             Difficulty.HARD,
-            "A diverging lens (f = -15 cm) is placed 20 cm from an object. A convex lens (f = 10 cm) is placed 30 cm behind the first lens. Where is the final image?",
-            null
+            "A diverging lens (f = 15 cm) is placed 20 cm from an object. A converging lens (f = 10 cm) is placed 30 cm behind the first lens. Where is the final image?",
+            "/images/hard2.png"
     );
 
     public static final Question MICROSCOPE_IMAGE_LOCATION_QUESTION = new Question(
@@ -208,7 +208,7 @@ public class Question {
             "infinity",
             Difficulty.HARD,
             "A microscope has an objective lens (f = 2 cm) and an eyepiece lens (f = 5 cm). The object is placed 2.5 cm from the objective lens. Where is the final image located?",
-            null
+            "/images/hard3.png"
     );
 
     public static final Question MULTI_MEDIUM_REFRACTION_QUESTION = new Question(
@@ -216,7 +216,7 @@ public class Question {
             "32.1",
             Difficulty.HARD,
             "A light ray passes from air (n = 1.00) into glass (n = 1.5) and then into water (n = 1.33). If the initial angle of incidence is 45°, find the final angle in water.",
-            null
+            "/images/hard4.png"
     );
 
     public static final Question LASER_BEAM_REFRACTION_QUESTION = new Question(
@@ -224,15 +224,15 @@ public class Question {
             "35.4",
             Difficulty.HARD,
             "A laser beam travels from air (n = 1.00) into oil (n = 1.46) and then into a polymer (n = 1.25). The initial angle is 50°. What is the final angle in the polymer?",
-            null
+            "/images/hard5.png"
     );
 
     public static final Question LENS_MIRROR_SYSTEM_QUESTION = new Question(
             "Find the image formed by the lens using the lens equation. Treat that image as the object for the mirror.",
             "4.3 cm",
             Difficulty.HARD,
-            "A convex lens (f = 15 cm) is placed 30 cm away from a concave mirror (f = -10 cm). An object is placed 45 cm in front of the convex lens. Where is the final image located?",
-            null
+            "A converging lens (f = 15 cm) is placed 30 cm away from a concave mirror (f = -10 cm). An object is placed 45 cm in front of the converging lens. Where is the final image located?",
+            "/images/hard6.png"
     );
 
     public static final Question TELESCOPE_LENS_SEPARATION_QUESTION = new Question(
@@ -240,31 +240,31 @@ public class Question {
             "105 cm",
             Difficulty.HARD,
             "A telescope has an objective lens (f = 100 cm) and an eyepiece (f = 5 cm). If the object is at infinity, what is the separation between the lenses for normal adjustment?",
-            null
+            "/images/medium2.png"
     );
 
     public static final Question CONCAVE_MIRROR_LENS_SYSTEM_QUESTION = new Question(
             "Solve for the first image using the lens equation. Use that image as the object for the concave mirror.",
             "16.67 cm",
             Difficulty.HARD,
-            "A concave mirror (f = -20 cm) is placed 50 cm behind a convex lens (f = 25 cm). An object is 30 cm in front of the convex lens. Where is the final image?",
-            null
+            "A concave mirror (f = 20 cm) is placed 50 cm behind a converging lens (f = 25 cm). An object is 30 cm in front of the comverging lens. Where is the final image?",
+            "/images/hard8.png"
     );
 
     public static final Question DIVERGING_LENS_MIRROR_SYSTEM_QUESTION = new Question(
             "Solve for the first image using the mirror equation. Use that image as the object for the diverging lens.",
             "3.53 cm",
             Difficulty.HARD,
-            "A diverging lens (f = -30 cm) is placed 20 cm behind a convex mirror (f = -40 cm). An object is placed 60 cm in front of the mirror. Where is the final image?",
-            null
+            "A diverging lens (f = 30 cm) is placed 20 cm behind a convex mirror (f = 40 cm). An object is placed 60 cm in front of the mirror. Where is the final image?",
+            "/images/hard9.png"
     );
 
     public static final Question CONCAVE_MIRROR_LENS_SYSTEM2_QUESTION = new Question(
             "Use the lens equation to find the first image. Use the mirror equation for the second image.",
             "2.86 cm",
             Difficulty.HARD,
-            "A concave mirror (f = -25 cm) is placed 40 cm behind a converging lens (f = 30 cm). An object is placed 20 cm in front of the lens. Where is the final image?",
-            null
+            "A concave mirror (f = 25 cm) is placed 40 cm behind a converging lens (f = 30 cm). An object is placed 20 cm in front of the lens. Where is the final image?",
+            "/images/hard10.png"
     );
 
     public static List<Question> getSampleQuestions() {
