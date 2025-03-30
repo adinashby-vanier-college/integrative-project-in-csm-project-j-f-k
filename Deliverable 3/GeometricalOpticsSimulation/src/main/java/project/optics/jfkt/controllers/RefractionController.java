@@ -47,7 +47,7 @@ public class RefractionController {
     }
 
     public void onIncidentLocationChanged(Number incidentLocation, Circle incidentPoint) {
-        incidentPoint.setCenterX(incidentLocation.doubleValue());
+        incidentPoint.setTranslateX(incidentLocation.doubleValue());
     }
 
     public void onPlayButtonPressed() {

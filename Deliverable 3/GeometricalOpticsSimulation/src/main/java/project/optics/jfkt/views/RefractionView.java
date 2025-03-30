@@ -30,7 +30,7 @@ public class RefractionView extends VBox {
     private static final double ANIMATION_PANE_HEIGHT = 900;
     private int currentLayer = 1;
     private Material chosenLayer;
-    private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty();
+    private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty(0);
     private Circle object;
     private SimpleDoubleProperty incidentAngle = new SimpleDoubleProperty(45);
     private VBox frame;
