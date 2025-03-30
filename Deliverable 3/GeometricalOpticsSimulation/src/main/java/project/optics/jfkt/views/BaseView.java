@@ -27,13 +27,14 @@ public class BaseView extends BorderPane{
     private BaseViewController baseViewController;
     private Button optionbutton1;
     private Button optionbutton2;
+    private Button playbutton;
     private ArrayList<TextField> textInputs = new ArrayList<>();
 
     public BaseView(String type){
         if (type.contentEquals("Mirrors")){
             this.type = type;
-            option1 = "Convex";
-            option2 = "Concave";
+            option1 = "Concave";
+            option2 = "Convex";
         } else{
             this.type = type;
             option1 = "Converging";
@@ -101,7 +102,7 @@ public class BaseView extends BorderPane{
         topbuttons.setAlignment(Pos.CENTER);
 
         ImageView playimage = new ImageView(new Image(this.getClass().getResource("/images/64/Play.png").toExternalForm()));
-        Button playbutton = new Button("",playimage);
+        playbutton = new Button("",playimage);
         playbutton.setPrefSize(120,20);
 
         ImageView pauseimage = new ImageView(new Image(this.getClass().getResource("/images/64/Pause.png").toExternalForm()));
@@ -227,5 +228,9 @@ public class BaseView extends BorderPane{
 
     public ArrayList<TextField> getTextInputs() {
         return textInputs;
+    }
+
+    public Button getPlaybutton() {
+        return playbutton;
     }
 }

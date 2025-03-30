@@ -1,5 +1,6 @@
 package project.optics.jfkt.controllers;
 
+import project.optics.jfkt.models.MirrorCoordinateCalculations;
 import project.optics.jfkt.views.MirrorView;
 
 public class MirrorController {
@@ -10,17 +11,31 @@ public class MirrorController {
     }
 
     public void onOption1ButtonPressed(){
-        mirrorView.setisConcave(false);
+        mirrorView.setisConcave(true);
         mirrorView.updateView();
     }
 
     public void onOption2ButtonPressed(){
-        mirrorView.setisConcave(true);
+        mirrorView.setisConcave(false);
         mirrorView.updateView();
     }
 
     public void onFocalLengthUpdated(double focalLength) {
         mirrorView.setFocalLength(focalLength);
         mirrorView.updateView();
+    }
+
+    public void onObjectDistanceUpdated(double objectDistance) {
+        mirrorView.setObjectDistance(objectDistance);
+        mirrorView.updateView();
+    }
+
+    public void onObjectHeightUpdated(double objectHeight){
+        mirrorView.setObjectHeight(objectHeight);
+        mirrorView.updateView();
+    }
+
+    public void onPlayButtonPressed(){
+       mirrorView.testCoordinate();
     }
 }

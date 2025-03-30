@@ -6,9 +6,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import project.optics.jfkt.controllers.MirrorController;
+import project.optics.jfkt.models.ArrowModel;
+import project.optics.jfkt.models.MirrorCoordinateCalculations;
 import project.optics.jfkt.models.MirrorModel;
+
+import java.util.ArrayList;
 
 
 public class MirrorView extends BaseView {
@@ -28,9 +33,9 @@ public class MirrorView extends BaseView {
         Pane animPane = getAnimpane();
         centerX = animPane.getPrefWidth()/2;
         centerY = animPane.getPrefHeight()/2;
-        //place base mirror & Objects
-        double defaultObjectDistance = objectDistance = 8.0;
-        double defaultObjectHeight = objectHeight =  2.0;
+
+        double defaultObjectDistance = objectDistance = 20.0;
+        double defaultObjectHeight = objectHeight =  8.0;
         double defaultFocalLength = focalLength = 8.0;
         boolean defaultIsConcave = isConcave = true;
 
@@ -52,22 +57,43 @@ public class MirrorView extends BaseView {
         getTextInputs().getFirst().textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != "") {
                 try {
-                    double focalLength = Double.parseDouble(newValue);
-                    mirrorController.onFocalLengthUpdated(focalLength);
+                    double updatedFocalLength = Double.parseDouble(newValue);
+                    mirrorController.onFocalLengthUpdated(updatedFocalLength);
                 } catch (Exception e) {
                     new Alert(Alert.AlertType.ERROR, "Please enter a valid number").showAndWait();
                 }
             }
         });
+        getTextInputs().get(1).textProperty().addListener((observable, oldValue, newValue) ->{
+            if (newValue != "") {
+                try {
+                    double updatedObjectDistance = Double.parseDouble(newValue);
+                    mirrorController.onObjectDistanceUpdated(updatedObjectDistance);
+                } catch (Exception e) {
+                    new Alert(Alert.AlertType.ERROR, "Please enter a valid number").showAndWait();
+                }
+            }
+        });
+        getTextInputs().getLast().textProperty().addListener((observable, oldValue, newValue) ->{
+            if (newValue != "") {
+                try {
+                    double updatedObjectHeight = Double.parseDouble(newValue);
+                    mirrorController.onObjectHeightUpdated(updatedObjectHeight);
+                } catch (Exception e) {
+                    new Alert(Alert.AlertType.ERROR, "Please enter a valid number").showAndWait();
+                }
+            }
+        });
+        getPlaybutton().setOnAction(e->{
+            mirrorController.onPlayButtonPressed();
+        });
 
 
         MirrorModel baseMirror = new MirrorModel(defaultFocalLength,centerX, centerY, scale, defaultIsConcave);
-        animPane.getChildren().add(baseMirror.getMirrorGroup());
+        ArrowModel baseArrowModel = new ArrowModel(defaultObjectHeight,scale,defaultObjectDistance,centerX,centerY);
+        animPane.getChildren().addAll(baseMirror.getMirrorGroup(), baseArrowModel.getArrowObject());
     }
 
-    void createObject(){
-
-    }
 
     public void updateView(){
         Pane animPane = getAnimpane();
@@ -78,7 +104,25 @@ public class MirrorView extends BaseView {
         opticalAxis.setStrokeWidth(1);
 
         MirrorModel updatedMirror = new MirrorModel(focalLength, centerX, centerY, scale, isConcave);
-        animPane.getChildren().addAll(opticalAxis, updatedMirror.getMirrorGroup());
+        ArrowModel arrowModel = new ArrowModel(objectHeight,scale,objectDistance,centerX,centerY);
+        animPane.getChildren().addAll(opticalAxis, updatedMirror.getMirrorGroup(), arrowModel.getArrowObject());
+    }
+
+    public void testCoordinate(){
+        MirrorCoordinateCalculations mirrorCoordinateCalculations = new MirrorCoordinateCalculations(focalLength,scale,centerX,centerY,objectDistance,objectHeight,isConcave);
+        ArrayList<Double> xCoordinates = mirrorCoordinateCalculations.getxCoordinates();
+        ArrayList<Double> yCoordinates = mirrorCoordinateCalculations.getyCoordinates();
+        for (int i =0; i< 5; i++){
+            Circle coordinate = new Circle(5);
+            coordinate.setFill(Color.BLUE);
+            coordinate.setStroke(Color.BLACK);
+            coordinate.setCenterX(xCoordinates.get(i));
+            coordinate.setCenterY(yCoordinates.get(i));
+            System.out.println("Coordinate x " + (i+1) +" :" + xCoordinates.get(i));
+            System.out.println("Coordinate y " + (i+1) +" :" + yCoordinates.get(i));
+            getAnimpane().getChildren().add(coordinate);
+        }
+
     }
 
     public void setisConcave(Boolean isConcave){
@@ -87,5 +131,13 @@ public class MirrorView extends BaseView {
 
     public void setFocalLength(double focalLength) {
         this.focalLength = focalLength;
+    }
+
+    public void setObjectDistance(double objectDistance){
+        this.objectDistance = objectDistance;
+    }
+
+    public void setObjectHeight(double objectHeight){
+        this.objectHeight = objectHeight;
     }
 }

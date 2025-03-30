@@ -20,7 +20,7 @@ public class MirrorModel {
         Circle focalPoint = new Circle(5);
         double focalX;
 
-        if (isConcave) {
+        if (!isConcave) {
             // Create mirror arcs
             mirrorArc.setCenterX(centerX + radius);
             mirrorArc.setCenterY(centerY);
@@ -49,7 +49,7 @@ public class MirrorModel {
             focalPoint.setStroke(Color.BLACK);
 
             double mirrorSurfaceX = centerX + radius;
-            focalX = mirrorSurfaceX + Math.abs(focalLength * scale);
+            focalX = mirrorSurfaceX - Math.abs(focalLength * scale);
             focalPoint.setCenterX(focalX);
             focalPoint.setCenterY(centerY);
 
@@ -68,8 +68,8 @@ public class MirrorModel {
 
             innerArc.setCenterX(centerX - radius);
             innerArc.setCenterY(centerY);
-            innerArc.setRadiusX(radius * 0.95);
-            innerArc.setRadiusY(radius * 0.95);
+            innerArc.setRadiusX(radius * 1.05);
+            innerArc.setRadiusY(radius * 1.05);
             innerArc.setStartAngle(270);
             innerArc.setLength(180);
             innerArc.setType(ArcType.OPEN);
@@ -83,7 +83,7 @@ public class MirrorModel {
             focalPoint.setStroke(Color.BLACK);
 
             double mirrorSurfaceX = centerX - radius;
-            focalX = mirrorSurfaceX - Math.abs(focalLength * scale);
+            focalX = mirrorSurfaceX + Math.abs(focalLength * scale);
             focalPoint.setCenterX(focalX);
             focalPoint.setCenterY(centerY);
 
