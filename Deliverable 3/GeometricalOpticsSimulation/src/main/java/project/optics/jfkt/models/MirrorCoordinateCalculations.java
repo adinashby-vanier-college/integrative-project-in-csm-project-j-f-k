@@ -17,6 +17,7 @@ public class MirrorCoordinateCalculations {
             double yImageCoordinate = centerY - (imageHeight*scale);
             double radius = Math.abs(2*focalLength)*scale;
             double squareTerm = (Math.pow(radius,2) - Math.pow(objectHeight*scale, 2));
+            double squareTerm2 = (Math.pow(radius,2) - Math.pow(imageHeight*scale, 2));
 
             //top of object coordinate
             xCoordinates.add(centerX - objectDistance* scale);
@@ -25,8 +26,8 @@ public class MirrorCoordinateCalculations {
             xCoordinates.add(centerX);
             yCoordinates.add(centerY);
             //ray going through Focal
-            xCoordinates.add(centerX + radius/2);
-            yCoordinates.add(centerY);
+            xCoordinates.add(centerX + (radius -(Math.sqrt(squareTerm2))));
+            yCoordinates.add(yImageCoordinate);
             //ray going straight to mirror
             xCoordinates.add(centerX + (radius -(Math.sqrt(squareTerm))));
             yCoordinates.add(centerY - objectHeight * scale);
@@ -41,6 +42,7 @@ public class MirrorCoordinateCalculations {
             double yImageCoordinate = centerY - (imageHeight*scale);
             double radius = Math.abs(2*focalLength)*scale;
             double squareTerm = (Math.pow(radius,2) - Math.pow(objectHeight*scale, 2));
+            double squareTerm2 = (Math.pow(radius,2) - Math.pow(imageHeight*scale, 2));
 
             //top of object coordinate
             xCoordinates.add(centerX - objectDistance* scale);
@@ -49,8 +51,8 @@ public class MirrorCoordinateCalculations {
             xCoordinates.add(centerX);
             yCoordinates.add(centerY);
             //ray going through Focal
-            xCoordinates.add(centerX - radius/2);
-            yCoordinates.add(centerY);
+            xCoordinates.add(centerX - (radius -(Math.sqrt(squareTerm2))));
+            yCoordinates.add(yImageCoordinate);
             //ray going straight to mirror
             xCoordinates.add(centerX - (radius -(Math.sqrt(squareTerm))));
             yCoordinates.add(centerY - objectHeight * scale);
