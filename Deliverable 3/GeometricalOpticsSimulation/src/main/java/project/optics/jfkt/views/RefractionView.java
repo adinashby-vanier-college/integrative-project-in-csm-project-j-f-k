@@ -12,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -245,6 +244,7 @@ public class RefractionView extends VBox {
         });
 
         Text locationValue = new Text();
+        locationValue.setWrappingWidth(40);
 
         StringConverter<Number> converter = new NumberStringConverter();
 
