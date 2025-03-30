@@ -3,6 +3,8 @@ package project.optics.jfkt.controllers;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -11,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -139,7 +142,7 @@ public class RefractionController {
         if (Math.abs(sinRefracted) > 1) {
             // Total internal reflection at interface 1:
             double reflectedX = nextX + dx; // reflected, so plus dx
-            double reflectedY = currentY; // reflected back to the initial height
+            double reflectedY = -5; // reflected back to y = 0
 
             path.add(new Point2D(reflectedX, reflectedY));
             return path;
@@ -168,7 +171,7 @@ public class RefractionController {
 
             // Then, refracted back to y = 0;
             double refractedX = nextX * 2; // just double the midpoint's x because it's symmetric
-            double refractedY = 0;
+            double refractedY = -5;
             path.add(new Point2D(refractedX, refractedY));
 
             return path;
@@ -184,7 +187,7 @@ public class RefractionController {
         // ------------------------------
         dx = h3 * Math.tan(incidentAngleRad);
         double exitX = currentX + dx;
-        double exitY = currentY + h3;
+        double exitY = currentY + h3 + 5;
         path.add(new Point2D(exitX, exitY)); // final exit point
 
         return path;
@@ -227,7 +230,7 @@ public class RefractionController {
             path.add(new Point2D(nextX, nextY));
             // 2. Reflect the ray: for a horizontal interface, reflection reverses the horizontal displacement.
             double reflectedX = nextX + dx1; // returns to original x at the top of layer1.
-            double reflectedY = currentY;     // back at the top.
+            double reflectedY = currentY - 5;     // back at the top.
             path.add(new Point2D(reflectedX, reflectedY));
             // End simulation here.
             return path;
@@ -244,7 +247,7 @@ public class RefractionController {
         // Compute the displacement in layer2.
         double dx2 = layerHeight2 * Math.tan(incidentAngleRad);
         double finalX = nextX + dx2;
-        double finalY = nextY + layerHeight2;
+        double finalY = nextY + layerHeight2 + 5;
         path.add(new Point2D(finalX, finalY));
 
         return path;
@@ -291,6 +294,7 @@ public class RefractionController {
         // Add keyframes for each point in the path
         for (int i = 1; i < path.size(); i++) {
             Point2D target = path.get(i);
+
             double time = i * segmentDuration;
 
             KeyFrame keyFrame = new KeyFrame(
@@ -302,6 +306,27 @@ public class RefractionController {
         }
 
         timeline.setCycleCount(1);
+
+        // stop the animation when goes out of bounds
+        object.translateXProperty().addListener((observable, oldValue, newValue) -> {
+            double screenWidth = Screen.getPrimary().getBounds().getWidth();
+            double totalHeight = 0;
+            int layerCount = refraction.getLayerCount();
+            if (layerCount == 2) {
+                totalHeight = refraction.getLayer1().getHeight() + refraction.getLayer2().getHeight();
+            } else if (layerCount == 3) {
+                totalHeight = refraction.getLayer1().getHeight() +
+                        refraction.getLayer2().getHeight() +
+                        refraction.getLayer3().getHeight();
+            }
+
+            if (object.getTranslateX() > screenWidth + 3 ||
+                    object.getTranslateY() < -3 ||
+                    object.getTranslateY() > totalHeight + 3) {
+                timeline.stop();
+            }
+        });
+
         return timeline;
     }
 
