@@ -6,6 +6,8 @@ import javafx.animation.Timeline;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -31,6 +33,8 @@ import java.util.List;
 public class RefractionController {
     private Refraction refraction;
     private RefractionView refractionView;
+    private Timeline animation;
+
     public RefractionController(Refraction refraction, RefractionView refractionView) {
         this.refraction = refraction;
         this.refractionView = refractionView;
@@ -70,6 +74,7 @@ public class RefractionController {
             }
 
             animation = createAnimation(path, Duration.seconds(4));
+            this.animation = animation;
             animation.play();
         }
     }
@@ -367,6 +372,17 @@ public class RefractionController {
         } else {
             clip.heightProperty().bind(animationPane.heightProperty());
             clip.widthProperty().bind(animationPane.widthProperty());
+        }
+    }
+
+    public void onAnimationSpeedChanged(Toggle selectedSpeed) {
+        RadioButton selectedButton = (RadioButton) selectedSpeed;
+        String selectedTxt = selectedButton.getText();
+
+        switch (selectedTxt) {
+            case "Slow" -> animation.setRate(0.5);
+            case "Normal" -> animation.setRate(1);
+            case "Fast" -> animation.setRate(2);
         }
     }
 }

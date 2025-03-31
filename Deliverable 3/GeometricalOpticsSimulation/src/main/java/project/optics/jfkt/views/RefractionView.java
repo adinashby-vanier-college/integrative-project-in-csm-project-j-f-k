@@ -215,9 +215,18 @@ public class RefractionView extends VBox {
     }
 
     private Region createAnimationSpeedButtons() {
-        Button slow = new Button("Slow");
-        Button normal = new Button("Normal");
-        Button fast = new Button("Fast");
+        RadioButton slow = new RadioButton("Slow");
+        RadioButton normal = new RadioButton("Normal");
+        RadioButton fast = new RadioButton("Fast");
+        normal.setSelected(true);
+
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        slow.setToggleGroup(toggleGroup);
+        normal.setToggleGroup(toggleGroup);
+        fast.setToggleGroup(toggleGroup);
+
+        toggleGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) -> refractionController.onAnimationSpeedChanged(newVal));
 
         HBox container = new HBox(20, slow, normal, fast);
 
