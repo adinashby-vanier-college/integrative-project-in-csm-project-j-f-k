@@ -6,7 +6,9 @@ import javafx.animation.Timeline;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Toggle;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -44,6 +46,7 @@ public class RefractionController {
 
     public void onNewLayerButtonPressed(RefractionView refractionView, ArrayList<HBox> layers, VBox frame, HBox plusSignLayer) {
         if (refraction.getLayerCount() < 4) {
+            // create layer choosing stage
             Stage stage = new Stage();
             stage.initOwner(MainApp.primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
@@ -53,6 +56,11 @@ public class RefractionController {
             stage.setScene(new Scene(new LayerChoosingView(refractionView, stage, layers, frame, refraction.getLayerCount(), plusSignLayer, refraction)));
             stage.setFullScreen(false);
             stage.show();
+
+            refractionView.setAnimationStatus(AnimationStatus.PREPARED);
+            refractionView.getTrailPane().getChildren().clear();
+            refractionView.getTrailPane().getChildren().add(refractionView.getObject());
+            refractionView.getObject().setTranslateY(0);
         }
     }
 
@@ -69,7 +77,6 @@ public class RefractionController {
         if (refractionView.getAnimationStatus() == AnimationStatus.PREPARED || refractionView.getAnimationStatus() == AnimationStatus.FINISHED) {
             boolean flag = update();
             List<Point2D> path;
-            Timeline animation;
 
             if (flag) { // if update successfully: at least two layers were settled
                 if (refraction.getLayerCount() == 3) {
@@ -82,7 +89,6 @@ public class RefractionController {
                 }
 
                 animation = createAnimation(path, Duration.seconds(4));
-                this.animation = animation;
                 animation.play();
                 refractionView.setAnimationStatus(AnimationStatus.IN_PROGRESS);
             }
@@ -359,7 +365,6 @@ public class RefractionController {
         });
 
         timeline.setOnFinished(event -> refractionView.setAnimationStatus(AnimationStatus.FINISHED));
-
         return timeline;
     }
 
@@ -422,5 +427,18 @@ public class RefractionController {
 
     public void onRefreshButtonPressed() {
         new Util().switchScene(new Scene(new RefractionView()));
+    }
+
+    public void onAnimationStatusChanged(AnimationStatus status, Slider locationSlider, Slider angleSlider, Button newLayerButton) {
+        System.out.println(status);
+        if (status == AnimationStatus.IN_PROGRESS || status == AnimationStatus.PAUSED) {
+            locationSlider.setDisable(true);
+            angleSlider.setDisable(true);
+            newLayerButton.setDisable(true);
+        } else {
+            locationSlider.setDisable(false);
+            angleSlider.setDisable(false);
+            newLayerButton.setDisable(false);
+        }
     }
 }

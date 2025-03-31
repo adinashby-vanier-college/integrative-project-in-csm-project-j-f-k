@@ -2,6 +2,7 @@ package project.optics.jfkt.views;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -40,6 +41,10 @@ public class RefractionView extends VBox {
     private StackPane animationPane;
     private Pane trailPane;
     private Rectangle rectangleClip;
+    private Slider locationSlider;
+    private Slider angleSlider;
+    private Button newLayer;
+    private SimpleObjectProperty<AnimationStatus> animationStatusProperty = new SimpleObjectProperty<>(AnimationStatus.PREPARED);
 
     public RefractionView() {
         Region menu = util.createMenu();
@@ -52,6 +57,9 @@ public class RefractionView extends VBox {
 
         // resize the clipping area
         refraction.layerCountProperty().addListener((observable, oldValue, newValue) -> refractionController.onLayerCountChanged(newValue.intValue()));
+
+        // Disable user inputs when the animation status is modified
+        animationStatusProperty.addListener((observable, oldValue, newValue) -> refractionController.onAnimationStatusChanged(newValue, locationSlider, angleSlider, newLayer));
     }
 
     private void initializeLayers() {
@@ -143,6 +151,8 @@ public class RefractionView extends VBox {
                 "-fx-cursor: hand; " +
                 "-fx-pref-width: 0; -fx-pref-height: 0; " + // Zero preferred size
                 "-fx-min-width: 0; -fx-min-height: 0; " );
+
+        this.newLayer = newLayer;
 
         HBox plusSignLayer = new HBox(newLayer);
         plusSignLayer.setAlignment(Pos.CENTER);
@@ -276,6 +286,8 @@ public class RefractionView extends VBox {
 
         HBox container = new HBox(10, angleSlider, angleValue);
 
+        this.angleSlider = angleSlider;
+
         return container;
     }
 
@@ -301,6 +313,8 @@ public class RefractionView extends VBox {
         Bindings.bindBidirectional(locationValue.textProperty(), locationSlider.valueProperty(), converter);
 
         HBox container = new HBox(10, locationSlider, locationValue);
+
+        this.locationSlider = locationSlider;
 
         return container;
     }
@@ -370,11 +384,11 @@ public class RefractionView extends VBox {
     }
 
     public AnimationStatus getAnimationStatus() {
-        return animationStatus;
+        return animationStatusProperty.get();
     }
 
     public void setAnimationStatus(AnimationStatus animationStatus) {
-        this.animationStatus = animationStatus;
+        animationStatusProperty.set(animationStatus);
     }
 
     public void setIncidentLocation(double incidentLocation) {
