@@ -1,6 +1,7 @@
 package project.optics.jfkt.controllers;
 
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,9 +16,12 @@ import javafx.scene.text.Text;
 import project.optics.jfkt.enums.Difficulty;
 import project.optics.jfkt.models.Question;
 import project.optics.jfkt.views.EducationModeView;
+import project.optics.jfkt.views.SelectionView;
 
 import java.io.InputStream;
 import java.util.*;
+
+import static project.optics.jfkt.MainApp.primaryStage;
 
 public class EducationModeController {
     private EducationModeView view;
@@ -25,6 +29,8 @@ public class EducationModeController {
     private List<Question> availableQuestions;
     private Question currentQuestion;
     private Random random = new Random();
+    private ImageView imageView;
+    private Image image;
 
     public EducationModeController(EducationModeView view, Difficulty difficulty) {
         this.view = view;
@@ -33,11 +39,30 @@ public class EducationModeController {
         loadNewQuestion();
     }
 
+
     private void initializeQuestionBank(Difficulty difficulty) {
         questionBank = new ArrayList<>(Question.getSampleQuestions());
         questionBank.removeIf(q -> q.getDifficulty() != difficulty);
         availableQuestions = new ArrayList<>(questionBank);
         Collections.shuffle(availableQuestions);
+    }
+    private void onBackButtonPressed(){
+        SelectionView selectionView = new SelectionView();
+        Scene selectionScene = new Scene(selectionView);
+        primaryStage.setScene(selectionScene);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
+
+    }
+
+    private void onZoomInButtonPressed(){
+    imageView.setFitHeight(image.getHeight()*1.1);
+    imageView.setFitWidth(image.getWidth()*1.1);
+    }
+    private void onZoomOutButtonPressed(){
+        imageView.setFitHeight(image.getHeight()*0.9);
+        imageView.setFitWidth(image.getWidth()*0.9);
+
     }
 
     private void setupButtonActions() {
@@ -45,6 +70,9 @@ public class EducationModeController {
         view.getHintButton().setOnAction(e -> showHint());
         view.getAnswerButton().setOnAction(e -> showAnswer());
         view.getNewQuestionButton().setOnAction(e -> loadNewQuestion());
+        view.getBackButton().setOnAction(e->onBackButtonPressed());
+        view.getZoomInButton().setOnAction(e->onZoomInButtonPressed());
+        view.getZoomOutButton().setOnAction(e-> onZoomOutButtonPressed());
     }
 
     private void loadNewQuestion() {
@@ -100,8 +128,8 @@ public class EducationModeController {
             try {
                 InputStream imageStream = getClass().getResourceAsStream(currentQuestion.getImage());
                 if (imageStream != null) {
-                    Image image = new Image(imageStream);
-                    ImageView imageView = new ImageView(image);
+                     image = new Image(imageStream);
+                     imageView = new ImageView(image);
 
                     // Preserve aspect ratio
                     imageView.setPreserveRatio(true);

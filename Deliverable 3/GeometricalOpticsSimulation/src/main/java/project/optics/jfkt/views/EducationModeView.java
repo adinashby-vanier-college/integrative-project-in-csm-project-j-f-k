@@ -3,12 +3,14 @@ package project.optics.jfkt.views;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import project.optics.jfkt.MainApp;
 import project.optics.jfkt.controllers.EducationModeController;
 import project.optics.jfkt.enums.Difficulty;
 import project.optics.jfkt.models.Question;
@@ -31,6 +33,9 @@ public class EducationModeView extends BorderPane {
     private Button answerButton;
     private Button newQuestionButton;
     private Pane imagePane;
+    private Button zoomIn;
+    private Button zoomOut;
+    private Button back;
 
     // Radio button groups
     private ToggleGroup modeGroup;
@@ -55,13 +60,27 @@ public class EducationModeView extends BorderPane {
         return util.createMenu();
     }
 
+    public HBox createZoomAndBackButtons() {
+        HBox container = new HBox(20);
+
+         zoomIn = new Button("Zoom In");
+         zoomOut = new Button("Zoom Out");
+         back = new Button("Back");
+
+
+        container.getChildren().addAll(zoomIn, zoomOut, back);
+
+        return container;
+    }
+
+
     private Region createCenter() {
         VBox container = new VBox(20);
         container.setAlignment(Pos.CENTER);
         container.setPadding(new Insets(20));
         container.setBorder(Border.stroke(Color.BLACK));
 
-        HBox topButtons = util.createZoomAndBackButtons();
+        HBox topButtons = createZoomAndBackButtons();
         topButtons.setAlignment(Pos.CENTER_LEFT);
         topButtons.setSpacing(10);
         topButtons.setPrefHeight(50);
@@ -242,4 +261,8 @@ public class EducationModeView extends BorderPane {
     public ToggleGroup getSizeGroup() { return sizeGroup; }
     public ToggleGroup getOrientationGroup() { return orientationGroup; }
     public Pane getImagePane() {return imagePane;}
+    public Button getZoomInButton() {return zoomIn;}
+    public Button getZoomOutButton() {return zoomOut;}
+    public Button getBackButton(){return back;}
+
 }
