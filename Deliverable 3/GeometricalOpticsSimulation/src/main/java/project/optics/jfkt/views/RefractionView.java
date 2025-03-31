@@ -18,6 +18,7 @@ import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import project.optics.jfkt.controllers.RefractionController;
+import project.optics.jfkt.enums.AnimationStatus;
 import project.optics.jfkt.enums.Material;
 import project.optics.jfkt.models.Refraction;
 import project.optics.jfkt.utils.Util;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 public class RefractionView extends VBox {
     private Refraction refraction = new Refraction();
+    private AnimationStatus animationStatus = AnimationStatus.PREPARED;
     private final RefractionController refractionController = new RefractionController(refraction, this);
     private final Util util = new Util();
     private static final double ANIMATION_PANE_HEIGHT = 900;
@@ -175,7 +177,7 @@ public class RefractionView extends VBox {
         Region parameters = createParameters();
         parameters.setPrefWidth(340);
         Region animationSpeedButtons = createAnimationSpeedButtons();
-        Region pausePlayAndRestartButtons = createPausePlayAndRestartButtons();
+        Region pausePlayAndRestartButtons = createPausePlayAndRefreshButtons();
 
         Region spacer1 = new Region();
         Region spacer2 = new Region();
@@ -192,7 +194,7 @@ public class RefractionView extends VBox {
         return container;
     }
 
-    private Region createPausePlayAndRestartButtons() {
+    private Region createPausePlayAndRefreshButtons() {
         Image pauseImg = new Image(this.getClass().getResource("/images/64/Pause.png").toExternalForm());
         ImageView pauseImgView = new ImageView(pauseImg);
         Button pause = new Button();
@@ -202,14 +204,17 @@ public class RefractionView extends VBox {
         ImageView playImgView = new ImageView(playImg);
         Button play = new Button();
         play.setGraphic(playImgView);
+
+        Image refreshImg = new Image(this.getClass().getResource("/images/64/Redo.png").toExternalForm());
+        ImageView restartImgView = new ImageView(refreshImg);
+        Button refresh = new Button();
+        refresh.setGraphic(restartImgView);
+
         play.setOnAction(event -> refractionController.onPlayButtonPressed());
+        pause.setOnAction(event -> refractionController.onPausePressed());
+        refresh.setOnAction(event -> refractionController.onRefreshButtonPressed());
 
-        Image restartImg = new Image(this.getClass().getResource("/images/64/Redo.png").toExternalForm());
-        ImageView restartImgView = new ImageView(restartImg);
-        Button restart = new Button();
-        restart.setGraphic(restartImgView);
-
-        HBox container = new HBox(20, pause, play, restart);
+        HBox container = new HBox(20, pause, play, refresh);
 
         return container;
     }
@@ -260,7 +265,7 @@ public class RefractionView extends VBox {
         angleSlider.setBlockIncrement(0.5);
 
         // update incident angle with the angle slider dynamically
-        angleSlider.valueProperty().addListener((observable, oldValue, newValue) -> incidentAngle.set(newValue.doubleValue()));
+        angleSlider.valueProperty().addListener((observable, oldValue, newValue) -> refractionController.onInitialAngleChanged(newValue.doubleValue()));
 
         Text angleValue = new Text();
         angleValue.setWrappingWidth(45);
@@ -286,12 +291,7 @@ public class RefractionView extends VBox {
         });
         locationSlider.setBlockIncrement(1);
         locationSlider.setMin(0);
-        locationSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                incidentLocation.set(newValue.doubleValue());
-            }
-        });
+        locationSlider.valueProperty().addListener((observable, oldVal, newVal) -> refractionController.onInitialLocationChanged(newVal.doubleValue()));
 
         Text locationValue = new Text();
         locationValue.setWrappingWidth(60);
@@ -367,5 +367,21 @@ public class RefractionView extends VBox {
 
     public void setRectangleClip(Rectangle rectangleClip) {
         this.rectangleClip = rectangleClip;
+    }
+
+    public AnimationStatus getAnimationStatus() {
+        return animationStatus;
+    }
+
+    public void setAnimationStatus(AnimationStatus animationStatus) {
+        this.animationStatus = animationStatus;
+    }
+
+    public void setIncidentLocation(double incidentLocation) {
+        this.incidentLocation.set(incidentLocation);
+    }
+
+    public void setIncidentAngle(double incidentAngle) {
+        this.incidentAngle.set(incidentAngle);
     }
 }

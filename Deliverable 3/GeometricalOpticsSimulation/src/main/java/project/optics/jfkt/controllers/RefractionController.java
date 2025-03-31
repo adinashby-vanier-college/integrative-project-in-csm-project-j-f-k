@@ -23,7 +23,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import project.optics.jfkt.MainApp;
+import project.optics.jfkt.enums.AnimationStatus;
 import project.optics.jfkt.models.Refraction;
+import project.optics.jfkt.utils.Util;
 import project.optics.jfkt.views.LayerChoosingView;
 import project.optics.jfkt.views.RefractionView;
 
@@ -59,23 +61,31 @@ public class RefractionController {
     }
 
     public void onPlayButtonPressed() {
-        boolean flag = update();
-        List<Point2D> path;
-        Timeline animation;
-
-        if (flag) { // if update successfully: at least two layers were settled
-            if (refraction.getLayerCount() == 3) {
-                path = calculate3();
-            } else if (refraction.getLayerCount() == 2) {
-                path = calculate2(0); // start at y = 0
-            } else {
-                // Handle other cases or assign a default value.
-                throw new IllegalStateException("Unsupported layer count: " + refraction.getLayerCount());
-            }
-
-            animation = createAnimation(path, Duration.seconds(4));
-            this.animation = animation;
+        if (refractionView.getAnimationStatus() == AnimationStatus.PAUSED) {
             animation.play();
+            refractionView.setAnimationStatus(AnimationStatus.IN_PROGRESS);
+        }
+
+        if (refractionView.getAnimationStatus() == AnimationStatus.PREPARED || refractionView.getAnimationStatus() == AnimationStatus.FINISHED) {
+            boolean flag = update();
+            List<Point2D> path;
+            Timeline animation;
+
+            if (flag) { // if update successfully: at least two layers were settled
+                if (refraction.getLayerCount() == 3) {
+                    path = calculate3();
+                } else if (refraction.getLayerCount() == 2) {
+                    path = calculate2(0); // start at y = 0
+                } else {
+                    // Handle other cases or assign a default value.
+                    throw new IllegalStateException("Unsupported layer count: " + refraction.getLayerCount());
+                }
+
+                animation = createAnimation(path, Duration.seconds(4));
+                this.animation = animation;
+                animation.play();
+                refractionView.setAnimationStatus(AnimationStatus.IN_PROGRESS);
+            }
         }
     }
 
@@ -348,6 +358,8 @@ public class RefractionController {
             }
         });
 
+        timeline.setOnFinished(event -> refractionView.setAnimationStatus(AnimationStatus.FINISHED));
+
         return timeline;
     }
 
@@ -384,5 +396,31 @@ public class RefractionController {
             case "Normal" -> animation.setRate(1);
             case "Fast" -> animation.setRate(2);
         }
+    }
+
+    public void onPausePressed() {
+        animation.pause();
+        refractionView.setAnimationStatus(AnimationStatus.PAUSED);
+    }
+
+    public void onInitialLocationChanged(double location) {
+        refractionView.getTrailPane().getChildren().clear();
+        refractionView.getTrailPane().getChildren().add(refractionView.getObject());
+        refractionView.setIncidentLocation(location);
+        refractionView.setAnimationStatus(AnimationStatus.PREPARED);
+        refractionView.getObject().setTranslateY(0);
+
+    }
+
+    public void onInitialAngleChanged(double angle) {
+        refractionView.getTrailPane().getChildren().clear();
+        refractionView.getTrailPane().getChildren().add(refractionView.getObject());
+        refractionView.setIncidentAngle(angle);
+        refractionView.setAnimationStatus(AnimationStatus.PREPARED);
+        refractionView.getObject().setTranslateY(0);
+    }
+
+    public void onRefreshButtonPressed() {
+        new Util().switchScene(new Scene(new RefractionView()));
     }
 }
