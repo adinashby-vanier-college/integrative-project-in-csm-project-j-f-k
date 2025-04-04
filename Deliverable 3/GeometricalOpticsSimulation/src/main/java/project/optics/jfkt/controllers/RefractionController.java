@@ -361,6 +361,7 @@ public class RefractionController {
                     object.getTranslateY() < -3 ||
                     object.getTranslateY() > totalHeight + 3) {
                 timeline.stop();
+                refractionView.setAnimationStatus(AnimationStatus.FINISHED);
             }
         });
 
@@ -395,6 +396,10 @@ public class RefractionController {
     public void onAnimationSpeedChanged(Toggle selectedSpeed) {
         RadioButton selectedButton = (RadioButton) selectedSpeed;
         String selectedTxt = selectedButton.getText();
+
+        if (animation == null) {
+            return;
+        }
 
         switch (selectedTxt) {
             case "Slow" -> animation.setRate(0.5);

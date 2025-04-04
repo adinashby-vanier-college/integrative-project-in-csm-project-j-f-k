@@ -27,10 +27,8 @@ import project.optics.jfkt.utils.Util;
 import java.util.ArrayList;
 
 public class RefractionView extends VBox {
-    private Refraction refraction = new Refraction();
-    private AnimationStatus animationStatus = AnimationStatus.PREPARED;
+    private final Refraction refraction = new Refraction();
     private final RefractionController refractionController = new RefractionController(refraction, this);
-    private final Util util = new Util();
     private static final double ANIMATION_PANE_HEIGHT = 900;
     private Material chosenLayer;
     private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty(0);
@@ -47,6 +45,7 @@ public class RefractionView extends VBox {
     private SimpleObjectProperty<AnimationStatus> animationStatusProperty = new SimpleObjectProperty<>(AnimationStatus.PREPARED);
 
     public RefractionView() {
+        Util util = new Util();
         Region menu = util.createMenu();
         HBox topButtons = util.createZoomAndBackButtons();
         topButtons.setAlignment(Pos.CENTER_LEFT);
@@ -119,6 +118,13 @@ public class RefractionView extends VBox {
         object.setStroke(Color.BLUE);
         object.setFill(Color.BLUE);
         object.setManaged(false);
+        object.setVisible(false);
+
+        // the object would be displayed only when there are two or more layers
+        refraction.layerCountProperty().addListener((obs, oldVal, newVal) -> {
+            object.setVisible(newVal.intValue() >= 2);
+        });
+
 
         // object's X position dynamically change with the incident location slider
         incidentLocation.addListener((observable, oldValue, newValue) -> refractionController.onIncidentLocationChanged(newValue, object));
