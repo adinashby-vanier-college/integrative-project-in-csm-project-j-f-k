@@ -7,6 +7,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,10 +27,11 @@ import project.optics.jfkt.utils.Util;
 
 import java.util.ArrayList;
 
-public class RefractionView extends VBox {
+public class RefractionView extends Pane {
+    private final Util util = new Util();
     private final Refraction refraction = new Refraction();
     private final RefractionController refractionController = new RefractionController(refraction, this);
-    private static final double ANIMATION_PANE_HEIGHT = 900;
+    private static final double ANIMATION_PANE_HEIGHT = 830;
     private Material chosenLayer;
     private SimpleDoubleProperty incidentLocation = new SimpleDoubleProperty(0);
     private Circle object;
@@ -43,22 +45,52 @@ public class RefractionView extends VBox {
     private Slider angleSlider;
     private Button newLayer;
     private SimpleObjectProperty<AnimationStatus> animationStatusProperty = new SimpleObjectProperty<>(AnimationStatus.PREPARED);
+    private ToggleGroup animationSpeed;
 
     public RefractionView() {
-        Util util = new Util();
-        Region menu = util.createMenu();
-        HBox topButtons = util.createZoomAndBackButtons();
-        topButtons.setAlignment(Pos.CENTER_LEFT);
-        topButtons.setSpacing(10);
-        topButtons.setPrefHeight(50);
-        VBox.setMargin(topButtons, new Insets(10, 0, 0, 0));
-        this.getChildren().addAll(menu, topButtons, createAnimationPane(), createBottom());
+        // add all components to the scene
+        VBox vBox = new VBox(createMenu(), createTopButtons(), createAnimationPane(), createBottom());
+        vBox.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
+        vBox.maxWidthProperty().bind(this.widthProperty());
+        vBox.maxHeightProperty().bind(this.heightProperty());
+        this.getChildren().addAll(vBox, createProtractor());
+
+        // Add listener to ensure proper layout
+        this.widthProperty().addListener((obs, oldVal, newVal) -> {
+            vBox.setPrefWidth(newVal.doubleValue());
+            vBox.requestLayout();
+        });
+
+        this.heightProperty().addListener((obs, oldVal, newVal) -> {
+            vBox.setPrefHeight(newVal.doubleValue());
+            vBox.requestLayout();
+        });
 
         // resize the clipping area
         refraction.layerCountProperty().addListener((observable, oldValue, newValue) -> refractionController.onLayerCountChanged(newValue.intValue()));
 
         // Disable user inputs when the animation status is modified
         animationStatusProperty.addListener((observable, oldValue, newValue) -> refractionController.onAnimationStatusChanged(newValue, locationSlider, angleSlider, newLayer));
+    }
+
+    private Region createMenu() {
+        return util.createMenu();
+    }
+
+    private Region createTopButtons() {
+        HBox topButtons = util.createZoomAndBackButtons();
+        topButtons.setAlignment(Pos.CENTER_LEFT);
+        topButtons.setSpacing(10);
+        topButtons.setPrefHeight(100);
+        VBox.setMargin(topButtons, new Insets(10, 0, 0, 0));
+        return topButtons;
+    }
+
+    private Group createProtractor() {
+        Group protractor = util.createProtractor();
+        protractor.setLayoutX(400);
+        protractor.setLayoutY(20);
+        return protractor;
     }
 
     private void initializeLayers() {
@@ -114,9 +146,9 @@ public class RefractionView extends VBox {
         trailPane.toFront();
 
         // create the object of animation
-        object = new Circle(3);
-        object.setStroke(Color.BLUE);
-        object.setFill(Color.BLUE);
+        object = new Circle(5);
+        object.setStroke(Color.BLACK);
+        object.setFill(Color.BLACK);
         object.setManaged(false);
         object.setVisible(false);
 
@@ -249,6 +281,8 @@ public class RefractionView extends VBox {
 
         toggleGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) -> refractionController.onAnimationSpeedChanged(newVal));
 
+        animationSpeed = toggleGroup;
+
         HBox container = new HBox(20, slow, normal, fast);
 
         return container;
@@ -281,7 +315,7 @@ public class RefractionView extends VBox {
         angleSlider.setBlockIncrement(0.5);
 
         // update incident angle with the angle slider dynamically
-        angleSlider.valueProperty().addListener((observable, oldValue, newValue) -> refractionController.onInitialAngleChanged(newValue.doubleValue()));
+        angleSlider.valueProperty().addListener((observable, oldValue, newValue) -> refractionController.onInitialAngleChanged(newValue.doubleValue(), locationSlider.getValue()));
 
         Text angleValue = new Text();
         angleValue.setWrappingWidth(45);
@@ -403,5 +437,12 @@ public class RefractionView extends VBox {
 
     public void setIncidentAngle(double incidentAngle) {
         this.incidentAngle.set(incidentAngle);
+    }
+
+    public String getAnimationSpeed() {
+        RadioButton selectedButton = (RadioButton) animationSpeed.getSelectedToggle();
+        String selectedTxt = selectedButton.getText();
+
+        return selectedTxt;
     }
 }

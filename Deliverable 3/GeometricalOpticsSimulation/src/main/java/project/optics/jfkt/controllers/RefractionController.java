@@ -343,6 +343,11 @@ public class RefractionController {
         }
 
         timeline.setCycleCount(1);
+        switch (refractionView.getAnimationSpeed()) {
+            case "Slow" -> timeline.setRate(0.5);
+            case "Normal" -> timeline.setRate(1);
+            case "Fast" -> timeline.setRate(2);
+        }
 
         // Stop the animation when the object goes out of bounds.
         object.translateXProperty().addListener((observable, oldValue, newValue) -> {
@@ -357,9 +362,9 @@ public class RefractionController {
                         refraction.getLayer3().getHeight();
             }
 
-            if (object.getTranslateX() > screenWidth + 3 ||
-                    object.getTranslateY() < -3 ||
-                    object.getTranslateY() > totalHeight + 3) {
+            if (object.getTranslateX() > screenWidth + 5 ||
+                    object.getTranslateY() < -5 ||
+                    object.getTranslateY() > totalHeight + 5) {
                 timeline.stop();
                 refractionView.setAnimationStatus(AnimationStatus.FINISHED);
             }
@@ -422,12 +427,13 @@ public class RefractionController {
 
     }
 
-    public void onInitialAngleChanged(double angle) {
+    public void onInitialAngleChanged(double angle, double location) {
         refractionView.getTrailPane().getChildren().clear();
         refractionView.getTrailPane().getChildren().add(refractionView.getObject());
         refractionView.setIncidentAngle(angle);
         refractionView.setAnimationStatus(AnimationStatus.PREPARED);
         refractionView.getObject().setTranslateY(0);
+        refractionView.getObject().setTranslateX(location);
     }
 
     public void onRefreshButtonPressed() {
@@ -435,7 +441,6 @@ public class RefractionController {
     }
 
     public void onAnimationStatusChanged(AnimationStatus status, Slider locationSlider, Slider angleSlider, Button newLayerButton) {
-        System.out.println(status);
         if (status == AnimationStatus.IN_PROGRESS || status == AnimationStatus.PAUSED) {
             locationSlider.setDisable(true);
             angleSlider.setDisable(true);
