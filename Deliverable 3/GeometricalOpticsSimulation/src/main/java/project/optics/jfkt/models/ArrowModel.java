@@ -31,14 +31,15 @@ public class ArrowModel extends Polygon {
 
 
         arrowObject.getPoints().addAll(points);
-        arrowObject.setLayoutX(centerX - Math.abs(objectDistance * scale));
-        arrowObject.setLayoutY(centerY- heightPx);
+        arrowObject.setLayoutX(centerX - (objectDistance * scale));
+        arrowObject.setLayoutY(centerY- (objectHeight*scale));
 
         arrowObject.setFill(Color.BLUE);
         arrowObject.setStroke(Color.DARKBLUE);
 
         if (objectHeight < 0){
             arrowObject.setRotate(180);
+            arrowObject.setLayoutY(centerY);
         }
 
     }

@@ -28,6 +28,8 @@ public class BaseView extends BorderPane{
     private Button optionbutton1;
     private Button optionbutton2;
     private Button playbutton;
+    private Button pausebutton;
+    private Button redobutton;
     private ArrayList<TextField> textInputs = new ArrayList<>();
 
     public BaseView(String type){
@@ -106,11 +108,11 @@ public class BaseView extends BorderPane{
         playbutton.setPrefSize(120,20);
 
         ImageView pauseimage = new ImageView(new Image(this.getClass().getResource("/images/64/Pause.png").toExternalForm()));
-        Button pausebutton = new Button("",pauseimage);
+        pausebutton = new Button("",pauseimage);
         pausebutton.setPrefSize(120,20);
 
         ImageView redoimage = new ImageView(new Image(this.getClass().getResource("/images/64/Redo.png").toExternalForm()));
-        Button redobutton = new Button("",redoimage);
+        redobutton = new Button("",redoimage);
         redobutton.setPrefSize(120,20);
 
         topbuttons.getChildren().addAll(playbutton,pausebutton,redobutton);
@@ -232,5 +234,13 @@ public class BaseView extends BorderPane{
 
     public Button getPlaybutton() {
         return playbutton;
+    }
+
+    public Button getPausebutton() {
+        return pausebutton;
+    }
+
+    public Button getRedobutton() {
+        return redobutton;
     }
 }

@@ -49,7 +49,7 @@ public class MirrorModel {
             focalPoint.setStroke(Color.BLACK);
 
             double mirrorSurfaceX = centerX + radius;
-            focalX = mirrorSurfaceX - Math.abs(focalLength * scale);
+            focalX = mirrorSurfaceX - Math.abs(focalLength * scale) + (radius*0.05);
             focalPoint.setCenterX(focalX);
             focalPoint.setCenterY(centerY);
 
@@ -83,7 +83,7 @@ public class MirrorModel {
             focalPoint.setStroke(Color.BLACK);
 
             double mirrorSurfaceX = centerX - radius;
-            focalX = mirrorSurfaceX + Math.abs(focalLength * scale);
+            focalX = mirrorSurfaceX + Math.abs(focalLength * scale) - (radius*0.05);
             focalPoint.setCenterX(focalX);
             focalPoint.setCenterY(centerY);
 
