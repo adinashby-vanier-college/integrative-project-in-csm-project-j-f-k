@@ -57,6 +57,19 @@
     -fx-fill: white;
 }
 
+/* Rectangle and Border Styling */
+.dark-mode .education-outline,
+.dark-mode .hint-area,
+.dark-mode .answer-area,
+.dark-mode .image-container {
+    -fx-border-color: white !important;
+}
+
+.dark-mode .rectangle,
+.dark-mode .square {
+    -fx-stroke: white !important;
+}
+
 /* Base View Specific Styles */
 .dark-mode .animation-pane {
     -fx-border-color: white !important;
@@ -205,8 +218,51 @@
     -fx-fill: white;
 }
 
-.dark-mode .help-text {
-    -fx-fill: white;
+/* Education Mode Specific Styles */
+.education-outline {
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+.hint-area {
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+.answer-area {
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+.question-text {
+    -fx-font-size: 18px;
+    -fx-fill: -fx-text-base-color;
+}
+
+.hint-text {
+    -fx-font-size: 16px;
+    -fx-fill: -fx-text-base-color;
+}
+
+/* Dark Mode Education Mode */
+.dark-mode .education-outline {
+    -fx-border-color: white !important;
+}
+
+.dark-mode .hint-area {
+    -fx-border-color: white !important;
+}
+
+.dark-mode .answer-area {
+    -fx-border-color: white !important;
+}
+
+.dark-mode .question-text {
+    -fx-fill: white !important;
+}
+
+.dark-mode .hint-text {
+    -fx-fill: white !important;
 }
 
 /* Alert Dialog Styling */
@@ -220,11 +276,6 @@
 
 .dark-mode .alert .content.label {
     -fx-text-fill: white;
-}
-
-/* TextFlow Styling */
-.dark-mode .text-flow .text {
-    -fx-fill: white;
 }
 
 /* VBox/HBox Containers */
