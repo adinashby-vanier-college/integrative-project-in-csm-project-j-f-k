@@ -12,16 +12,42 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import project.optics.jfkt.controllers.SelectionController;
+import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.utils.Util;
 
 public class SelectionView extends BorderPane {
     private final Util util = new Util();
     private final SelectionController selectionController = new SelectionController();
+    private Button hard, medium, easy, back;
 
     public SelectionView() {
+        // Initialize with current theme and font
+        this.getStyleClass().add(ThemeController.getCurrentTheme());
+        applyCurrentFont();
+
+        // Add font change listener
+        ThemeController.addFontChangeListener(font -> {
+            applyCurrentFont();
+            updateButtonFonts();
+        });
+
         this.setTop(util.createMenu());
         this.setCenter(createCenter());
         this.setBottom(createBottom());
+    }
+
+    private void applyCurrentFont() {
+        this.setStyle("-fx-font-family: '" + ThemeController.getCurrentFont() + "';");
+    }
+
+    private void updateButtonFonts() {
+        String fontFamily = ThemeController.getCurrentFont();
+        String buttonStyle = "-fx-font-family: '" + fontFamily + "';";
+
+        if (hard != null) hard.setStyle(buttonStyle);
+        if (medium != null) medium.setStyle(buttonStyle);
+        if (easy != null) easy.setStyle(buttonStyle);
+        if (back != null) back.setStyle(buttonStyle);
     }
 
     private Region createCenter() {
@@ -59,9 +85,12 @@ public class SelectionView extends BorderPane {
         HBox buttons = new HBox(150);
         buttons.setAlignment(Pos.CENTER);
 
-        Button hard = new Button("Hard");
-        Button medium = new Button("Medium");
-        Button easy = new Button("Easy");
+        hard = new Button("Hard");
+        medium = new Button("Medium");
+        easy = new Button("Easy");
+
+        // Apply current font to buttons
+        updateButtonFonts();
 
         hard.setOnAction(event -> selectionController.onHardButtonPressed());
         medium.setOnAction(event -> selectionController.onMediumButtonPressed());
@@ -78,7 +107,9 @@ public class SelectionView extends BorderPane {
     private Region createBottom() {
         HBox container = new HBox();
 
-        Button back = new Button("Back");
+        back = new Button("Back");
+        // Apply current font to back button
+        updateButtonFonts();
         back.setOnAction(event -> selectionController.onBackButtonPressed());
 
         HBox.setMargin(back, new Insets(0, 0, 100, 100));
@@ -87,5 +118,4 @@ public class SelectionView extends BorderPane {
 
         return container;
     }
-
 }

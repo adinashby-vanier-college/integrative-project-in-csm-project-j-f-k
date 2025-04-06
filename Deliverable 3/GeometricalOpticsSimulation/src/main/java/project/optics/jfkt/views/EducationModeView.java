@@ -45,7 +45,7 @@ public class EducationModeView extends BorderPane {
     private ToggleGroup orientationGroup;
 
     // Font sizes
-    private static final double QUESTION_FONT_SIZE = 18.0;
+    private static final double QUESTION_FONT_SIZE = 16.0;
     private static final double HINT_FONT_SIZE = 16.0;
     private static final double ANSWER_FONT_SIZE = 16.0;
     private static final double INPUT_FONT_SIZE = 14.0;
@@ -58,14 +58,15 @@ public class EducationModeView extends BorderPane {
         new EducationModeController(this, difficulty);
 
         // Apply initial font
-        updateFontStyles();
+        updateAllFontStyles();
 
         // Register for font changes
         ThemeController.addFontChangeListener(font -> {
-            Platform.runLater(this::updateFontStyles);
+            Platform.runLater(this::updateAllFontStyles);
         });
     }
-    private void updateFontStyles() {
+
+    private void updateAllFontStyles() {
         String fontFamily = ThemeController.getCurrentFont();
 
         // Apply to question text
@@ -88,16 +89,34 @@ public class EducationModeView extends BorderPane {
         // Apply to text field
         userInputField.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
                 fontFamily, INPUT_FONT_SIZE));
-    }
 
+        // Apply to buttons
+        applyFontToButtons(fontFamily);
+    }
     private void updateRadioButtonFonts(ToggleGroup group, String fontFamily) {
         for (Toggle toggle : group.getToggles()) {
             HBox container = (HBox) toggle.getUserData();
-            Label label = (Label) container.getChildren().get(0);
-            label.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
-                    fontFamily, INPUT_FONT_SIZE));
+            if (container != null) {
+                Node firstChild = container.getChildren().get(0);
+                if (firstChild instanceof Label) {
+                    Label label = (Label) firstChild;
+                    label.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
+                            fontFamily, INPUT_FONT_SIZE));
+                }
+            }
         }
     }
+    private void applyFontToButtons(String fontFamily) {
+        String buttonStyle = String.format("-fx-font-family: '%s';", fontFamily);
+        submitButton.setStyle(buttonStyle);
+        hintButton.setStyle(buttonStyle);
+        answerButton.setStyle(buttonStyle);
+        newQuestionButton.setStyle(buttonStyle);
+        zoomIn.setStyle(buttonStyle);
+        zoomOut.setStyle(buttonStyle);
+        back.setStyle(buttonStyle);
+    }
+
 
 
     private Region createTop() {
@@ -107,9 +126,9 @@ public class EducationModeView extends BorderPane {
     public HBox createZoomAndBackButtons() {
         HBox container = new HBox(20);
 
-         zoomIn = new Button("Zoom In");
-         zoomOut = new Button("Zoom Out");
-         back = new Button("Back");
+        zoomIn = new Button("Zoom In");
+        zoomOut = new Button("Zoom Out");
+        back = new Button("Back");
 
 
         container.getChildren().addAll(zoomIn, zoomOut, back);
@@ -192,7 +211,8 @@ public class EducationModeView extends BorderPane {
         StackPane imageContainer = new StackPane();
         imageContainer.setMinSize(600, 400);
         imageContainer.setPrefSize(600, 400);
-        imageContainer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Fixed this line
+        imageContainer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        imageContainer.getStyleClass().add("image-container"); // Add this line
         imageContainer.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: rgb(128,128,128);");
 
         // The actual image pane that will hold the image
@@ -252,11 +272,28 @@ public class EducationModeView extends BorderPane {
         rb.setStyle("-fx-opacity: 0; -fx-padding: 0; -fx-min-width: 0; -fx-min-height: 0;");
 
         Rectangle square = new Rectangle(15, 15);
-        square.getStyleClass().add("education-outline");
+        square.getStyleClass().add("radio-square");
         square.setStroke(Color.BLACK);
         square.setFill(Color.TRANSPARENT);
         rb.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            square.setFill(isSelected ? Color.BLACK : Color.TRANSPARENT);
+            square.setFill(isSelected ?
+                    ThemeController.getCurrentTheme().equals("dark-mode") ? Color.WHITE : Color.BLACK
+                    : Color.TRANSPARENT);
+        });
+
+        // Add listener for theme changes
+        ThemeController.addThemeChangeListener(theme -> {
+            if (theme.equals("dark-mode")) {
+                square.setStroke(Color.WHITE);
+                if (rb.isSelected()) {
+                    square.setFill(Color.WHITE);
+                }
+            } else {
+                square.setStroke(Color.BLACK);
+                if (rb.isSelected()) {
+                    square.setFill(Color.BLACK);
+                }
+            }
         });
 
         HBox optionContainer = new HBox(10);
@@ -267,9 +304,7 @@ public class EducationModeView extends BorderPane {
         rb.setManaged(false);
         rb.setVisible(false);
 
-        // Store the container in the radio button's user data
         rb.setUserData(optionContainer);
-
         optionContainer.setOnMouseClicked(e -> rb.setSelected(true));
         return optionContainer;
     }

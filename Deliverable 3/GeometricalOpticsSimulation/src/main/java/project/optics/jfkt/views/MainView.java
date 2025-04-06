@@ -1,4 +1,5 @@
 package project.optics.jfkt.views;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -12,19 +13,45 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import project.optics.jfkt.controllers.MainController;
+import project.optics.jfkt.controllers.ThemeController;
 
 import java.io.IOException;
 
 public class MainView extends BorderPane{
 private Stage primaryStage;
     private MainController mainController;
+    private Label title;
 
     public MainView(Stage primaryStage) {
         this.primaryStage = primaryStage;
         mainController = new MainController(primaryStage);
+
+        // Initialize with current theme and font
+        this.getStyleClass().add(ThemeController.getCurrentTheme());
+        applyCurrentFont();
+
+        // Add font change listener
+        ThemeController.addFontChangeListener(font -> {
+            Platform.runLater(() -> {
+                applyCurrentFont();
+                updateTitleFont();
+            });
+        });
+
         this.setCenter(createContent());
         this.setTop(createMenu());
     }
+
+    private void applyCurrentFont() {
+        this.setStyle("-fx-font-family: '" + ThemeController.getCurrentFont() + "';");
+    }
+
+    private void updateTitleFont() {
+        // This ensures the title keeps its size and weight while changing font family
+        title.setStyle("-fx-font-family: '" + ThemeController.getCurrentFont() + "';" +
+                "-fx-font-size: 35px; -fx-font-weight: bold;");
+    }
+
     private MenuBar createMenu() {
         MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
@@ -58,8 +85,9 @@ private Stage primaryStage;
     private Region createContent() {
         VBox container = new VBox(30);
 
-        Label title = new Label("Geometric Optics Simulation");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 35));
+        title = new Label("Geometric Optics Simulation");
+        title.getStyleClass().add("main-title");
+        updateTitleFont(); // Initialize the font with current settings
         title.setPadding(new Insets(0, 0, 80, 0));
 
         double imageWidth = 300;

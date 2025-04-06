@@ -29,7 +29,7 @@ public class ThemeView extends BorderPane {
 
         // ComboBox for font selection
         ComboBox<String> fontComboBox = new ComboBox<>();
-        fontComboBox.getItems().addAll("Arial", "Times New Roman", "Courier New", "Verdana", "Comic Sans MS");
+        fontComboBox.getItems().addAll("Arial", "Times New Roman", "Verdana", "Comic Sans MS");
         fontComboBox.setValue(ThemeController.getCurrentFont());
         fontComboBox.setOnAction(e -> {
             String selectedFont = fontComboBox.getValue();

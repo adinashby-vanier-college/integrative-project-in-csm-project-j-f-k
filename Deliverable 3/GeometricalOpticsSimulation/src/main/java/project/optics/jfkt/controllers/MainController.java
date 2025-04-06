@@ -18,17 +18,35 @@ import project.optics.jfkt.views.*;
 import java.io.IOException;
 
 public class MainController {
-
     private Stage primaryStage;
+    private VBox aboutUsContainer;
+    private VBox helpContainer;
+    private Scene aboutUsScene;
+    private Scene helpScene;
+
     public MainController(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        ThemeController.addFontChangeListener(font -> {
+            if (aboutUsScene != null) {
+                applyFontToScene(aboutUsScene);
+            }
+            if (helpScene != null) {
+                applyFontToScene(helpScene);
+            }
+        });
     }
+
     private final Util util = new Util();
     private ThemeController themeController = new ThemeController();
     private GeneralSettingsController generalSettingsController = new GeneralSettingsController();
     private AnimationController animationController = new AnimationController();
 
-
+    private void applyFontToScene(Scene scene) {
+        if (scene != null) {
+            String currentFont = ThemeController.getCurrentFont();
+            scene.getRoot().setStyle("-fx-font-family: '" + currentFont + "';");
+        }
+    }
 
     public void onQuitButtonPressed() {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -38,144 +56,115 @@ public class MainController {
 
         confirmationAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-
                 primaryStage.close();
             }
-
         });
     }
 
     public void onAboutUsPressed() {
+        if (aboutUsContainer == null) {
+            aboutUsContainer = new VBox(20);
+            aboutUsContainer.setAlignment(Pos.CENTER);
+            aboutUsContainer.setPadding(new Insets(20));
 
-        VBox vbox1 = new VBox(20);
-        vbox1.setAlignment(Pos.CENTER);
-        vbox1.setPadding(new Insets(20));
+            // Create the UI elements
+            Label aboutUsText = new Label("About Us");
+            aboutUsText.getStyleClass().add("about-us-title"); // Add style class
 
+            Label fillerText = new Label(
+                    "Welcome to our application!\n\n" +
+                            "We are a team of passionate developers dedicated to creating amazing software.\n" +
+                            "Our mission is to provide users with the best experience possible.\n\n" +
+                            "Thank you for using our app!"
+            );
+            fillerText.getStyleClass().add("about-us-content"); // Add style class
+            fillerText.setTextAlignment(TextAlignment.CENTER);
 
-        Label aboutUsText = new Label("About Us");
-        aboutUsText.setFont(Font.font(18));
-        aboutUsText.setStyle("-fx-font-weight: bold;");
+            Button backButton = new Button("Back");
+            backButton.getStyleClass().add("about-us-button"); // Add style class
+            backButton.setOnAction(e -> {
+                util.switchScene(new Scene(new MainView(MainApp.primaryStage)));
+            });
 
-        // Filler text , subject to change later
-        Label fillerText = new Label(
-                "Welcome to our application!\n\n" +
-                        "We are a team of passionate developers dedicated to creating amazing software.\n" +
-                        "Our mission is to provide users with the best experience possible.\n\n" +
-                        "Thank you for using our app!"
-        );
-        fillerText.setFont(Font.font(14));
-        fillerText.setTextAlignment(TextAlignment.CENTER);
+            aboutUsContainer.getChildren().addAll(aboutUsText, fillerText, backButton);
+            aboutUsScene = new Scene(aboutUsContainer, 400, 300);
+            ThemeController.applyTheme(aboutUsScene);
+        }
 
+        // Apply current font to all elements
+        String currentFont = ThemeController.getCurrentFont();
+        aboutUsContainer.setStyle("-fx-font-family: '" + currentFont + "';");
 
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> {
+        // Explicitly set font for each element (in case CSS overrides)
+        for (var node : aboutUsContainer.getChildren()) {
+            if (node instanceof Label) {
+                ((Label) node).setStyle("-fx-font-family: '" + currentFont + "';");
+            } else if (node instanceof Button) {
+                ((Button) node).setStyle("-fx-font-family: '" + currentFont + "';");
+            }
+        }
 
-            util.switchScene(new Scene(new MainView(MainApp.primaryStage)));
-        });
-
-
-        vbox1.getChildren().addAll(aboutUsText, fillerText, backButton);
-
-
-        Scene scene = new Scene(vbox1, 400, 300);
-        util.switchScene(scene);
+        util.switchScene(aboutUsScene);
     }
 
-
     public void onHelpPressed() {
-        VBox vbox1 = new VBox(20);
-        vbox1.setAlignment(Pos.CENTER);
-        vbox1.setPadding(new Insets(20));
-        vbox1.getStyleClass().add("help-container");
+        if (helpContainer == null) {
+            helpContainer = new VBox(20);
+            helpContainer.setAlignment(Pos.CENTER);
+            helpContainer.setPadding(new Insets(20));
+            helpContainer.getStyleClass().add("help-container");
 
-        Label helpHeading = new Label("Help - Geometric Optics Formulas");
-        helpHeading.setFont(Font.font(18));
-        helpHeading.setStyle("-fx-font-weight: bold;");
-        helpHeading.getStyleClass().add("help-heading");
+            Label helpHeading = new Label("Help - Geometric Optics Formulas");
+            helpHeading.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+            helpHeading.getStyleClass().add("help-heading");
 
-        TextFlow helpTextFlow = new TextFlow();
-        helpTextFlow.getStyleClass().add("help-text-flow");
+            TextFlow helpTextFlow = new TextFlow();
+            helpTextFlow.getStyleClass().add("help-text-flow");
 
-        Text welcomeText = new Text("Welcome to the Help section!\n\n");
-        welcomeText.setFont(Font.font(14));
-        welcomeText.getStyleClass().add("help-text");
+            // Create all text elements with style classes
+            Text[] textElements = {
+                    createHelpText("Welcome to the Help section!\n\n", false),
+                    createHelpText("This program is designed to help you learn and visualize geometric optics concepts.\n\n", false),
+                    createHelpText("Refraction (Snell's Law):\n", true),
+                    createHelpText("   n₁ sin(θ₁) = n₂ sin(θ₂)\n", false),
+                    createHelpText("   - n₁, n₂: Refractive indices of the two media\n   - θ₁, θ₂: Angles of incidence and refraction\n\n", false),
+                    createHelpText("Thin Lens Formula:\n", true),
+                    createHelpText("   1/f = 1/v - 1/u\n", false),
+                    createHelpText("   - f: Focal length of the lens\n   - v: Image distance\n   - u: Object distance\n\n", false),
+                    createHelpText("Mirror Formula:\n", true),
+                    createHelpText("   1/f = 1/v + 1/u\n", false),
+                    createHelpText("   - f: Focal length of the mirror\n   - v: Image distance\n   - u: Object distance\n\n", false),
+                    createHelpText("Magnification (m):\n", true),
+                    createHelpText("   m = h'/h = -v/u\n", false),
+                    createHelpText("   - h': Height of the image\n   - h: Height of the object\n\n", false)
+            };
 
-        Text descriptionText = new Text("This program is designed to help you learn and visualize geometric optics concepts.\n\n");
-        descriptionText.setFont(Font.font(14));
-        descriptionText.getStyleClass().add("help-text");
+            helpTextFlow.getChildren().addAll(textElements);
 
-        Text refractionHeading = new Text("Refraction (Snell's Law):\n");
-        refractionHeading.setFont(Font.font(14));
-        refractionHeading.setUnderline(true);
-        refractionHeading.getStyleClass().add("help-text");
+            HBox textFlowContainer = new HBox(helpTextFlow);
+            textFlowContainer.setAlignment(Pos.CENTER);
 
-        Text refractionFormula = new Text("   n₁ sin(θ₁) = n₂ sin(θ₂)\n");
-        refractionFormula.setFont(Font.font(14));
-        refractionFormula.getStyleClass().add("help-text");
+            Button backButton = new Button("Back");
+            backButton.setOnAction(e -> {
+                util.switchScene(new Scene(new MainView(MainApp.primaryStage)));
+            });
 
-        Text refractionDescription = new Text("   - n₁, n₂: Refractive indices of the two media\n   - θ₁, θ₂: Angles of incidence and refraction\n\n");
-        refractionDescription.setFont(Font.font(14));
-        refractionDescription.getStyleClass().add("help-text");
+            helpContainer.getChildren().addAll(helpHeading, textFlowContainer, backButton);
+            helpScene = new Scene(helpContainer, 600, 500);
+            ThemeController.applyTheme(helpScene);
+        }
 
-        Text thinLensHeading = new Text("Thin Lens Formula:\n");
-        thinLensHeading.setFont(Font.font(14));
-        thinLensHeading.setUnderline(true);
-        thinLensHeading.getStyleClass().add("help-text");
+        applyFontToScene(helpScene);
+        util.switchScene(helpScene);
+    }
 
-        Text thinLensFormula = new Text("   1/f = 1/v - 1/u\n");
-        thinLensFormula.setFont(Font.font(14));
-        thinLensFormula.getStyleClass().add("help-text");
-
-        Text thinLensDescription = new Text("   - f: Focal length of the lens\n   - v: Image distance\n   - u: Object distance\n\n");
-        thinLensDescription.setFont(Font.font(14));
-        thinLensDescription.getStyleClass().add("help-text");
-
-        Text mirrorHeading = new Text("Mirror Formula:\n");
-        mirrorHeading.setFont(Font.font(14));
-        mirrorHeading.setUnderline(true);
-        mirrorHeading.getStyleClass().add("help-text");
-
-        Text mirrorFormula = new Text("   1/f = 1/v + 1/u\n");
-        mirrorFormula.setFont(Font.font(14));
-        mirrorFormula.getStyleClass().add("help-text");
-
-        Text mirrorDescription = new Text("   - f: Focal length of the mirror\n   - v: Image distance\n   - u: Object distance\n\n");
-        mirrorDescription.setFont(Font.font(14));
-        mirrorDescription.getStyleClass().add("help-text");
-
-        Text magnificationHeading = new Text("Magnification (m):\n");
-        magnificationHeading.setFont(Font.font(14));
-        magnificationHeading.setUnderline(true);
-        magnificationHeading.getStyleClass().add("help-text");
-
-        Text magnificationFormula = new Text("   m = h'/h = -v/u\n");
-        magnificationFormula.setFont(Font.font(14));
-        magnificationFormula.getStyleClass().add("help-text");
-
-        Text magnificationDescription = new Text("   - h': Height of the image\n   - h: Height of the object\n\n");
-        magnificationDescription.setFont(Font.font(14));
-        magnificationDescription.getStyleClass().add("help-text");
-
-        helpTextFlow.getChildren().addAll(
-                welcomeText, descriptionText,
-                refractionHeading, refractionFormula, refractionDescription,
-                thinLensHeading, thinLensFormula, thinLensDescription,
-                mirrorHeading, mirrorFormula, mirrorDescription,
-                magnificationHeading, magnificationFormula, magnificationDescription
-        );
-
-        HBox textFlowContainer = new HBox(helpTextFlow);
-        textFlowContainer.setAlignment(Pos.CENTER);
-
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> {
-            util.switchScene(new Scene(new MainView(MainApp.primaryStage)));
-        });
-
-        vbox1.getChildren().addAll(helpHeading, textFlowContainer, backButton);
-        Scene scene = new Scene(vbox1, 600, 500);
-        ThemeController.applyTheme(scene);
-        util.switchScene(scene);
+    private Text createHelpText(String content, boolean isHeading) {
+        Text text = new Text(content);
+        text.getStyleClass().add("help-text");
+        if (isHeading) {
+            text.setUnderline(true);
+        }
+        return text;
     }
 
     public void onThemeButtonPressed() {

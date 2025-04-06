@@ -26,7 +26,7 @@ public class Question {
 
     // ========== EASY QUESTIONS ========== //
     public static final Question CONCAVE_MIRROR_QUESTION = new Question(
-            "Use the mirror equation: 1/f = 1/dₒ + 1/dᵢ",
+            "Use the mirror equation: 1/f = 1/dₒ + 1/di",
             "20 cm,real,any,inverted",
             Difficulty.EASY,
             "A concave mirror has a focal length of 10 cm. If an object is placed 20 cm in front of it, where is the image formed?",
@@ -66,7 +66,7 @@ public class Question {
     );
 
     public static final Question CONVEX_MIRROR_QUESTION = new Question(
-            "Use the mirror equation: 1/f = 1/dₒ + 1/dᵢ (remember f is negative for convex mirrors)",
+            "Use the mirror equation: 1/f = 1/dₒ + 1/di (remember f is negative for convex mirrors)",
             "-10 cm,virtual,smaller,upright",
             Difficulty.EASY,
             "A convex mirror has a focal length of -15 cm. An object is placed 30 cm in front of it. Find the image distance.",
@@ -98,7 +98,7 @@ public class Question {
     );
 
     public static final Question CONVERGING_LENS_QUESTION = new Question(
-            "Use the thin lens equation: 1/f = 1/dₒ + 1/dᵢ and the magnification equation: -dᵢ/dₒ",
+            "Use the thin lens equation: 1/f = 1/dₒ + 1/di and the magnification equation: -di/dₒ",
             "-1,real,any,inverted",
             Difficulty.EASY,
             "A converging lens has a focal length of 15 cm. An object is placed 30 cm away. What are the image characteristics (real/virtual, upright/inverted) and find the magnification?",
@@ -147,7 +147,7 @@ public class Question {
     );
 
     public static final Question CONVEX_LENS_IMAGE_QUESTION = new Question(
-            "Use the lens equation: 1/f = 1/dₒ + 1/dᵢ",
+            "Use the lens equation: 1/f = 1/dₒ + 1/di",
             "7.5 cm",
             Difficulty.MEDIUM,
             "A converging lens of focal length 5 cm is used as a magnifier. If the object is placed at 3 cm, find the image distance.",
@@ -179,7 +179,7 @@ public class Question {
     );
 
     public static final Question LENS_MAGNIFICATION_QUESTION = new Question(
-            "First find di using the lens equation, then use M = -dᵢ/dₒ",
+            "First find di using the lens equation, then use M = -di/dₒ",
             "2",
             Difficulty.MEDIUM,
             "What is the magnification if an object is placed 5 cm in front of a convex lens with a focal length of 10 cm?",
@@ -188,7 +188,7 @@ public class Question {
 
     // ========== HARD QUESTIONS ========== //
     public static final Question TWO_LENS_SYSTEM_QUESTION = new Question(
-            "Solve for the intermediate location using the lens equation: 1/f = 1/dₒ + 1/dᵢ",
+            "Solve for the intermediate location using the lens equation: 1/f = 1/dₒ + 1/di",
             "100 cm",
             Difficulty.HARD,
             "A two-lens system consists of a converging lens (f = 10 cm) placed 30 cm in front of an object. A converging lens (f = 20 cm) is placed 40 cm behind the first lens. Where is the final image?",
