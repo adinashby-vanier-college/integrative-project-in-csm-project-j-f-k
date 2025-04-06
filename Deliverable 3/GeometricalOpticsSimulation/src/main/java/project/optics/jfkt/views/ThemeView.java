@@ -15,6 +15,8 @@ import project.optics.jfkt.controllers.ThemeController;
 public class ThemeView extends BorderPane {
 
     public ThemeView(ThemeController controller) {
+        // Apply current theme to this view
+        this.getStyleClass().add(ThemeController.getCurrentTheme());
 
         VBox themeSettingsBox = new VBox(20);
         themeSettingsBox.setAlignment(Pos.CENTER);
@@ -38,7 +40,16 @@ public class ThemeView extends BorderPane {
         themeButtonsBox.setAlignment(Pos.CENTER);
 
         Button darkMode = new Button("Dark Mode");
+        darkMode.setOnAction(e -> {
+            controller.setDarkMode();
+            ThemeController.applyTheme(this.getScene());
+        });
+
         Button lightMode = new Button("Light Mode");
+        lightMode.setOnAction(e -> {
+            controller.setLightMode();
+            ThemeController.applyTheme(this.getScene());
+        });
 
         // Temporary image for dark mode
         ImageView darkModeImage = new ImageView(new Image("images/tempd.png"));
@@ -53,11 +64,11 @@ public class ThemeView extends BorderPane {
         // Add spacing between the buttons and their corresponding images
         VBox darkModeBox = new VBox(10);
         darkModeBox.setAlignment(Pos.CENTER);
-        darkModeBox.getChildren().addAll(darkModeImage,darkMode);
+        darkModeBox.getChildren().addAll(darkModeImage, darkMode);
 
         VBox lightModeBox = new VBox(10);
         lightModeBox.setAlignment(Pos.CENTER);
-        lightModeBox.getChildren().addAll(lightModeImage,lightMode);
+        lightModeBox.getChildren().addAll(lightModeImage, lightMode);
 
         // Add the buttons and images to the HBox
         themeButtonsBox.getChildren().addAll(darkModeBox, lightModeBox);

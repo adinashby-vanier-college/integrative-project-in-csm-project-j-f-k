@@ -49,6 +49,7 @@ public class EducationModeController {
     private void onBackButtonPressed(){
         SelectionView selectionView = new SelectionView();
         Scene selectionScene = new Scene(selectionView);
+        ThemeController.applyTheme(selectionScene);
         primaryStage.setScene(selectionScene);
         primaryStage.setFullScreen(true);
         primaryStage.show();

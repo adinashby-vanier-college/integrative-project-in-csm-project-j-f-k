@@ -15,10 +15,12 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import project.optics.jfkt.MainApp;
+import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.views.MainView;
 
 public class Util {
     public void switchScene(Scene newScene) {
+        ThemeController.applyTheme(newScene);
         MainApp.primaryStage.setScene(newScene);
         MainApp.primaryStage.setFullScreen(true);
         MainApp.primaryStage.show();

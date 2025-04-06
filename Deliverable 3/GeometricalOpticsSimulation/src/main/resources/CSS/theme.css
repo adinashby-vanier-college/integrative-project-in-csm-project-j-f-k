@@ -1,0 +1,113 @@
+/* theme.css */
+
+/* Base Styles */
+.root {
+    -fx-text-base-color: #333333;
+}
+
+/* Light Mode */
+.light-mode {
+    -fx-background-color: #F7F7F7;
+}
+
+/* Text elements that change in light mode */
+.light-mode .text,
+.light-mode .label,
+.light-mode .check-box .text,
+.light-mode .radio-button .text,
+.light-mode .text-field,
+.light-mode .text-area .text,
+.light-mode .list-view,
+.light-mode .hint-text,
+.light-mode .question-text {
+    -fx-text-fill: black;
+    -fx-fill: black;
+}
+
+/* Dark Mode */
+.dark-mode {
+    -fx-background-color: #222222;
+}
+
+/* Text elements that change in dark mode */
+.dark-mode .text,
+.dark-mode .label,
+.dark-mode .check-box .text,
+.dark-mode .radio-button .text,
+.dark-mode .text-field,
+.dark-mode .text-area .text,
+.dark-mode .list-view,
+.dark-mode .hint-text,
+.dark-mode .question-text {
+    -fx-text-fill: white;
+    -fx-fill: white;
+}
+
+/* Education Mode Specific Styles */
+/* Container outlines */
+.dark-mode .education-outline {
+    -fx-border-color: white !important;
+}
+
+/* Hint and Answer areas */
+.dark-mode .hint-area,
+.dark-mode .answer-area {
+    -fx-border-color: white !important;
+}
+
+/* Radio button squares */
+.dark-mode .radio-outline {
+    -fx-stroke: white !important;
+}
+
+/* Combo Box Protection */
+.combo-box .label,
+.combo-box .text,
+.combo-box .list-cell,
+.combo-box-popup .list-view,
+.combo-box-popup .list-cell {
+    -fx-text-fill: -fx-text-base-color;
+    -fx-fill: -fx-text-base-color;
+}
+
+/* Menu System Protection */
+.menu-bar,
+.menu-bar .menu,
+.menu-bar .menu-item,
+.context-menu,
+.menu-bar .menu .text,
+.menu-bar .menu-item .text,
+.context-menu .menu-item .text,
+.menu-bar .label,
+.menu-bar .menu .label,
+.menu-bar .menu-item .label,
+.context-menu .menu-item .label {
+    -fx-text-fill: -fx-text-base-color;
+    -fx-fill: -fx-text-base-color;
+}
+
+/* Button Protection */
+.button,
+.button .text {
+    -fx-text-fill: -fx-text-base-color;
+    -fx-fill: -fx-text-base-color;
+}
+
+/* State styles */
+.combo-box:hover .label,
+.combo-box:showing .label,
+.combo-box .list-cell:hover,
+.combo-box .list-cell:filled:selected,
+.menu-bar .menu:hover .label,
+.menu-bar .menu:showing .label,
+.menu-bar .menu-item:hover .label,
+.menu-bar .menu-item:showing .label,
+.context-menu .menu-item:hover .label,
+.context-menu .menu-item:showing .label {
+    -fx-text-fill: -fx-text-base-color;
+}
+
+/* Image container in education mode */
+.dark-mode .image-container {
+    -fx-border-color: white !important;
+}

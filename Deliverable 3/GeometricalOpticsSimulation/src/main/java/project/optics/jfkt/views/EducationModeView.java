@@ -78,6 +78,7 @@ public class EducationModeView extends BorderPane {
         VBox container = new VBox(20);
         container.setAlignment(Pos.CENTER);
         container.setPadding(new Insets(20));
+        container.getStyleClass().add("education-outline");
         container.setBorder(Border.stroke(Color.BLACK));
 
         HBox topButtons = createZoomAndBackButtons();
@@ -86,26 +87,28 @@ public class EducationModeView extends BorderPane {
         topButtons.setPrefHeight(50);
         HBox.setMargin(topButtons, new Insets(10, 0, 0, 0));
 
-        // Hint area
+        // Hint area - Add style class
         StackPane hintArea = new StackPane();
         hintArea.setPrefSize(300, 100);
         hintArea.setBorder(Border.stroke(Color.BLACK));
+        hintArea.getStyleClass().add("hint-area");  // Add this line
         hintText = new Text();
         hintText.setFont(new Font(HINT_FONT_SIZE));
+        hintText.getStyleClass().add("hint-text");
         hintText.setWrappingWidth(280);
         hintArea.setPadding(new Insets(5));
         hintArea.getChildren().add(hintText);
 
-        // Answer area
+        // Answer area - Add style class
         StackPane answerArea = new StackPane();
         answerArea.setPrefSize(300, 100);
         answerArea.setBorder(Border.stroke(Color.BLACK));
+        answerArea.getStyleClass().add("answer-area");  // Add this line
         answerText = new Text();
         answerText.setFont(new Font(ANSWER_FONT_SIZE));
         answerText.setWrappingWidth(280);
         answerArea.setPadding(new Insets(5));
         answerArea.getChildren().add(answerText);
-
         HBox topRegion = new HBox(300, topButtons, hintArea, answerArea);
 
         // Question pane
@@ -133,10 +136,12 @@ public class EducationModeView extends BorderPane {
     private Region createQuestionPane() {
         BorderPane questionPane = new BorderPane();
         questionPane.setPadding(new Insets(20));
+        questionPane.getStyleClass().add("education-outline");
         questionPane.setBorder(Border.stroke(Color.BLACK));
 
         questionText = new Text("Select 'New' to get a question");
         questionText.setFont(new Font(QUESTION_FONT_SIZE));
+        questionText.getStyleClass().add("question-text");
         questionPane.setTop(questionText);
 
         // Create a StackPane as the image container to center content
@@ -202,6 +207,7 @@ public class EducationModeView extends BorderPane {
         rb.setStyle("-fx-opacity: 0; -fx-padding: 0; -fx-min-width: 0; -fx-min-height: 0;");
 
         Rectangle square = new Rectangle(15, 15);
+        square.getStyleClass().add("education-outline");
         square.setStroke(Color.BLACK);
         square.setFill(Color.TRANSPARENT);
         rb.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
