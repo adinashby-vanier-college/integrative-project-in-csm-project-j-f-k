@@ -55,12 +55,12 @@ public class ThemeView extends BorderPane {
         });
 
         // Temporary image for dark mode
-        ImageView darkModeImage = new ImageView(new Image("images/tempd.png"));
+        ImageView darkModeImage = new ImageView(new Image("images/darkmodeicon.png"));
         darkModeImage.setFitWidth(300);
         darkModeImage.setFitHeight(300);
 
         // Temporary image for light mode
-        ImageView lightModeImage = new ImageView(new Image("images/templ.png"));
+        ImageView lightModeImage = new ImageView(new Image("images/lightmodeicon.png"));
         lightModeImage.setFitWidth(300);
         lightModeImage.setFitHeight(300);
 

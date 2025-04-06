@@ -168,6 +168,7 @@
     -fx-fill: -fx-text-base-color !important;
 }
 
+
 /* Plus sign styling */
 .dark-mode .refraction-plus-sign {
     -fx-stroke: white !important;
@@ -367,4 +368,17 @@
 
 .dark-mode .radio-square {
     -fx-stroke: white !important;
+}
+/* Add these to your existing CSS */
+.refraction-parameters .label {
+    -fx-font-family: inherit;
+    -fx-font-size: 14px;
+}
+
+.refraction-parameters .text {
+    -fx-font-family: inherit;
+}
+
+.radio-button {
+    -fx-font-family: inherit;
 }
