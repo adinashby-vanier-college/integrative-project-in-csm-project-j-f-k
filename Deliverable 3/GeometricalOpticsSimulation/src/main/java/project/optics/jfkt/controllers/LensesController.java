@@ -95,9 +95,6 @@ public class LensesController {
         return Integer.parseInt(text.trim());
     }
 
-    // ========================
-    // View Updates
-    // ========================
     private void updateView() {
         view.updateView(
                 model.getNumRays(),
