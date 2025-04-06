@@ -54,6 +54,7 @@ public class BaseView extends BorderPane{
 
         VBox paramvbox = new VBox();
         Text paramheadertext = new Text();
+        paramheadertext.getStyleClass().add("param-text");
         Font paramheaderfont = new Font(40);
         paramheadertext.setText("Parameters:");
         paramheadertext.setFont(paramheaderfont);
@@ -63,8 +64,8 @@ public class BaseView extends BorderPane{
         paramvbox.getChildren().add(paramheadertext);
         paramvbox.getChildren().addAll(createParamHbox("Focal Length"),createParamHbox("Object Distance"),createParamHbox("Object Height"));
 
-
         animpane = new Pane();
+        animpane.getStyleClass().add("animation-pane");
         HBox zoomhbox =new HBox();
         ImageView zoominImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Add.png").toExternalForm()));
         ImageView zoomoutImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Reduce.png").toExternalForm()));
@@ -74,6 +75,7 @@ public class BaseView extends BorderPane{
         animpane.setLayoutX(420);
         animpane.setStyle("-fx-border-color: black; -fx-border-width: 4px;");
         Line opticalAxis = new Line(0, animpane.getPrefHeight()/2, animpane.getPrefWidth(), animpane.getPrefHeight()/2);
+        opticalAxis.getStyleClass().add("optical-axis");
         opticalAxis.setStroke(Color.BLACK);
         opticalAxis.setStrokeWidth(1);
         zoomhbox.setPrefSize(200,100);
@@ -82,11 +84,7 @@ public class BaseView extends BorderPane{
         zoomhbox.getChildren().addAll(zoomin,zoomout);
         animpane.getChildren().addAll(opticalAxis,zoomhbox);
 
-
-
-
         mainpane.getChildren().addAll(paramvbox,animpane);
-
         return mainpane;
     }
 
@@ -138,6 +136,7 @@ public class BaseView extends BorderPane{
 
         Pane choicepane = new Pane();
         Text choicetext = new Text();
+        choicetext.getStyleClass().add("choice-text");
         Font font1 = new Font(36);
         Font font2 = new Font(28);
         choicetext.setText(type);
@@ -147,9 +146,11 @@ public class BaseView extends BorderPane{
         choicehbox.setAlignment(Pos.CENTER);
         Pane optionpane1 = new Pane();
         Text optiontext1 = new Text();
+        optiontext1.getStyleClass().add("option-text");
         optionbutton1 = new Button("", null);
         Pane optionpane2 = new Pane();
         Text optiontext2 = new Text();
+        optiontext2.getStyleClass().add("option-text");
         optionbutton2 = new Button("", null);
 
         optionpane1.setPrefSize(160,160);
@@ -196,6 +197,7 @@ public class BaseView extends BorderPane{
         paramhbox.setAlignment(Pos.CENTER);
 
         Text paramtext = new Text();
+        paramtext.getStyleClass().add("param-text");
         Font textfont = new Font(30);
         paramtext.setText(Text);
         paramtext.setFont(textfont);

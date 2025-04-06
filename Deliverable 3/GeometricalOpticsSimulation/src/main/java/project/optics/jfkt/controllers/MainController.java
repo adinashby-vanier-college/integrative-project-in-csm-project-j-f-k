@@ -83,82 +83,90 @@ public class MainController {
 
 
     public void onHelpPressed() {
-
         VBox vbox1 = new VBox(20);
         vbox1.setAlignment(Pos.CENTER);
         vbox1.setPadding(new Insets(20));
+        vbox1.getStyleClass().add("help-container");
 
-        // Add a heading for the help section
         Label helpHeading = new Label("Help - Geometric Optics Formulas");
         helpHeading.setFont(Font.font(18));
         helpHeading.setStyle("-fx-font-weight: bold;");
-
+        helpHeading.getStyleClass().add("help-heading");
 
         TextFlow helpTextFlow = new TextFlow();
-
+        helpTextFlow.getStyleClass().add("help-text-flow");
 
         Text welcomeText = new Text("Welcome to the Help section!\n\n");
         welcomeText.setFont(Font.font(14));
+        welcomeText.getStyleClass().add("help-text");
 
         Text descriptionText = new Text("This program is designed to help you learn and visualize geometric optics concepts.\n\n");
         descriptionText.setFont(Font.font(14));
+        descriptionText.getStyleClass().add("help-text");
 
-        // Refraction section
         Text refractionHeading = new Text("Refraction (Snell's Law):\n");
         refractionHeading.setFont(Font.font(14));
         refractionHeading.setUnderline(true);
+        refractionHeading.getStyleClass().add("help-text");
+
         Text refractionFormula = new Text("   n₁ sin(θ₁) = n₂ sin(θ₂)\n");
         refractionFormula.setFont(Font.font(14));
+        refractionFormula.getStyleClass().add("help-text");
 
         Text refractionDescription = new Text("   - n₁, n₂: Refractive indices of the two media\n   - θ₁, θ₂: Angles of incidence and refraction\n\n");
         refractionDescription.setFont(Font.font(14));
+        refractionDescription.getStyleClass().add("help-text");
 
-        // Thin Lens section
         Text thinLensHeading = new Text("Thin Lens Formula:\n");
         thinLensHeading.setFont(Font.font(14));
         thinLensHeading.setUnderline(true);
+        thinLensHeading.getStyleClass().add("help-text");
 
         Text thinLensFormula = new Text("   1/f = 1/v - 1/u\n");
         thinLensFormula.setFont(Font.font(14));
+        thinLensFormula.getStyleClass().add("help-text");
 
         Text thinLensDescription = new Text("   - f: Focal length of the lens\n   - v: Image distance\n   - u: Object distance\n\n");
         thinLensDescription.setFont(Font.font(14));
+        thinLensDescription.getStyleClass().add("help-text");
 
-        // Mirror section
         Text mirrorHeading = new Text("Mirror Formula:\n");
         mirrorHeading.setFont(Font.font(14));
         mirrorHeading.setUnderline(true);
+        mirrorHeading.getStyleClass().add("help-text");
 
         Text mirrorFormula = new Text("   1/f = 1/v + 1/u\n");
         mirrorFormula.setFont(Font.font(14));
+        mirrorFormula.getStyleClass().add("help-text");
 
         Text mirrorDescription = new Text("   - f: Focal length of the mirror\n   - v: Image distance\n   - u: Object distance\n\n");
         mirrorDescription.setFont(Font.font(14));
+        mirrorDescription.getStyleClass().add("help-text");
 
-        // Magnification section
         Text magnificationHeading = new Text("Magnification (m):\n");
         magnificationHeading.setFont(Font.font(14));
         magnificationHeading.setUnderline(true);
+        magnificationHeading.getStyleClass().add("help-text");
 
         Text magnificationFormula = new Text("   m = h'/h = -v/u\n");
         magnificationFormula.setFont(Font.font(14));
+        magnificationFormula.getStyleClass().add("help-text");
 
         Text magnificationDescription = new Text("   - h': Height of the image\n   - h: Height of the object\n\n");
         magnificationDescription.setFont(Font.font(14));
+        magnificationDescription.getStyleClass().add("help-text");
 
-
-        // Add all Text nodes to the TextFlow
         helpTextFlow.getChildren().addAll(
                 welcomeText, descriptionText,
                 refractionHeading, refractionFormula, refractionDescription,
                 thinLensHeading, thinLensFormula, thinLensDescription,
                 mirrorHeading, mirrorFormula, mirrorDescription,
                 magnificationHeading, magnificationFormula, magnificationDescription
-
         );
 
         HBox textFlowContainer = new HBox(helpTextFlow);
         textFlowContainer.setAlignment(Pos.CENTER);
+
         Button backButton = new Button("Back");
         backButton.setOnAction(e -> {
             util.switchScene(new Scene(new MainView(MainApp.primaryStage)));
@@ -166,6 +174,7 @@ public class MainController {
 
         vbox1.getChildren().addAll(helpHeading, textFlowContainer, backButton);
         Scene scene = new Scene(vbox1, 600, 500);
+        ThemeController.applyTheme(scene);
         util.switchScene(scene);
     }
 

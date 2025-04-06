@@ -18,13 +18,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import project.optics.jfkt.controllers.LensesController;
-//import project.optics.jfkt.models.Lens;
+import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.models.LensesModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LensView extends BaseView {
     private LensesController controller;
@@ -56,7 +54,6 @@ public class LensView extends BaseView {
         setupZoomControls();
 
         this.controller = new LensesController(new LensesModel(3, 8.0, 2.0, -0.5, 4.0), this);
-        //setupViewListeners();
         showDefaultLensSystem();
     }
 
@@ -69,13 +66,6 @@ public class LensView extends BaseView {
         centerY = animPane.getPrefHeight() / 2;
         centerX = animPane.getPrefWidth() / 2;
     }
-
-
-
-
-
-
-
 
     private void showDefaultLensSystem() {
         updateView(3, 8.0, 2.0, -0.5, 4.0, new ArrayList<>());
@@ -94,6 +84,7 @@ public class LensView extends BaseView {
             header.setFont(new Font(40));
             header.setTextAlignment(TextAlignment.CENTER);
             header.setUnderline(true);
+            header.getStyleClass().add("header-text");
             VBox.setMargin(header, new Insets(0, 0, 20, 0));
 
             // Create parameter HBoxes
@@ -138,6 +129,7 @@ public class LensView extends BaseView {
 
         Text label = new Text(labelText);
         label.setFont(new Font(20));
+        label.getStyleClass().add("parameter-label");
 
         TextField textField = new TextField(defaultValue);
         textField.setFont(new Font(18));
@@ -177,7 +169,6 @@ public class LensView extends BaseView {
                 lastMagnification, lastFocalLength, lastExtraLenses);
     }
 
-
     private VBox findParametersVBox(Pane baseCenter) {
         for (Node node : baseCenter.getChildren()) {
             if (node instanceof VBox) {
@@ -190,7 +181,6 @@ public class LensView extends BaseView {
     public void updateView(int numRays, double objectDistance, double objectHeight,
                            double magnification, double focalLength,
                            List<LensesModel.Lens> extraLenses) {
-
         Pane animPane = getAnimpane();
         animPane.getChildren().removeIf(node -> {
             // Keep only the zoom controls (HBox)
@@ -229,14 +219,13 @@ public class LensView extends BaseView {
 
     private void drawOpticalAxis(Pane pane) {
         Line axis = new Line(0, centerY, pane.getPrefWidth(), centerY);
-        axis.setStroke(Color.BLACK);
+
         pane.getChildren().add(axis);
     }
 
     private void drawMainLens(Pane pane) {
-        // Increased height to ±150 (was ±50) to ensure ray intersections
         Line lens = new Line(centerX, centerY - 150, centerX, centerY + 150);
-        lens.setStroke(Color.BLUE);
+
         lens.setStrokeWidth(3);
         pane.getChildren().add(lens);
     }
@@ -253,6 +242,8 @@ public class LensView extends BaseView {
         // Labels
         Text nearLabel = new Text(lensX - focalLengthPx - 20, centerY - 10, "F");
         Text farLabel = new Text(lensX + focalLengthPx + 10, centerY - 10, "F'");
+        nearLabel.getStyleClass().add("focal-label");
+        farLabel.getStyleClass().add("focal-label");
 
         pane.getChildren().addAll(nearFocal, farFocal, nearLabel, farLabel);
     }
@@ -260,7 +251,7 @@ public class LensView extends BaseView {
     private void drawObject(double x, double baseY, double heightPx, Pane pane) {
         // Object line
         Line objLine = new Line(x, baseY, x, baseY - heightPx);
-        objLine.setStroke(Color.GREEN);
+
         objLine.setStrokeWidth(2);
 
         // Arrow head
@@ -269,10 +260,11 @@ public class LensView extends BaseView {
                 x - 5, baseY - heightPx + 10,
                 x + 5, baseY - heightPx + 10
         );
-        arrowHead.setFill(Color.GREEN);
+
 
         // Label
         Text label = new Text(x - 30, baseY - heightPx/2, "Object");
+        label.getStyleClass().add("lens-label");
 
         pane.getChildren().addAll(objLine, arrowHead, label);
     }
@@ -293,10 +285,8 @@ public class LensView extends BaseView {
         Line parallelRay = new Line(objX, objTopY, lensX, objTopY);
         Line parallelRayRefracted;
         if (isConverging) {
-            // Converges through far focal point (F')
             parallelRayRefracted = new Line(lensX, objTopY, imageX, imageY);
         } else {
-            // Diverges as if coming from near virtual focus
             double virtualSlope = (objTopY - lensY) / (lensX - (lensX - focalLengthPx));
             parallelRayRefracted = new Line(lensX, objTopY,
                     lensX + Math.abs(focalLengthPx)*2,
@@ -310,13 +300,11 @@ public class LensView extends BaseView {
         Line focalRay;
         Line focalRayRefracted;
         if (isConverging) {
-            // Passes through near focal point (F) before lens, then parallel
             double nearFocalX = lensX - focalLengthPx;
             double focalRayIntersectY = lensY + (objTopY-lensY)*focalLengthPx/(objX-nearFocalX);
             focalRay = new Line(objX, objTopY, lensX, focalRayIntersectY);
             focalRayRefracted = new Line(lensX, focalRayIntersectY, imageX, imageY);
         } else {
-            // Aims toward virtual far focal point (F') before lens, then parallel
             double virtualFarFocalX = lensX + Math.abs(focalLengthPx);
             double virtualSlope = (objTopY - lensY) / (objX - virtualFarFocalX);
             double intersectY = lensY + virtualSlope * (lensX - objX);
@@ -327,12 +315,13 @@ public class LensView extends BaseView {
         }
 
         // Style and add all rays
-        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN};
-        parallelRay.setStroke(colors[0]);
-        parallelRayRefracted.setStroke(colors[0]);
-        centralRay.setStroke(colors[1]);
-        focalRay.setStroke(colors[2]);
-        focalRayRefracted.setStroke(colors[2]);
+
+
+        parallelRay.setStroke(Color.RED);
+        parallelRayRefracted.setStroke(Color.RED);
+        centralRay.setStroke(Color.BLUE);
+        focalRay.setStroke(Color.GREEN);
+        focalRayRefracted.setStroke(Color.GREEN);
 
         for (Line ray : new Line[]{parallelRay, parallelRayRefracted,
                 centralRay, focalRay, focalRayRefracted}) {
@@ -340,18 +329,17 @@ public class LensView extends BaseView {
             pane.getChildren().add(ray);
         }
 
-        // Draw image if real image exists (converging lens with object outside focal point)
+        // Draw image if real image exists
         if (isConverging && u > focalLengthPx) {
             drawImageArrow(imageX, lensY, imageHeight, pane);
         } else if (!isConverging) {
-            // For diverging lens, draw virtual image (dashed)
             drawVirtualImageArrow(imageX, lensY, imageHeight, pane);
         }
     }
 
     private void drawImageArrow(double x, double baseY, double heightPx, Pane pane) {
         Line imageLine = new Line(x, baseY, x, baseY - heightPx);
-        imageLine.setStroke(Color.PURPLE);
+
         imageLine.setStrokeWidth(2);
 
         Polygon arrowHead = new Polygon(
@@ -359,23 +347,23 @@ public class LensView extends BaseView {
                 x - 5, baseY - heightPx + 10,
                 x + 5, baseY - heightPx + 10
         );
-        arrowHead.setFill(Color.PURPLE);
+
         pane.getChildren().addAll(imageLine, arrowHead);
     }
 
     private void drawVirtualImageArrow(double x, double baseY, double heightPx, Pane pane) {
         Line imageLine = new Line(x, baseY, x, baseY - heightPx);
-        imageLine.setStroke(Color.PURPLE);
+
         imageLine.setStrokeWidth(2);
-        imageLine.getStrokeDashArray().addAll(5d, 5d); // Dashed line for virtual image
+        imageLine.getStrokeDashArray().addAll(5d, 5d);
 
         Polygon arrowHead = new Polygon(
                 x, baseY - heightPx,
                 x - 5, baseY - heightPx + 10,
                 x + 5, baseY - heightPx + 10
         );
-        arrowHead.setFill(Color.PURPLE);
-        arrowHead.setOpacity(0.6); // Semi-transparent
+
+        arrowHead.setOpacity(0.6);
         pane.getChildren().addAll(imageLine, arrowHead);
     }
 
@@ -383,7 +371,6 @@ public class LensView extends BaseView {
                                     double lensX, double lensY,
                                     double focalLengthPx,
                                     int numExtraRays, Pane pane) {
-        // Calculate image position (same as in drawAllPrincipalRays)
         double imageDistance = 1 / (1/focalLengthPx - 1/(lensX-objX));
         double imageX = lensX + imageDistance;
         double imageHeight = -((lensX-objX)/imageDistance) * (lensY-objTopY);
@@ -396,15 +383,9 @@ public class LensView extends BaseView {
             double yOffset = spacing * i;
             double rayStartY = objTopY + yOffset;
 
-            // 1. Incident ray (object to lens)
             Line incidentRay = new Line(objX, rayStartY, lensX, rayStartY);
-
-            // 2. Refracted ray (lens to image point)
-            // Calculate proper refraction using lens formula
-            double refractedSlope = (rayStartY - lensY) / (lensX - (lensX - focalLengthPx));
             Line refractedRay = new Line(lensX, rayStartY, imageX, imageY + yOffset*(imageHeight/objectHeight));
 
-            // Style rays (semi-transparent orange)
             Color rayColor = Color.ORANGE.deriveColor(0, 1, 1, 0.6);
             incidentRay.setStroke(rayColor);
             refractedRay.setStroke(rayColor);
@@ -419,6 +400,7 @@ public class LensView extends BaseView {
         for (LensesModel.Lens lens : extraLenses) {
             double lensX = centerX + (lens.getPosition() * scale);
             Line lensLine = new Line(lensX, centerY - 40, lensX, centerY + 40);
+
             lensLine.setStroke(lens.isConverging() ? Color.BLUE : Color.RED);
             if (!lens.isConverging()) {
                 lensLine.getStrokeDashArray().addAll(5d, 5d);
@@ -468,5 +450,4 @@ public class LensView extends BaseView {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }

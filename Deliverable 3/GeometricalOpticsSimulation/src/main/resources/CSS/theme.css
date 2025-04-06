@@ -19,7 +19,14 @@
 .light-mode .text-area .text,
 .light-mode .list-view,
 .light-mode .hint-text,
-.light-mode .question-text {
+.light-mode .question-text,
+.light-mode .param-text,
+.light-mode .option-text,
+.light-mode .choice-text,
+.light-mode .header-text,
+.light-mode .parameter-label,
+.light-mode .lens-label,
+.light-mode .focal-label {
     -fx-text-fill: black;
     -fx-fill: black;
 }
@@ -38,20 +45,54 @@
 .dark-mode .text-area .text,
 .dark-mode .list-view,
 .dark-mode .hint-text,
-.dark-mode .question-text {
+.dark-mode .question-text,
+.dark-mode .param-text,
+.dark-mode .option-text,
+.dark-mode .choice-text,
+.dark-mode .header-text,
+.dark-mode .parameter-label,
+.dark-mode .lens-label,
+.dark-mode .focal-label {
     -fx-text-fill: white;
     -fx-fill: white;
 }
 
+/* Base View Specific Styles */
+.dark-mode .animation-pane {
+    -fx-border-color: white !important;
+}
+
+.dark-mode .optical-axis {
+    -fx-stroke: white !important;
+}
+
+/* Lens View Specific Styles */
+.dark-mode .lens-line {
+    -fx-stroke: white !important;
+}
+
+.dark-mode .object-arrow {
+    -fx-stroke: white !important;
+    -fx-fill: white !important;
+}
+
+.dark-mode .image-arrow {
+    -fx-stroke: white !important;
+    -fx-fill: white !important;
+}
+
+.dark-mode .principal-ray {
+    -fx-stroke: white !important;
+}
+
 /* Refraction View Specific Styles */
-/* Container outlines */
 .dark-mode .refraction-outline,
 .dark-mode .refraction-animation-pane,
 .dark-mode .refraction-parameters {
     -fx-border-color: white !important;
 }
 
-/* Refraction text protection (won't change in dark mode) */
+/* Refraction text protection */
 .refraction-text,
 .refraction-text .text,
 .refraction-text .label,
@@ -102,6 +143,11 @@
     -fx-fill: -fx-text-base-color;
 }
 
+/* Image container styling */
+.dark-mode .image-container {
+    -fx-border-color: white !important;
+}
+
 /* State styles */
 .combo-box:hover .label,
 .combo-box:showing .label,
@@ -116,7 +162,94 @@
     -fx-text-fill: -fx-text-base-color;
 }
 
-/* Image container in education mode */
-.dark-mode .image-container {
-    -fx-border-color: white !important;
+/* Help Section Styles */
+.help-container {
+    -fx-background-color: #222222;
+}
+
+.help-heading {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.help-text-flow {
+    -fx-text-fill: -fx-text-base-color;
+    -fx-background-color: transparent;
+}
+
+.help-text {
+    -fx-fill: -fx-text-base-color;
+    -fx-font-size: 14px;
+}
+
+/* Dark Mode Help Section */
+.dark-mode .help-container {
+    -fx-background-color: #222222;
+}
+
+.dark-mode .help-heading {
+    -fx-text-fill: white;
+}
+
+.dark-mode .help-text-flow {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+}
+
+.dark-mode .help-text {
+    -fx-fill: white;
+}
+
+.dark-mode .text-flow .text {
+    -fx-fill: white;
+}
+
+.dark-mode .help-text {
+    -fx-fill: white;
+}
+
+/* Alert Dialog Styling */
+.dark-mode .alert {
+    -fx-background-color: #333333;
+}
+
+.dark-mode .alert .header-panel {
+    -fx-background-color: #444444;
+}
+
+.dark-mode .alert .content.label {
+    -fx-text-fill: white;
+}
+
+/* TextFlow Styling */
+.dark-mode .text-flow .text {
+    -fx-fill: white;
+}
+
+/* VBox/HBox Containers */
+.dark-mode .content-container {
+    -fx-background-color: #222222;
+}
+
+/* ScrollPane Styling */
+.dark-mode .scroll-pane {
+    -fx-background: #222222;
+    -fx-border-color: #444444;
+}
+
+.dark-mode .scroll-bar:vertical,
+.dark-mode .scroll-bar:horizontal {
+    -fx-background-color: #333333;
+}
+
+.dark-mode .scroll-bar .thumb {
+    -fx-background-color: #555555;
+}
+
+/* TextField Styling */
+.dark-mode .text-field {
+    -fx-text-fill: white;
+    -fx-background-color: #444444;
+    -fx-prompt-text-fill: #aaaaaa;
 }
