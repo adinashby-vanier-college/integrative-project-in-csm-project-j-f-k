@@ -28,33 +28,25 @@ public class Util {
     }
 
     public Region createMenu() {
-        HBox container = new HBox();
-        container.setBorder(Border.stroke(Paint.valueOf("Black")));
-
-        MenuBar menuBar1 = new MenuBar();
-
+        MenuBar menuBar = new MenuBar();
+        Menu fileMenu = new Menu("File");
+        MenuItem quit = new MenuItem("Quit");
+        MenuItem aboutUs = new MenuItem("About Us");
+        MenuItem help = new MenuItem("Help");
         Menu settings = new Menu("Settings");
-        MenuItem general = new MenuItem("General");
-        MenuItem animation = new MenuItem("Animation");
+
         MenuItem theme = new MenuItem("Theme");
-        settings.getItems().addAll(general, animation, theme);
-
-        Menu help = new Menu("Help");
-        Menu aboutUs = new Menu("About Us");
-
-        menuBar1.getMenus().addAll(settings, help, aboutUs);
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        MenuBar menuBar2 = new MenuBar();
-        Menu quit = new Menu("Quit");
-        menuBar2.getMenus().add(quit);
+        MenuItem animation = new MenuItem("Animation");
+        MenuItem general = new MenuItem("General");
 
 
-        container.getChildren().addAll(menuBar1, spacer, menuBar2);
+        fileMenu.getItems().addAll(quit,aboutUs, help);
 
-        return container;
+        settings.getItems().addAll(theme, animation, general);
+
+        menuBar.getMenus().addAll(fileMenu,settings );
+
+        return menuBar;
     }
 
     public HBox createZoomAndBackButtons() {

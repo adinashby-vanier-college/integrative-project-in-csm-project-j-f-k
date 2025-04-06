@@ -43,21 +43,30 @@
     -fx-fill: white;
 }
 
-/* Education Mode Specific Styles */
+/* Refraction View Specific Styles */
 /* Container outlines */
-.dark-mode .education-outline {
+.dark-mode .refraction-outline,
+.dark-mode .refraction-animation-pane,
+.dark-mode .refraction-parameters {
     -fx-border-color: white !important;
 }
 
-/* Hint and Answer areas */
-.dark-mode .hint-area,
-.dark-mode .answer-area {
-    -fx-border-color: white !important;
+/* Refraction text protection (won't change in dark mode) */
+.refraction-text,
+.refraction-text .text,
+.refraction-text .label,
+.refraction-layer .label,
+.refraction-layer .text,
+.refraction-parameters .label,
+.refraction-parameters .text {
+    -fx-text-fill: -fx-text-base-color !important;
+    -fx-fill: -fx-text-base-color !important;
 }
 
-/* Radio button squares */
-.dark-mode .radio-outline {
+/* Plus sign styling */
+.dark-mode .refraction-plus-sign {
     -fx-stroke: white !important;
+    -fx-fill: white !important;
 }
 
 /* Combo Box Protection */

@@ -98,14 +98,17 @@ public class RefractionView extends Pane {
 
         HBox layer1 = new HBox();
         layer1.setBorder(Border.stroke(Color.BLACK));
+        layer1.getStyleClass().addAll("refraction-layer", "refraction-text");
         VBox.setVgrow(layer1, Priority.ALWAYS);
 
         HBox layer2 = new HBox();
         layer2.setBorder(Border.stroke(Color.BLACK));
+        layer2.getStyleClass().addAll("refraction-layer", "refraction-text");
         VBox.setVgrow(layer2, Priority.ALWAYS);
 
         HBox layer3 = new HBox();
         layer3.setBorder(Border.stroke(Color.BLACK));
+        layer3.getStyleClass().addAll("refraction-layer", "refraction-text");
         VBox.setVgrow(layer3, Priority.ALWAYS);
 
         layers.add(layer1);
@@ -116,30 +119,25 @@ public class RefractionView extends Pane {
     private StackPane createAnimationPane() {
         // The outerPane including the layers and the trail of animation
         StackPane animationPane = new StackPane();
+        animationPane.getStyleClass().addAll("refraction-animation-pane", "refraction-text");
         this.animationPane = animationPane;
 
         // The pane displaying the trail and the object of animation
         Pane trailPane = new Pane();
         trailPane.setMouseTransparent(true);
-        animationPane.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                trailPane.setPrefHeight(newValue.doubleValue());
-            }
+        animationPane.heightProperty().addListener((observable, oldValue, newValue) -> {
+            trailPane.setPrefHeight(newValue.doubleValue());
         });
-        animationPane.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                trailPane.setPrefWidth(newValue.doubleValue());
-            }
+        animationPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            trailPane.setPrefWidth(newValue.doubleValue());
         });
-
         this.trailPane = trailPane;
 
         // initialize the pane
         VBox layerPane = new VBox();
         layerPane.setPrefHeight(ANIMATION_PANE_HEIGHT);
         layerPane.setBorder(Border.stroke(Color.BLACK));
+        layerPane.getStyleClass().addAll("refraction-outline", "refraction-text");
         this.layerPane = layerPane;
 
         animationPane.getChildren().addAll(layerPane, trailPane);
@@ -157,23 +155,19 @@ public class RefractionView extends Pane {
             object.setVisible(newVal.intValue() >= 2);
         });
 
-
         // object's X position dynamically change with the incident location slider
-        incidentLocation.addListener((observable, oldValue, newValue) -> refractionController.onIncidentLocationChanged(newValue, object));
+        incidentLocation.addListener((observable, oldValue, newValue) ->
+                refractionController.onIncidentLocationChanged(newValue, object));
 
         // initialization center Y value of incident point
         object.setTranslateY(0);
-
         trailPane.getChildren().add(object);
 
         // hide overflowed elements of the pane
         Rectangle clip = new Rectangle();
-
         clip.widthProperty().bind(animationPane.widthProperty());
         clip.heightProperty().bind(animationPane.heightProperty());
-
         this.rectangleClip = clip;
-
         trailPane.setClip(clip);
 
         // create layers
@@ -187,19 +181,18 @@ public class RefractionView extends Pane {
         newLayer.setStyle("-fx-background-color: transparent; " +
                 "-fx-border-color: transparent; " +
                 "-fx-cursor: hand; " +
-                "-fx-pref-width: 0; -fx-pref-height: 0; " + // Zero preferred size
-                "-fx-min-width: 0; -fx-min-height: 0; " );
+                "-fx-pref-width: 0; -fx-pref-height: 0; " +
+                "-fx-min-width: 0; -fx-min-height: 0; ");
 
         this.newLayer = newLayer;
 
         HBox plusSignLayer = new HBox(newLayer);
         plusSignLayer.setAlignment(Pos.CENTER);
-
         VBox.setVgrow(plusSignLayer, Priority.ALWAYS);
-
         layerPane.getChildren().add(plusSignLayer);
 
-        newLayer.setOnAction(event -> refractionController.onNewLayerButtonPressed(RefractionView.this, layers, layerPane, plusSignLayer));
+        newLayer.setOnAction(event ->
+                refractionController.onNewLayerButtonPressed(RefractionView.this, layers, layerPane, plusSignLayer));
 
         return animationPane;
     }
