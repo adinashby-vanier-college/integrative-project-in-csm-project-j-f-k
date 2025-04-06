@@ -3,6 +3,7 @@ package project.optics.jfkt.controllers;
 
 import javafx.scene.control.Alert;
 //import project.optics.jfkt.models.Lens;
+import javafx.scene.control.TextField;
 import project.optics.jfkt.models.LensesModel;
 import project.optics.jfkt.views.LensView;
 
@@ -27,60 +28,57 @@ public class LensesController {
     }
 
     private void setupViewListeners() {
-        // Connect UI actions to controller methods
-        view.getApplyButton().setOnAction(e -> {System.out.println("Apply button clicked!");
-        applyParameters();
+        view.getApplyButton().setOnAction(e -> applyParameters());
+
+        view.getConvergingButton().setOnAction(e -> {
+            view.addConvergingLensParams(10.0, 4.0);
         });
-        view.getConvergingButton().setOnAction(e -> addConvergingLens());
-        view.getDivergingButton().setOnAction(e -> addDivergingLens());
+
+        view.getDivergingButton().setOnAction(e -> {
+            view.addDivergingLensParams(10.0, -4.0);
+        });
     }
 
-    // ========================
-    // Main Parameter Control
-    // ========================
+
+    //Applying
     public void applyParameters() {
         try {
-            // Get text from input fields
-            String odText = view.getObjectDistanceField();
-            String ohText = view.getObjectHeightField();
-            String flText = view.getFocalLengthField();
-            String magText = view.getMagnificationField();
-            String raysText = view.getNumRaysField();
+            // Existing main parameters
+            double objectDistance = parseDouble(view.getObjectDistanceField(), "Object Distance");
+            double objectHeight = parseDouble(view.getObjectHeightField(), "Object Height");
+            double focalLength = parseDouble(view.getFocalLengthField(), "Focal Length");
+            double magnification = parseDouble(view.getMagnificationField(), "Magnification");
+            int numRays = parseInt(view.getNumRaysField(), "Number of Rays");
 
-            // Parse and validate
-            double objectDistance = parseDouble(odText, "Object Distance");
-            double objectHeight = parseDouble(ohText, "Object Height");
-            double focalLength = parseDouble(flText, "Focal Length");
-            double magnification = parseDouble(magText, "Magnification");
-            int numRays = parseInt(raysText, "Number of Rays");
+            // Validation
+            if (objectDistance <= 0 || objectHeight <= 0 || numRays < 1 || numRays > 20) {
+                throw new IllegalArgumentException("Check parameter values (positive and rays between 1-20).");
+            }
 
-            // Additional validation
-            if (objectDistance <= 0) throw new IllegalArgumentException("Object Distance must be positive");
-            if (objectHeight <= 0) throw new IllegalArgumentException("Object Height must be positive");
-            if (numRays < 1 || numRays > 20) throw new IllegalArgumentException("Number of Rays must be between 1-20");
-
-            // Update model
+            // Set main parameters in model
             model.setObjectDistance(objectDistance);
             model.setObjectHeight(objectHeight);
             model.setFocalLength(focalLength);
             model.setMagnification(magnification);
             model.setNumRays(numRays);
 
+            // Handle extra lens parameters dynamically
+            model.clearExtraLenses();
+            for (TextField[] fields : view.extraLensFields) {
+                double position = parseDouble(fields[0].getText(), "Lens Position");
+                double lensFocalLength = parseDouble(fields[1].getText(), "Lens Focal Length");
+                model.addExtraLens(position, lensFocalLength);
+            }
+
             updateView();
 
-            System.out.println("Applying parameters:");
-            System.out.println("Object Distance: " + objectDistance);
-            System.out.println("Object Height: " + objectHeight);
-            System.out.println("Focal Length: " + focalLength);
-            System.out.println("Magnification: " + magnification);
-            System.out.println("Number of Rays: " + numRays);
-
         } catch (NumberFormatException e) {
-            view.showError("Please enter valid numbers in all fields");
+            view.showError("Invalid input: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             view.showError(e.getMessage());
         }
     }
+
 
     // Helper methods for parsing and validation
     private double parseDouble(String text, String fieldName) throws NumberFormatException {
@@ -95,31 +93,6 @@ public class LensesController {
             throw new NumberFormatException(fieldName + " cannot be empty");
         }
         return Integer.parseInt(text.trim());
-    }
-
-    // Lens Management
-    public void addConvergingLens() {
-        double defaultPosition = 10.0; // Units right of main lens
-        double defaultFocalLength = 4.0; // Converging lens
-        model.addExtraLens(defaultPosition, defaultFocalLength);
-        updateView();
-    }
-
-    public void addDivergingLens() {
-        double defaultPosition = 10.0; // Units right of main lens
-        double defaultFocalLength = -4.0; // Diverging lens
-        model.addExtraLens(defaultPosition, defaultFocalLength);
-        updateView();
-    }
-
-    public void removeLens(int index) {
-        model.removeExtraLens(index);
-        updateView();
-    }
-
-    public void clearAllLenses() {
-        model.clearExtraLenses();
-        updateView();
     }
 
     // ========================

@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -15,6 +16,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import project.optics.jfkt.controllers.LensesController;
@@ -26,11 +28,12 @@ import java.util.List;
 
 public class LensView extends BaseView {
     private LensesController controller;
-
+    private VBox paramVBox;
     private static final double DEFAULT_SCALE = 50.0;
     private double scale = DEFAULT_SCALE;
     private double centerY;
     private double centerX;
+    private int lensCounter = 1;
 
     // State tracking
     private int lastNumRays;
@@ -39,6 +42,9 @@ public class LensView extends BaseView {
     private double lastMagnification;
     private double lastFocalLength;
     private List<LensesModel.Lens> lastExtraLenses = new ArrayList<>();
+    // Track the dynamically added lens parameter fields
+    public final List<TextField[]> extraLensFields = new ArrayList<>();
+
 
     // UI Components
     private TextField objectDistanceField;
@@ -74,7 +80,7 @@ public class LensView extends BaseView {
     @Override
     protected Pane createCenter() {
         Pane baseCenter = (Pane) super.createCenter();
-        VBox paramVBox = findParametersVBox(baseCenter);
+        paramVBox = findParametersVBox(baseCenter);
 
         if (paramVBox != null) {
             paramVBox.getChildren().clear();
@@ -399,16 +405,83 @@ public class LensView extends BaseView {
     private void drawExtraLenses(List<LensesModel.Lens> extraLenses, Pane pane) {
         for (LensesModel.Lens lens : extraLenses) {
             double lensX = centerX + (lens.getPosition() * scale);
-            Line lensLine = new Line(lensX, centerY - 40, lensX, centerY + 40);
-
+            Line lensLine = new Line(lensX, centerY - 100, lensX, centerY + 100);
             lensLine.setStroke(lens.isConverging() ? Color.BLUE : Color.RED);
+            lensLine.setStrokeWidth(3);
+
             if (!lens.isConverging()) {
-                lensLine.getStrokeDashArray().addAll(5d, 5d);
+                lensLine.getStrokeDashArray().addAll(10d, 5d);
             }
-            lensLine.setStrokeWidth(2);
-            pane.getChildren().add(lensLine);
+
+            Text lensLabel = new Text(lensX - 30, centerY - 110, lens.isConverging() ? "Converging" : "Diverging");
+            lensLabel.setFont(new Font(14));
+            lensLabel.setFill(lens.isConverging() ? Color.BLUE : Color.RED);
+
+            pane.getChildren().addAll(lensLine, lensLabel);
         }
     }
+
+    // Adds converging lens parameters with default values
+    public void addConvergingLensParams(double defaultPosition, double defaultFocalLength) {
+        addExtraLensParamFields(defaultPosition, defaultFocalLength);
+    }
+
+    // Adds diverging lens parameters with default values
+    public void addDivergingLensParams(double defaultPosition, double defaultFocalLength) {
+        addExtraLensParamFields(defaultPosition, defaultFocalLength);
+    }
+
+    // General method to add parameter fields
+    private void addExtraLensParamFields(double position, double focalLength) {
+        if (paramVBox != null) {
+            // Wrapper VBox for each lens entry
+            VBox lensGroup = new VBox(5);
+            lensGroup.setPadding(new Insets(10));
+            lensGroup.setStyle("-fx-border-color: grey; -fx-border-width: 1; -fx-background-color: #f5f5f5;");
+
+            String labelText = (focalLength > 0 ? "Converging" : "Diverging") + " Lens #" + lensCounter++;
+
+            Label lensLabel = new Label(labelText);
+            lensLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+
+            HBox lensPositionBox = createParameterHBox("Position", String.valueOf(position));
+            HBox lensFocalLengthBox = createParameterHBox("Focal Length", String.valueOf(focalLength));
+
+            TextField positionField = (TextField) lensPositionBox.getChildren().get(1);
+            TextField focalField = (TextField) lensFocalLengthBox.getChildren().get(1);
+            extraLensFields.add(new TextField[]{positionField, focalField});
+
+            // "X" remove button
+            Button removeBtn = new Button("X");
+            removeBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
+            removeBtn.setOnAction(e -> {
+                paramVBox.getChildren().remove(lensGroup);
+                extraLensFields.removeIf(pair -> pair[0] == positionField && pair[1] == focalField);
+            });
+
+            HBox header = new HBox(lensLabel, removeBtn);
+            header.setAlignment(Pos.CENTER_LEFT);
+            header.setSpacing(10);
+
+            lensGroup.getChildren().addAll(header, lensPositionBox, lensFocalLengthBox);
+
+            // Add before Apply button (last element)
+            paramVBox.getChildren().add(paramVBox.getChildren().size() - 1, lensGroup);
+        }
+    }
+
+
+    // Clears extra lens parameter fields (useful for resets)
+    public void clearExtraLensParamFields() {
+        if (paramVBox != null && extraLensFields.size() > 0) {
+            int numToRemove = extraLensFields.size() * 2; // two boxes per lens
+            int startRemoveIndex = paramVBox.getChildren().size() - numToRemove - 1; // before apply button
+            paramVBox.getChildren().remove(startRemoveIndex, startRemoveIndex + numToRemove);
+            extraLensFields.clear();
+        }
+    }
+
+
 
     // UI Access Methods
     public Button getApplyButton() {
