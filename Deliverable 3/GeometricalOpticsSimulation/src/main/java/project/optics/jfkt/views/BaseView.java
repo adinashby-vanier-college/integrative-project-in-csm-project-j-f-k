@@ -49,7 +49,7 @@ public class BaseView extends BorderPane{
     }
 
     Region createCenter(){
-        Pane mainpane = new Pane();
+        HBox mainpane = new HBox();
         mainpane.setPrefSize(1920,1080);
 
         VBox paramvbox = new VBox();
@@ -72,7 +72,7 @@ public class BaseView extends BorderPane{
         Button zoomin = new Button("", zoominImage);
         Button zoomout = new Button("", zoomoutImage);
         animpane.setPrefSize(1400,720);
-        animpane.setLayoutX(420);
+        animpane.setPrefWidth(1500);
         animpane.setStyle("-fx-border-color: black; -fx-border-width: 4px;");
         Line opticalAxis = new Line(0, animpane.getPrefHeight()/2, animpane.getPrefWidth(), animpane.getPrefHeight()/2);
         opticalAxis.getStyleClass().add("optical-axis");
