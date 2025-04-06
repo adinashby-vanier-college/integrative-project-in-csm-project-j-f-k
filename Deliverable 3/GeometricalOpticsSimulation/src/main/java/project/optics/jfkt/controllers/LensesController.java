@@ -28,7 +28,10 @@ public class LensesController {
     }
 
     private void setupViewListeners() {
-        view.getApplyButton().setOnAction(e -> applyParameters());
+        view.getApplyButton().setOnAction(e -> {
+            System.out.println("Apply clicked!");
+            applyParameters();
+        });
 
         view.getConvergingButton().setOnAction(e -> {
             view.addConvergingLensParams(10.0, 4.0);
@@ -37,6 +40,14 @@ public class LensesController {
         view.getDivergingButton().setOnAction(e -> {
             view.addDivergingLensParams(10.0, -4.0);
         });
+
+        view.getPlaybutton().setOnAction(e -> onPlayPressed());
+        view.getPausebutton().setOnAction(e -> onPausePressed());
+        view.getRedobutton().setOnAction(e -> onRestartPressed());
+        //view.getStepBackButton().setOnAction(e -> onStepBackPressed());
+        //view.getStepForwardButton().setOnAction(e -> onStepForwardPressed());
+        //view.getSixthButton().setOnAction(e -> onToggleLoopPressed());
+
     }
 
 
@@ -48,11 +59,11 @@ public class LensesController {
             double objectHeight = parseDouble(view.getObjectHeightField(), "Object Height");
             double focalLength = parseDouble(view.getFocalLengthField(), "Focal Length");
             double magnification = parseDouble(view.getMagnificationField(), "Magnification");
-            int numRays = parseInt(view.getNumRaysField(), "Number of Rays");
+            int numRays = parseInt(view.getNumExtraRaysField(), "Number of Extra Rays");
 
             // Validation
-            if (objectDistance <= 0 || objectHeight <= 0 || numRays < 1 || numRays > 20) {
-                throw new IllegalArgumentException("Check parameter values (positive and rays between 1-20).");
+            if (objectDistance <= 0 || objectHeight <= 0 || numRays < 0) {
+                throw new IllegalArgumentException("Check parameter values (positive and rays from 0 to how many you want).");
             }
 
             // Set main parameters in model
@@ -105,5 +116,35 @@ public class LensesController {
                 model.getExtraLenses() // Passes List<Lens>
         );
     }
+
+
+
+    // Animation logic handlers
+    public void onPlayPressed() {
+        view.startAnimation();
+    }
+
+    public void onPausePressed() {
+        view.stopAnimation();
+    }
+
+    public void onRestartPressed() {
+        view.stopAnimation();
+        view.startAnimation();
+    }
+
+    // public void onStepBackPressed() {
+    //    view.stepBackAnimation(); // backward
+    //}
+
+    //public void onStepForwardPressed() {
+    //    view.stepForwardAnimation(); // forward
+    //}
+
+    //public void onToggleLoopPressed() {
+    //    view.toggleLoopMode(); // loop ON/OFF
+    //}
+
+
 
 }
