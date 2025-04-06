@@ -15,24 +15,27 @@ import project.optics.jfkt.controllers.ThemeController;
 public class ThemeView extends BorderPane {
 
     public ThemeView(ThemeController controller) {
-        // Apply current theme to this view
+        // Apply current theme and font to this view
         this.getStyleClass().add(ThemeController.getCurrentTheme());
+        this.setStyle("-fx-font-family: '" + ThemeController.getCurrentFont() + "';");
 
         VBox themeSettingsBox = new VBox(20);
         themeSettingsBox.setAlignment(Pos.CENTER);
         themeSettingsBox.setPadding(new Insets(20));
 
-        // Sample text with default font
+        // Sample text with current font
         Label sampleText = new Label("Sample Text");
-        sampleText.setFont(javafx.scene.text.Font.font(16));
+        sampleText.setStyle("-fx-font-size: 16;");
 
         // ComboBox for font selection
         ComboBox<String> fontComboBox = new ComboBox<>();
         fontComboBox.getItems().addAll("Arial", "Times New Roman", "Courier New", "Verdana", "Comic Sans MS");
-        fontComboBox.setValue("Arial"); // Default font
+        fontComboBox.setValue(ThemeController.getCurrentFont());
         fontComboBox.setOnAction(e -> {
             String selectedFont = fontComboBox.getValue();
-            sampleText.setFont(javafx.scene.text.Font.font(selectedFont, 16));
+            ThemeController.setCurrentFont(selectedFont);
+
+            this.setStyle("-fx-font-family: '" + selectedFont + "';");
         });
 
         // Dark mode and light mode buttons in a horizontal box
@@ -81,6 +84,7 @@ public class ThemeView extends BorderPane {
         themeSettingsBox.getChildren().addAll(
                 new Label("Choose Font:"),
                 fontComboBox,
+
                 new Label("Choose Theme:"),
                 themeButtonsBox,
                 backButton

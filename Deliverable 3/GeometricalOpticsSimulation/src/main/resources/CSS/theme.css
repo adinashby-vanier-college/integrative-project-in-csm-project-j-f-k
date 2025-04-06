@@ -1,8 +1,42 @@
 /* theme.css */
-
 /* Base Styles */
 .root {
     -fx-text-base-color: #333333;
+    -fx-font-family: inherit;
+}
+
+/* Text elements */
+.text,
+.label,
+.check-box .text,
+.radio-button .text,
+.text-field,
+.text-area .text,
+.list-view,
+.hint-text,
+.question-text,
+.param-text,
+.option-text,
+.choice-text,
+.header-text,
+.parameter-label,
+.lens-label,
+.focal-label,
+.radio-option-label {
+    -fx-font-family: inherit;
+}
+
+/* Question, Hint, Answer specific styles */
+.question-text {
+    -fx-font-size: 18px;
+}
+
+.hint-text {
+    -fx-font-size: 16px;
+}
+
+.answer-text {
+    -fx-font-size: 16px;
 }
 
 /* Light Mode */
@@ -10,7 +44,6 @@
     -fx-background-color: #F7F7F7;
 }
 
-/* Text elements that change in light mode */
 .light-mode .text,
 .light-mode .label,
 .light-mode .check-box .text,
@@ -36,7 +69,6 @@
     -fx-background-color: #222222;
 }
 
-/* Text elements that change in dark mode */
 .dark-mode .text,
 .dark-mode .label,
 .dark-mode .check-box .text,

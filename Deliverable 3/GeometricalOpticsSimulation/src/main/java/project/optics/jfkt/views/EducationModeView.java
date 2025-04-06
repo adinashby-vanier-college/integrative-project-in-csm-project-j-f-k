@@ -1,5 +1,6 @@
 package project.optics.jfkt.views;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import project.optics.jfkt.MainApp;
 import project.optics.jfkt.controllers.EducationModeController;
+import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.enums.Difficulty;
 import project.optics.jfkt.models.Question;
 import project.optics.jfkt.utils.Util;
@@ -54,7 +56,49 @@ public class EducationModeView extends BorderPane {
         this.setCenter(createCenter());
         this.setRight(createRight());
         new EducationModeController(this, difficulty);
+
+        // Apply initial font
+        updateFontStyles();
+
+        // Register for font changes
+        ThemeController.addFontChangeListener(font -> {
+            Platform.runLater(this::updateFontStyles);
+        });
     }
+    private void updateFontStyles() {
+        String fontFamily = ThemeController.getCurrentFont();
+
+        // Apply to question text
+        questionText.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
+                fontFamily, QUESTION_FONT_SIZE));
+
+        // Apply to hint text
+        hintText.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
+                fontFamily, HINT_FONT_SIZE));
+
+        // Apply to answer text
+        answerText.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
+                fontFamily, ANSWER_FONT_SIZE));
+
+        // Apply to radio button labels
+        updateRadioButtonFonts(modeGroup, fontFamily);
+        updateRadioButtonFonts(sizeGroup, fontFamily);
+        updateRadioButtonFonts(orientationGroup, fontFamily);
+
+        // Apply to text field
+        userInputField.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
+                fontFamily, INPUT_FONT_SIZE));
+    }
+
+    private void updateRadioButtonFonts(ToggleGroup group, String fontFamily) {
+        for (Toggle toggle : group.getToggles()) {
+            HBox container = (HBox) toggle.getUserData();
+            Label label = (Label) container.getChildren().get(0);
+            label.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
+                    fontFamily, INPUT_FONT_SIZE));
+        }
+    }
+
 
     private Region createTop() {
         return util.createMenu();
@@ -200,7 +244,8 @@ public class EducationModeView extends BorderPane {
 
     private Node createCustomRadioOption(String text, ToggleGroup group) {
         Label label = new Label(text);
-        label.setFont(new Font(INPUT_FONT_SIZE));
+        label.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %.1f;",
+                ThemeController.getCurrentFont(), INPUT_FONT_SIZE));
 
         RadioButton rb = new RadioButton();
         rb.setToggleGroup(group);
