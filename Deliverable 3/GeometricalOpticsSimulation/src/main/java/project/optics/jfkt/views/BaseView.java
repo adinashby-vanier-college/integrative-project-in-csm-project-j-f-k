@@ -18,7 +18,7 @@ import project.optics.jfkt.utils.Util;
 import java.util.ArrayList;
 
 
-public class BaseView extends BorderPane{
+public class BaseView extends BorderPane {
     Util util = new Util();
     private String type;
     private String option1;
@@ -31,13 +31,16 @@ public class BaseView extends BorderPane{
     private Button pausebutton;
     private Button redobutton;
     private ArrayList<TextField> textInputs = new ArrayList<>();
+    private Button slowbutton;
+    private Button normalbutton;
+    private Button fastbutton;
 
-    public BaseView(String type){
-        if (type.contentEquals("Mirrors")){
+    public BaseView(String type) {
+        if (type.contentEquals("Mirrors")) {
             this.type = type;
             option1 = "Concave";
             option2 = "Convex";
-        } else{
+        } else {
             this.type = type;
             option1 = "Converging";
             option2 = "Diverging";
@@ -48,9 +51,9 @@ public class BaseView extends BorderPane{
         this.setBottom(createBottom());
     }
 
-    Region createCenter(){
+    Region createCenter() {
         HBox mainpane = new HBox();
-        mainpane.setPrefSize(1920,1080);
+        mainpane.setPrefSize(1920, 1080);
 
         VBox paramvbox = new VBox();
         Text paramheadertext = new Text();
@@ -60,41 +63,41 @@ public class BaseView extends BorderPane{
         paramheadertext.setFont(paramheaderfont);
         paramheadertext.setTextAlignment(TextAlignment.CENTER);
         paramheadertext.setUnderline(true);
-        paramvbox.setPrefSize(420,720);
+        paramvbox.setPrefSize(420, 720);
         paramvbox.getChildren().add(paramheadertext);
-        paramvbox.getChildren().addAll(createParamHbox("Focal Length"),createParamHbox("Object Distance"),createParamHbox("Object Height"));
+        paramvbox.getChildren().addAll(createParamHbox("Focal Length"), createParamHbox("Object Distance"), createParamHbox("Object Height"));
 
         animpane = new Pane();
         animpane.getStyleClass().add("animation-pane");
-        HBox zoomhbox =new HBox();
+        HBox zoomhbox = new HBox();
         ImageView zoominImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Add.png").toExternalForm()));
         ImageView zoomoutImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Reduce.png").toExternalForm()));
         Button zoomin = new Button("", zoominImage);
         Button zoomout = new Button("", zoomoutImage);
-        animpane.setPrefSize(1400,720);
+        animpane.setPrefSize(1400, 720);
         animpane.setPrefWidth(1500);
         animpane.setStyle("-fx-border-color: black; -fx-border-width: 4px;");
-        Line opticalAxis = new Line(0, animpane.getPrefHeight()/2, animpane.getPrefWidth(), animpane.getPrefHeight()/2);
+        Line opticalAxis = new Line(0, animpane.getPrefHeight() / 2, animpane.getPrefWidth(), animpane.getPrefHeight() / 2);
         opticalAxis.getStyleClass().add("optical-axis");
         opticalAxis.setStroke(Color.BLACK);
         opticalAxis.setStrokeWidth(1);
-        zoomhbox.setPrefSize(200,100);
+        zoomhbox.setPrefSize(200, 100);
         zoomhbox.setLayoutX(4);
         zoomhbox.setLayoutY(4);
-        zoomhbox.getChildren().addAll(zoomin,zoomout);
-        animpane.getChildren().addAll(opticalAxis,zoomhbox);
+        zoomhbox.getChildren().addAll(zoomin, zoomout);
+        animpane.getChildren().addAll(opticalAxis, zoomhbox);
 
-        mainpane.getChildren().addAll(paramvbox,animpane);
+        mainpane.getChildren().addAll(paramvbox, animpane);
         return mainpane;
     }
 
-    private Region createBottom(){
+    private Region createBottom() {
         HBox mainhbox = new HBox();
         mainhbox.setAlignment(Pos.CENTER);
         mainhbox.setSpacing(80);
 
         VBox animbuttonvbox = new VBox();
-        animbuttonvbox.setPrefSize(380,280);
+        animbuttonvbox.setPrefSize(380, 280);
         animbuttonvbox.setAlignment(Pos.CENTER);
         animbuttonvbox.setSpacing(20);
 
@@ -102,37 +105,37 @@ public class BaseView extends BorderPane{
         topbuttons.setAlignment(Pos.CENTER);
 
         ImageView playimage = new ImageView(new Image(this.getClass().getResource("/images/64/Play.png").toExternalForm()));
-        playbutton = new Button("",playimage);
-        playbutton.setPrefSize(120,20);
+        playbutton = new Button("", playimage);
+        playbutton.setPrefSize(120, 20);
 
         ImageView pauseimage = new ImageView(new Image(this.getClass().getResource("/images/64/Pause.png").toExternalForm()));
-        pausebutton = new Button("",pauseimage);
-        pausebutton.setPrefSize(120,20);
+        pausebutton = new Button("", pauseimage);
+        pausebutton.setPrefSize(120, 20);
 
         ImageView redoimage = new ImageView(new Image(this.getClass().getResource("/images/64/Redo.png").toExternalForm()));
-        redobutton = new Button("",redoimage);
-        redobutton.setPrefSize(120,20);
+        redobutton = new Button("", redoimage);
+        redobutton.setPrefSize(120, 20);
 
-        topbuttons.getChildren().addAll(playbutton,pausebutton,redobutton);
+        topbuttons.getChildren().addAll(playbutton, pausebutton, redobutton);
 
         HBox bottombuttons = new HBox();
         bottombuttons.setAlignment(Pos.CENTER);
 
         ImageView slowimage = new ImageView(new Image(this.getClass().getResource("/images/64/Double-Chevron-Arrow-Left.png").toExternalForm()));
-        Button slowbutton = new Button("",slowimage);
-        slowbutton.setPrefSize(98,20);
+        slowbutton = new Button("", slowimage);
+        slowbutton.setPrefSize(98, 20);
 
         ImageView normalimage = new ImageView(new Image(this.getClass().getResource("/images/64/Next.png").toExternalForm()));
-        Button normalbutton = new Button("",normalimage);
-        normalbutton.setPrefSize(98,20);
+        normalbutton = new Button("", normalimage);
+        normalbutton.setPrefSize(98, 20);
 
         ImageView fastimage = new ImageView(new Image(this.getClass().getResource("/images/64/Double-Chevron-Arrow-Right.png").toExternalForm()));
-        Button fastbutton = new Button("",fastimage);
-        fastbutton.setPrefSize(98,20);
+        fastbutton = new Button("", fastimage);
+        fastbutton.setPrefSize(98, 20);
 
-        bottombuttons.getChildren().addAll(slowbutton,normalbutton,fastbutton);
+        bottombuttons.getChildren().addAll(slowbutton, normalbutton, fastbutton);
 
-        animbuttonvbox.getChildren().addAll(topbuttons,bottombuttons);
+        animbuttonvbox.getChildren().addAll(topbuttons, bottombuttons);
 
         Pane choicepane = new Pane();
         Text choicetext = new Text();
@@ -153,27 +156,27 @@ public class BaseView extends BorderPane{
         optiontext2.getStyleClass().add("option-text");
         optionbutton2 = new Button("", null);
 
-        optionpane1.setPrefSize(160,160);
+        optionpane1.setPrefSize(160, 160);
         optiontext1.setText(option1);
         optiontext1.setFont(font2);
-        optiontext1.setLayoutX(100-optiontext1.getBoundsInLocal().getWidth());
+        optiontext1.setLayoutX(100 - optiontext1.getBoundsInLocal().getWidth());
         optiontext1.setLayoutY(260);
-        optionbutton1.setPrefSize(80,180);
+        optionbutton1.setPrefSize(80, 180);
         optionbutton1.setLayoutY(50);
-        optionpane1.getChildren().addAll(optiontext1,optionbutton1);
+        optionpane1.getChildren().addAll(optiontext1, optionbutton1);
 
-        optionpane2.setPrefSize(200,160);
+        optionpane2.setPrefSize(200, 160);
         optiontext2.setText(option2);
         optiontext2.setFont(font2);
-        optiontext2.setLayoutX(100-optiontext2.getBoundsInLocal().getWidth());
+        optiontext2.setLayoutX(100 - optiontext2.getBoundsInLocal().getWidth());
         optiontext2.setLayoutY(260);
-        optionbutton2.setPrefSize(80,180);
+        optionbutton2.setPrefSize(80, 180);
         optionbutton2.setLayoutY(50);
-        optionpane2.getChildren().addAll(optiontext2,optionbutton2);
+        optionpane2.getChildren().addAll(optiontext2, optionbutton2);
 
         choicehbox.getChildren().addAll(optionpane1, optionpane2);
         choicehbox.setLayoutX(choicetext.getBoundsInLocal().getWidth());
-        choicepane.getChildren().addAll(choicetext,choicehbox);
+        choicepane.getChildren().addAll(choicetext, choicehbox);
 
         Button backmenu = new Button("Back To Main Menu");
         backmenu.setPrefSize(150, 50);
@@ -183,17 +186,16 @@ public class BaseView extends BorderPane{
         });
 
 
-
         mainhbox.getChildren().addAll(backmenu, animbuttonvbox, choicepane);
 
-        return  mainhbox;
+        return mainhbox;
 
     }
 
-    HBox createParamHbox(String Text){
+    HBox createParamHbox(String Text) {
         HBox paramhbox = new HBox();
         paramhbox.setSpacing(40);
-        paramhbox.setPrefSize(400,100);
+        paramhbox.setPrefSize(400, 100);
         paramhbox.setAlignment(Pos.CENTER);
 
         Text paramtext = new Text();
@@ -207,7 +209,7 @@ public class BaseView extends BorderPane{
         TextField paramtextfield = new TextField();
         Font fieldfont = new Font(28);
         paramtextfield.setAlignment(Pos.CENTER);
-        paramtextfield.setPrefSize(160,60);
+        paramtextfield.setPrefSize(160, 60);
         paramtextfield.setFont(fieldfont);
         textInputs.add(paramtextfield);
 
@@ -218,7 +220,7 @@ public class BaseView extends BorderPane{
     }
 
 
-    public Pane getAnimpane(){
+    public Pane getAnimpane() {
         return animpane;
     }
 
@@ -244,5 +246,17 @@ public class BaseView extends BorderPane{
 
     public Button getRedobutton() {
         return redobutton;
+    }
+
+    public Button getSlowbutton() {
+        return slowbutton;
+    }
+
+    public Button getFastbutton() {
+        return fastbutton;
+    }
+
+    public Button getNormalbutton() {
+        return normalbutton;
     }
 }

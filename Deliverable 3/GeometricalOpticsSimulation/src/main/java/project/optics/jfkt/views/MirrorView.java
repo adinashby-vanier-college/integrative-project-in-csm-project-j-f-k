@@ -94,6 +94,15 @@ public class MirrorView extends BaseView {
         getRedobutton().setOnAction(e->{
             mirrorController.onRedoButtonPressed();
         });
+        getSlowbutton().setOnAction(e->{
+            mirrorController.onSlowButtonPressed();
+        });
+        getNormalbutton().setOnAction(e->{
+            mirrorController.onNormalButtonPressed();
+        });
+        getFastbutton().setOnAction(e->{
+            mirrorController.onFastButtonPressed();
+        });
 
 
 
@@ -195,5 +204,13 @@ public class MirrorView extends BaseView {
 
     public void setObjectHeight(double objectHeight){
         this.objectHeight = objectHeight;
+    }
+
+    public double getDefaultVelocity() {
+        return DEFAULT_VELOCITY;
+    }
+
+    public void setVelocity(double velocity) {
+        this.velocity = velocity;
     }
 }
