@@ -34,7 +34,7 @@ public class LensesModel {
     // ========================
     public int getNumRays() { return numRays; }
     public void setNumRays(int numRays) {
-        this.numRays = Math.max(1, numRays); // At least 1 ray
+        this.numRays = Math.max(0, numRays); // At least 1 ray
     }
 
     public double getObjectDistance() { return objectDistance; }
@@ -57,27 +57,15 @@ public class LensesModel {
         this.focalLength = focalLength; // Positive for converging, negative for diverging
     }
 
-    // ========================
-    // Extra Lenses Management (Recommended Approach)
-    // ========================
+
+    // Extra Lenses
     public List<Lens> getExtraLenses() {
         return Collections.unmodifiableList(extraLenses);
     }
 
-    public void addExtraLens(Lens lens) {
-        if (lens != null) {
-            extraLenses.add(lens);
-        }
-    }
 
     public void addExtraLens(double position, double focalLength) {
         extraLenses.add(new Lens(position, focalLength));
-    }
-
-    public void removeExtraLens(int index) {
-        if (index >= 0 && index < extraLenses.size()) {
-            extraLenses.remove(index);
-        }
     }
 
     public void clearExtraLenses() {
@@ -108,13 +96,5 @@ public class LensesModel {
         }
     }
 
-    // ========================
-    // Validation Methods
-    // ========================
-    public boolean validate() {
-        if (numRays < 1) return false;
-        if (objectDistance <= 0) return false;
-        if (objectHeight <= 0) return false;
-        return true;
-    }
+
 }

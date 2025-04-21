@@ -276,7 +276,9 @@ public class LensView extends BaseView {
 
 // Draw extra rays if requested
         if (numRays != 0) {
-            drawAdditionalRays(objX, centerY - scaledObjHeight, centerX, centerY, scaledFL, numRays, animPane);
+            boolean isConverging = scaledFL > 0;
+            drawAdditionalRays(objX, centerY - scaledObjHeight, centerX, centerY, scaledFL, numRays, isConverging, animPane);
+
         }
 
 // Step 2: Compute image from main lens
@@ -296,9 +298,6 @@ public class LensView extends BaseView {
 
 // Step 4: Draw the lens lines
         drawExtraLensLines(extraLenses, animPane);
-        if (numRays > 3) {
-            drawAdditionalRays(objX, centerY - scaledObjHeight, centerX, centerY, scaledFL, numRays - 3, animPane);
-        }
 
         setupZoomControls(); // Re-add zoom controls
     }
@@ -361,41 +360,44 @@ public class LensView extends BaseView {
 
         double u = lensX - objX;
         double f = focalLengthPx;
-        double factor = getRayLengthFactor();
-        System.out.println("Ray length factor: " + factor);
-
-        double rayExtension = 150 * factor;
-
         boolean isConverging = f > 0;
 
-        // === Calculate image position ===
         double imageDistance = 1 / ((1 / f) - (1 / u));
         double imageX = lensX + imageDistance;
         double imageHeight = -(imageDistance / u) * (lensY - objTopY);
         double imageY = lensY - imageHeight;
 
-        // === Ray 1: Parallel then refracted ===
+        double extension = getRayExtensionBeyondImage(150); // control how far ray extends past image
+
+        // === Ray 1: Parallel to axis → refracted through or away from focal point
         Line ray1 = new Line(objX, objTopY, lensX, objTopY);
-        Line ray1Refracted = new Line();
+        Line ray1Refracted;
 
         if (isConverging) {
-            // Refracts through image
-            ray1Refracted.setStartX(lensX);
-            ray1Refracted.setStartY(objTopY);
-            ray1Refracted.setEndX(imageX);
-            ray1Refracted.setEndY(imageY);
+            double dx = imageX - lensX;
+            double dy = imageY - objTopY;
+            double slope = dy / dx;
+
+            ray1Refracted = new Line(lensX, objTopY,
+                    imageX + extension, imageY + slope * extension);
         } else {
-            // Diverging: refracts away from virtual focal point
             double virtualFocalX = lensX - Math.abs(f);
             double slope = (objTopY - lensY) / (lensX - virtualFocalX);
 
-            ray1Refracted.setStartX(lensX);
-            ray1Refracted.setStartY(objTopY);
-            ray1Refracted.setEndX(lensX + rayExtension);
-            ray1Refracted.setEndY(objTopY + slope * rayExtension);
+            ray1Refracted = new Line(lensX, objTopY,
+                    lensX + extension, objTopY + slope * extension);
 
-            // Dashed virtual ray back
-            Line virtualBack = new Line(lensX, objTopY, lensX - rayExtension, objTopY - slope * rayExtension);
+            // Virtual backtrace (dotted line)
+            double dx = lensX - imageX;
+            double dy = objTopY - imageY;
+            double dist = Math.sqrt(dx * dx + dy * dy);
+            double unitX = dx / dist;
+            double unitY = dy / dist;
+
+            Line virtualBack = new Line(
+                    lensX, objTopY,
+                    imageX - unitX * extension, imageY - unitY * extension
+            );
             virtualBack.setStroke(Color.RED);
             virtualBack.getStrokeDashArray().addAll(5d, 5d);
             pane.getChildren().add(virtualBack);
@@ -405,46 +407,38 @@ public class LensView extends BaseView {
         ray1Refracted.setStroke(Color.RED);
         pane.getChildren().addAll(ray1, ray1Refracted);
 
-        // === Ray 2: Through center of lens ===
-        Line ray2 = new Line(objX, objTopY, imageX, imageY);
+        // === Ray 2: Through center
+        Line ray2 = new Line(objX, objTopY, imageX + extension, imageY + (imageY - lensY != 0 ? (imageY - lensY) * extension / (imageX - lensX) : 0));
         ray2.setStroke(Color.BLUE);
         pane.getChildren().add(ray2);
 
-        // === Ray 3: Aimed at F (or toward virtual F), then refracted ===
-        Line ray3 = new Line();
-        Line ray3Refracted = new Line();
+        // === Ray 3: Toward focal point → refracted parallel
+        Line ray3;
+        Line ray3Refracted;
 
         if (isConverging) {
             double nearFocalX = lensX - f;
             double targetY = lensY + (objTopY - lensY) * f / (objX - nearFocalX);
 
-            ray3.setStartX(objX);
-            ray3.setStartY(objTopY);
-            ray3.setEndX(lensX);
-            ray3.setEndY(targetY);
+            ray3 = new Line(objX, objTopY, lensX, targetY);
 
-            ray3Refracted.setStartX(lensX);
-            ray3Refracted.setStartY(targetY);
-            ray3Refracted.setEndX(imageX);
-            ray3Refracted.setEndY(imageY);
+            double dx = imageX - lensX;
+            double dy = imageY - targetY;
+            double slope = dy / dx;
+
+            ray3Refracted = new Line(lensX, targetY,
+                    imageX + extension, imageY + slope * extension);
         } else {
-            // Diverging: aimed toward far F', emerges parallel
             double farFocalX = lensX + Math.abs(f);
             double slope = (lensY - objTopY) / (farFocalX - objX);
             double intersectY = objTopY + slope * (lensX - objX);
 
-            ray3.setStartX(objX);
-            ray3.setStartY(objTopY);
-            ray3.setEndX(lensX);
-            ray3.setEndY(intersectY);
+            ray3 = new Line(objX, objTopY, lensX, intersectY);
+            ray3Refracted = new Line(lensX, intersectY,
+                    lensX + extension, intersectY);
 
-            ray3Refracted.setStartX(lensX);
-            ray3Refracted.setStartY(intersectY);
-            ray3Refracted.setEndX(lensX + rayExtension);
-            ray3Refracted.setEndY(intersectY);
-
-            // Virtual extension (dashed)
-            Line virtualBack = new Line(lensX, intersectY, lensX - rayExtension, intersectY);
+            // Dotted line back
+            Line virtualBack = new Line(lensX, intersectY, lensX - extension, intersectY);
             virtualBack.setStroke(Color.GREEN);
             virtualBack.getStrokeDashArray().addAll(5d, 5d);
             pane.getChildren().add(virtualBack);
@@ -454,16 +448,13 @@ public class LensView extends BaseView {
         ray3Refracted.setStroke(Color.GREEN);
         pane.getChildren().addAll(ray3, ray3Refracted);
 
-        // === Image Arrow ===
+        // Image arrow
         if (isConverging && u > f) {
             drawImageArrow(imageX, lensY, imageHeight, pane);
         } else {
             drawVirtualImageArrow(imageX, lensY, imageHeight, pane);
         }
     }
-
-
-
 
     private void drawImageArrow(double x, double baseY, double heightPx, Pane pane) {
         Line imageLine = new Line(x, baseY, x, baseY - heightPx);
@@ -497,30 +488,63 @@ public class LensView extends BaseView {
 
     private void drawAdditionalRays(double objX, double objTopY,
                                     double lensX, double lensY,
-                                    double focalLengthPx,
-                                    int numExtraRays, Pane pane) {
-        double imageDistance = 1 / (1/focalLengthPx - 1/(lensX-objX));
-        double imageX = lensX + imageDistance;
-        double imageHeight = -((lensX-objX)/imageDistance) * (lensY-objTopY);
+                                    double focalLengthPx, int numExtraRays,
+                                    boolean isConverging, Pane pane) {
+
+        double u = lensX - objX;
+        if (u == 0) return;
+
+        double v = 1 / (1 / focalLengthPx - 1 / u);
+        double imageX = lensX + v;
+        double imageHeight = -(v / u) * (lensY - objTopY);
         double imageY = lensY - imageHeight;
 
         double objectHeight = lensY - objTopY;
         double spacing = objectHeight / (numExtraRays + 1);
+        double extension = getRayExtensionBeyondImage(150);
 
         for (int i = 1; i <= numExtraRays; i++) {
             double yOffset = spacing * i;
             double rayStartY = objTopY + yOffset;
 
             Line incidentRay = new Line(objX, rayStartY, lensX, rayStartY);
-            Line refractedRay = new Line(lensX, rayStartY, imageX, imageY + yOffset*(imageHeight/objectHeight));
-
-            Color rayColor = Color.ORANGE.deriveColor(0, 1, 1, 0.6);
-            incidentRay.setStroke(rayColor);
-            refractedRay.setStroke(rayColor);
+            incidentRay.setStroke(Color.ORANGE);
             incidentRay.setStrokeWidth(1);
-            refractedRay.setStrokeWidth(1);
 
-            pane.getChildren().addAll(incidentRay, refractedRay);
+            if (isConverging) {
+                double imageYOffset = imageY + yOffset * (imageHeight / objectHeight);
+                double slope = (imageYOffset - rayStartY) / (imageX - lensX);
+                Line refractedRay = new Line(lensX, rayStartY,
+                        imageX + extension, imageYOffset + slope * extension);
+                refractedRay.setStroke(Color.ORANGE);
+                refractedRay.setStrokeWidth(1);
+                pane.getChildren().addAll(incidentRay, refractedRay);
+            } else {
+                double virtualFocalX = lensX - Math.abs(focalLengthPx);
+                double slope = (rayStartY - lensY) / (lensX - virtualFocalX);
+
+                Line refractedRay = new Line(lensX, rayStartY,
+                        lensX + extension, rayStartY + slope * extension);
+                refractedRay.setStroke(Color.ORANGE);
+                refractedRay.setStrokeWidth(1);
+
+                double dx = lensX - imageX;
+                double dy = rayStartY - imageY;
+                double dist = Math.sqrt(dx * dx + dy * dy);
+                double unitX = dx / dist;
+                double unitY = dy / dist;
+
+                Line virtualBack = new Line(
+                        lensX, rayStartY,
+                        imageX - unitX * extension, imageY - unitY * extension
+                );
+
+                virtualBack.setStroke(Color.ORANGE);
+                virtualBack.setStrokeWidth(1);
+                virtualBack.getStrokeDashArray().addAll(5d, 5d);
+
+                pane.getChildren().addAll(incidentRay, refractedRay, virtualBack);
+            }
         }
     }
 
@@ -658,11 +682,11 @@ public class LensView extends BaseView {
         keyframeTimes.clear();
         currentKeyframeIndex = 0;
 
-        // ❗ Step 1: Clear only lines, polygons, images
+        //  Step 1: Clear only lines, polygons, images
         animPane.getChildren().removeIf(node ->
                 node instanceof Line || node instanceof Polygon || node instanceof Text || node instanceof Circle);
 
-        // ❗ Step 2: Redraw all static visuals
+        //  Step 2: Redraw all static visuals
         drawOpticalAxis(animPane);
         drawMainLens(animPane);
         drawFocalPoints(centerX, centerY, lastFocalLength * scale, animPane);
@@ -673,11 +697,11 @@ public class LensView extends BaseView {
         double objTopY = centerY - lastObjectHeight * scale;
         drawObject(objX, centerY, lastObjectHeight * scale, animPane);
 
-        // ❗ Step 3: Animate first lens (main)
+        //  Step 3: Animate first lens (main)
         double offset = 0;
         animateLensStage(objX, objTopY, centerX, centerY, lastFocalLength * scale, lastNumRays, offset);
 
-        // ❗ Step 4: Animate remaining lenses from last image
+        //  Step 4: Animate remaining lenses from last image
         double u = centerX - objX;
         double f = lastFocalLength * scale;
         double v = 1 / ((1 / f) - (1 / u));
@@ -897,6 +921,10 @@ public class LensView extends BaseView {
 
     public double getRayLengthFactor() {
         return rayLengthSlider != null ? rayLengthSlider.getValue() / 100.0 : 1.0;
+    }
+
+    private double getRayExtensionBeyondImage(double baseLength) {
+        return baseLength * getRayLengthFactor();  // getRayLengthFactor() from 0 to 1
     }
 
 
