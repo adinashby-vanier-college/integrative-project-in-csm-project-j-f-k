@@ -81,6 +81,9 @@ public class LensesController {
                 model.addExtraLens(position, lensFocalLength);
             }
 
+            view.resetDragOffset();           // Reset drag position
+            view.runRayIntersectionTest();
+            view.resetLensCounter();
             updateView();
 
         } catch (NumberFormatException e) {

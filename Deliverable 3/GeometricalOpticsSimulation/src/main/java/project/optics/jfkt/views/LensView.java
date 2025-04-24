@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -83,6 +84,8 @@ public class LensView extends BaseView {
         super("Lenses");
         initializeView();
         setupZoomControls();
+        runRayIntersectionTest();
+
 
         this.controller = new LensesController(new LensesModel(3, 8.0, 2.0, -0.5, 4.0), this);
         showDefaultLensSystem();
@@ -698,7 +701,9 @@ public class LensView extends BaseView {
             removeBtn.setOnAction(e -> {
                 paramVBox.getChildren().remove(lensGroup);
                 extraLensFields.removeIf(pair -> pair[0] == positionField && pair[1] == focalField);
+                resetLensLabels();
             });
+
 
             HBox header = new HBox(lensLabel, removeBtn);
             header.setAlignment(Pos.CENTER_LEFT);
@@ -710,6 +715,27 @@ public class LensView extends BaseView {
             paramVBox.getChildren().add(paramVBox.getChildren().size() - 1, lensGroup);
         }
     }
+
+    private void resetLensLabels() {
+        lensCounter = 1;
+        for (Node node : paramVBox.getChildren()) {
+            if (node instanceof VBox lensGroup) {
+                for (Node inner : lensGroup.getChildren()) {
+                    if (inner instanceof HBox header) {
+                        for (Node labelNode : header.getChildren()) {
+                            if (labelNode instanceof Label label) {
+                                if (label.getText().contains("Lens #")) {
+                                    boolean isConverging = label.getText().contains("Converging");
+                                    label.setText((isConverging ? "Converging" : "Diverging") + " Lens #" + lensCounter++);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     //Animation
     public void startAnimation() {
         stopAnimation();
@@ -932,6 +958,91 @@ public class LensView extends BaseView {
                 new KeyValue(arrow.endYProperty(), imageY)));
         keyframeTimes.add(t6);
     }
+
+    //Test cases
+    public void runRayIntersectionTest() {
+        System.out.println("Running ray-image intersection tests...");
+
+        int passed = 0;
+        int failed = 0;
+
+        passed += runTest("Converging, real image",
+                8.0, 2.0, 10.0, 4.0,
+                new Point2D(6.0, 4.0));
+
+        passed += runTest("Converging, virtual image",
+                9.5, 2.0, 10.0, 4.0,
+                new Point2D(20.57, -11.43));
+
+        passed += runTest("Diverging lens",
+                8.0, 2.0, 10.0, -4.0,
+                new Point2D(11.33, -0.67));
+
+        // CASE 4: Object at focal point (v = ∞)
+        Point2D infResult = computeImagePosition(6.0, 2.0, 10.0, 4.0);  // u = f
+        if (infResult == null || Double.isInfinite(infResult.getX()) || Double.isNaN(infResult.getX())) {
+            System.out.println("Focal point test passed (infinite or null image position)");
+            passed++;
+        } else {
+            System.out.println("Focal point test failed: expected image at infinity/null but got " + infResult);
+            failed++;
+        }
+
+        System.out.println("good " + passed + " passed");
+        System.out.println("bad  " + failed + " failed");
+    }
+
+
+    private int runTest(String label, double objX, double objY, double lensX, double focalLength, Point2D expected) {
+        Point2D actual = computeImagePosition(objX, objY, lensX, focalLength);
+
+        if (actual == null || expected == null) {
+            if (actual == expected) {
+                System.out.println(label + " passed (null as expected)");
+                return 1;
+            } else {
+                System.out.println(label + " failed (expected: " + expected + ", got: " + actual + ")");
+                return 0;
+            }
+        }
+
+        if (isClose(actual, expected, 0.05)) {
+            System.out.println(label + " passed");
+            return 1;
+        } else {
+            System.out.println(label + " failed");
+            System.out.println("Expected: " + expected);
+            System.out.println("Actual  : " + actual);
+            return 0;
+        }
+    }
+
+
+    private Point2D computeImagePosition(double objX, double objY, double lensX, double focalLength) {
+        double u = lensX - objX;
+        if (u == 0) return null;
+
+        double v = 1 / ((1 / focalLength) - (1 / u));
+        double imageX = lensX + v;
+        double magnification = -v / u;
+        double imageY = objY * magnification;
+
+        return new Point2D(imageX, imageY);
+    }
+
+    private boolean isClose(Point2D a, Point2D b, double tolerance) {
+        return Math.abs(a.getX() - b.getX()) < tolerance && Math.abs(a.getY() - b.getY()) < tolerance;
+    }
+
+    public void resetDragOffset() {
+        offsetX = 0;
+        offsetY = 0;
+    }
+
+    public void resetLensCounter() {
+        lensCounter = 1;
+    }
+
 
     // UI Access Methods
     public Button getApplyButton() {
