@@ -1,8 +1,8 @@
 package project.optics.jfkt.models;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javafx.scene.paint.Color;
+
+import java.util.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +18,10 @@ public class LensesModel {
 
     // Lens storage using recommended object approach
     private final List<Lens> extraLenses = new ArrayList<>();
+
+    private Color color1;
+    private Color color2;
+    private Color color3;
 
     public LensesModel(int numRays, double objectDistance,
                        double objectHeight, double magnification,
@@ -57,6 +61,9 @@ public class LensesModel {
         this.focalLength = focalLength; // Positive for converging, negative for diverging
     }
 
+    public Color getColor1() { return color1; }
+    public Color getColor2() { return color2; }
+    public Color getColor3() { return color3; }
 
     // Extra Lenses
     public List<Lens> getExtraLenses() {
@@ -70,6 +77,14 @@ public class LensesModel {
 
     public void clearExtraLenses() {
         extraLenses.clear();
+    }
+
+    public void assignRandomColors() {
+        Random rand = new Random();
+        double baseHue = rand.nextDouble() * 360;
+        this.color1 = Color.hsb(baseHue, 0.7, 0.9);
+        this.color2 = Color.hsb((baseHue + 30) % 360, 0.7, 0.9);
+        this.color3 = Color.hsb((baseHue + 60) % 360, 0.7, 0.9);
     }
 
     // ========================

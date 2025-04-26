@@ -4,10 +4,12 @@ package project.optics.jfkt.controllers;
 import javafx.scene.control.Alert;
 //import project.optics.jfkt.models.Lens;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import project.optics.jfkt.models.LensesModel;
 import project.optics.jfkt.views.LensView;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class LensesController {
@@ -54,34 +56,39 @@ public class LensesController {
     //Applying
     public void applyParameters() {
         try {
-            // Existing main parameters
             double objectDistance = parseDouble(view.getObjectDistanceField(), "Object Distance");
             double objectHeight = parseDouble(view.getObjectHeightField(), "Object Height");
             double focalLength = parseDouble(view.getFocalLengthField(), "Focal Length");
             double magnification = parseDouble(view.getMagnificationField(), "Magnification");
             int numRays = parseInt(view.getNumExtraRaysField(), "Number of Extra Rays");
 
-            // Validation
             if (objectDistance <= 0 || objectHeight <= 0 || numRays < 0) {
                 throw new IllegalArgumentException("Check parameter values (positive and rays from 0 to how many you want).");
             }
 
-            // Set main parameters in model
             model.setObjectDistance(objectDistance);
             model.setObjectHeight(objectHeight);
             model.setFocalLength(focalLength);
             model.setMagnification(magnification);
             model.setNumRays(numRays);
 
-            // Handle extra lens parameters dynamically
             model.clearExtraLenses();
+            view.clearLensColors(); // clear old colors
+            Random rand = new Random();
+
             for (TextField[] fields : view.extraLensFields) {
                 double position = parseDouble(fields[0].getText(), "Lens Position");
                 double lensFocalLength = parseDouble(fields[1].getText(), "Lens Focal Length");
                 model.addExtraLens(position, lensFocalLength);
+
+                // Random color for this lens
+                Color color1 = Color.hsb(rand.nextDouble() * 360, 0.7, 0.9);
+                Color color2 = Color.hsb(rand.nextDouble() * 360, 0.7, 0.9);
+                Color color3 = Color.hsb(rand.nextDouble() * 360, 0.7, 0.9);
+                view.addLensColors(color1, color2, color3);
             }
 
-            view.resetDragOffset();           // Reset drag position
+            view.resetDragOffset();
             view.runRayIntersectionTest();
             view.resetLensCounter();
             updateView();
@@ -92,6 +99,7 @@ public class LensesController {
             view.showError(e.getMessage());
         }
     }
+
 
 
     // Helper methods for parsing and validation

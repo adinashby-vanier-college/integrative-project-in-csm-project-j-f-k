@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -77,6 +78,13 @@ public class BaseView extends BorderPane {
         animpane.setPrefSize(1400, 720);
         animpane.setPrefWidth(1500);
         animpane.setStyle("-fx-border-color: black; -fx-border-width: 4px;");
+
+        //this is so the animation pane doesn't "leave" the black border
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(animpane.widthProperty());
+        clip.heightProperty().bind(animpane.heightProperty());
+        animpane.setClip(clip);
+
         Line opticalAxis = new Line(0, animpane.getPrefHeight() / 2, animpane.getPrefWidth(), animpane.getPrefHeight() / 2);
         opticalAxis.getStyleClass().add("optical-axis");
         opticalAxis.setStroke(Color.BLACK);
