@@ -35,6 +35,9 @@ public class BaseView extends BorderPane {
     private Button slowbutton;
     private Button normalbutton;
     private Button fastbutton;
+    private HBox zoomhbox;
+    private Button zoomin;
+    private Button zoomout;
 
     public BaseView(String type) {
         if (type.contentEquals("Mirrors")) {
@@ -70,11 +73,12 @@ public class BaseView extends BorderPane {
 
         animpane = new Pane();
         animpane.getStyleClass().add("animation-pane");
-        HBox zoomhbox = new HBox();
+        zoomhbox = new HBox();
+        zoomhbox.setViewOrder(-1);
         ImageView zoominImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Add.png").toExternalForm()));
         ImageView zoomoutImage = new ImageView(new Image(this.getClass().getResource("/images/64/Magnifying-Glass-Reduce.png").toExternalForm()));
-        Button zoomin = new Button("", zoominImage);
-        Button zoomout = new Button("", zoomoutImage);
+        zoomin = new Button("", zoominImage);
+        zoomout = new Button("", zoomoutImage);
         animpane.setPrefSize(1400, 720);
         animpane.setPrefWidth(1500);
         animpane.setStyle("-fx-border-color: black; -fx-border-width: 4px;");
@@ -266,5 +270,17 @@ public class BaseView extends BorderPane {
 
     public Button getNormalbutton() {
         return normalbutton;
+    }
+
+    public HBox getZoomhbox() {
+        return zoomhbox;
+    }
+
+    public Button getZoomin() {
+        return zoomin;
+    }
+
+    public Button getZoomout() {
+        return zoomout;
     }
 }

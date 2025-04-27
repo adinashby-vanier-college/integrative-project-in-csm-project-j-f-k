@@ -103,6 +103,12 @@ public class MirrorView extends BaseView {
         getFastbutton().setOnAction(e->{
             mirrorController.onFastButtonPressed();
         });
+        getZoomin().setOnAction( e -> {
+            mirrorController.onZoomIn();
+        });
+        getZoomout().setOnAction( e -> {
+            mirrorController.onZoomOut();
+        });
 
 
 
@@ -140,7 +146,7 @@ public class MirrorView extends BaseView {
 
         ArrowModel imageModel = new ArrowModel(mirrorCoordinateCalculations.getImageHeight(),scale,mirrorCoordinateCalculations.getImageDistance(),centerX,centerY);
         mirrorAnimation = new MirrorAnimation(velocity, firstCoordinateSet, secondCoordinateSet, thirdCoordinateSet, imageModel);
-        getAnimpane().getChildren().add(mirrorAnimation);
+        getAnimpane().getChildren().addAll(getZoomhbox(), mirrorAnimation);
     }
 
     public void testCoordinate(){
@@ -212,5 +218,13 @@ public class MirrorView extends BaseView {
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;
+    }
+
+    public double getScale() {
+        return scale;
+    }
+
+    public void setScale(double scale) {
+        this.scale = scale;
     }
 }

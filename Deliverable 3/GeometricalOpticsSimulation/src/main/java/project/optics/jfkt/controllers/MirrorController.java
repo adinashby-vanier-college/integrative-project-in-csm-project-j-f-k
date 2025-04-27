@@ -54,4 +54,14 @@ public class MirrorController {
     public void onFastButtonPressed(){
         mirrorView.setVelocity(mirrorView.getDefaultVelocity()*2);
     }
+    public void onZoomIn(){
+        mirrorView.setScale(mirrorView.getScale() + 2);
+        mirrorView.updateView();
+    }
+    public void onZoomOut(){
+        if (mirrorView.getScale() > 2){
+            mirrorView.setScale(mirrorView.getScale() - 2);
+            mirrorView.updateView();
+        }
+    }
 }
