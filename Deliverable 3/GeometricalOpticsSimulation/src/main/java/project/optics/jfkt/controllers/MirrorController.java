@@ -36,7 +36,7 @@ public class MirrorController {
     }
 
     public void onPlayButtonPressed(){
-       //mirrorView.testCoordinate();
+       mirrorView.testCoordinate();
        mirrorView.playAnim();
     }
     public void onPauseButtonPressed(){

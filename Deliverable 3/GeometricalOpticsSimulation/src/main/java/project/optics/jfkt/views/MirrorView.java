@@ -58,30 +58,27 @@ public class MirrorView extends BaseView {
         getTextInputs().getFirst().textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != "") {
                 try {
-                    double updatedFocalLength = Double.parseDouble(newValue);
+                    double updatedFocalLength = Double.parseDouble(getTextInputs().getFirst().getText());
                     mirrorController.onFocalLengthUpdated(updatedFocalLength);
-                } catch (Exception e) {
-                    new Alert(Alert.AlertType.ERROR, "Please enter a valid number").showAndWait();
+                } catch (Exception _) {
                 }
             }
         });
         getTextInputs().get(1).textProperty().addListener((observable, oldValue, newValue) ->{
             if (newValue != "") {
                 try {
-                    double updatedObjectDistance = Double.parseDouble(newValue);
+                    double updatedObjectDistance = Double.parseDouble(getTextInputs().get(1).getText());
                     mirrorController.onObjectDistanceUpdated(updatedObjectDistance);
-                } catch (Exception e) {
-                    new Alert(Alert.AlertType.ERROR, "Please enter a valid number").showAndWait();
+                } catch (Exception _) {
                 }
             }
         });
         getTextInputs().getLast().textProperty().addListener((observable, oldValue, newValue) ->{
             if (newValue != "") {
                 try {
-                    double updatedObjectHeight = Double.parseDouble(newValue);
+                    double updatedObjectHeight = Double.parseDouble(getTextInputs().getLast().getText());
                     mirrorController.onObjectHeightUpdated(updatedObjectHeight);
-                } catch (Exception e) {
-                    new Alert(Alert.AlertType.ERROR, "Please enter a valid number").showAndWait();
+                } catch (Exception _) {
                 }
             }
         });
@@ -155,6 +152,7 @@ public class MirrorView extends BaseView {
         ArrayList<CoordinateModel> secondCoordinateSet = mirrorCoordinateCalculations.getSecondCoordinateSet();
         ArrayList<CoordinateModel> thirdCoordinateSet = mirrorCoordinateCalculations.getThirdCoordinateSet();
 
+        System.out.println("The mirror is concave: " + isConcave);
         Circle firstCircle = new Circle(5);
         firstCircle.setFill(Color.BLUE);
         firstCircle.setStroke(Color.BLACK);
