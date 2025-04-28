@@ -4,6 +4,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,6 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -26,6 +30,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import project.optics.jfkt.MainApp;
 import project.optics.jfkt.enums.AnimationStatus;
+import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.models.Refraction;
 import project.optics.jfkt.utils.Util;
 import project.optics.jfkt.views.LayerChoosingView;
@@ -42,6 +47,30 @@ public class RefractionController {
     public RefractionController(Refraction refraction, RefractionView refractionView) {
         this.refraction = refraction;
         this.refractionView = refractionView;
+
+    }
+
+    public void addAudioWhenStartAndFinish() {
+        refractionView.animationStatusProperty().addListener(new ChangeListener<AnimationStatus>() {
+            @Override
+            public void changed(ObservableValue<? extends AnimationStatus> observable, AnimationStatus oldValue, AnimationStatus newValue) {
+                if (newValue == AnimationStatus.IN_PROGRESS) {
+                    Media media = new Media(this.getClass().getResource("/audio/start_audio.mp3").toExternalForm());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    mediaPlayer.setCycleCount(1);
+                    mediaPlayer.setVolume(GeneralSetting.getVolume() * 0.01);
+                    mediaPlayer.play();
+                }
+
+                if (newValue == AnimationStatus.FINISHED) {
+                    Media media = new Media(this.getClass().getResource("/audio/finished_audio.mp3").toExternalForm());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    mediaPlayer.setCycleCount(1);
+                    mediaPlayer.setVolume(GeneralSetting.getVolume() * 0.01);
+                    mediaPlayer.play();
+                }
+            }
+        });
     }
 
     public void onNewLayerButtonPressed(RefractionView refractionView, ArrayList<HBox> layers, VBox frame, HBox plusSignLayer) {

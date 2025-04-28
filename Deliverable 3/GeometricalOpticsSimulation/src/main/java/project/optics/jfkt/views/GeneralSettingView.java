@@ -11,8 +11,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import project.optics.jfkt.controllers.GeneralSettingsController;
+import project.optics.jfkt.models.GeneralSetting;
 
 public class GeneralSettingView extends BorderPane {
+    private final GeneralSettingsController generalSettingsController = new GeneralSettingsController();
 
     public GeneralSettingView(GeneralSettingsController controller) {
         // Create a VBox to hold the settings
@@ -27,13 +29,16 @@ public class GeneralSettingView extends BorderPane {
 
         // Volume Slider
         Label volumeLabel = new Label("Volume:");
-        Slider volumeSlider = new Slider(0, 100, 50); // Min: 0, Max: 100, Default: 50
+        Slider volumeSlider = new Slider(0, 100, GeneralSetting.getVolume()); // Min: 0, Max: 100, Default: 50
         volumeSlider.setShowTickLabels(true);
         volumeSlider.setShowTickMarks(true);
         volumeSlider.setMajorTickUnit(50);
         volumeSlider.setMinorTickCount(5);
         volumeSlider.setBlockIncrement(10);
         volumeSlider.setPrefWidth(200); // Set the preferred width of the slider (shorter)
+
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> generalSettingsController.onVolumeChanged(newValue.doubleValue()));
+        volumeSlider.valueProperty().bindBidirectional(GeneralSetting.volumeProperty());
 
         // Wrap the slider and label in an HBox
         HBox volumeBox = new HBox(10, volumeLabel, volumeSlider);
