@@ -4,17 +4,16 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import project.optics.jfkt.MainApp;
 import project.optics.jfkt.controllers.EducationModeController;
 import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.enums.Difficulty;
+import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.models.Question;
 import project.optics.jfkt.utils.Util;
 
@@ -117,8 +116,6 @@ public class EducationModeView extends BorderPane {
         back.setStyle(buttonStyle);
     }
 
-
-
     private Region createTop() {
         return util.createMenu();
     }
@@ -126,9 +123,9 @@ public class EducationModeView extends BorderPane {
     public HBox createZoomAndBackButtons() {
         HBox container = new HBox(20);
 
-        zoomIn = new Button("Zoom In");
-        zoomOut = new Button("Zoom Out");
-        back = new Button("Back");
+        zoomIn = new Button(GeneralSetting.getString("button.zoomIn"));
+        zoomOut = new Button(GeneralSetting.getString("button.zoomOut"));
+        back = new Button(GeneralSetting.getString("button.back"));
 
 
         container.getChildren().addAll(zoomIn, zoomOut, back);
@@ -183,9 +180,9 @@ public class EducationModeView extends BorderPane {
         bottomButtons.setAlignment(Pos.CENTER);
         bottomButtons.setPadding(new Insets(10));
 
-        submitButton = new Button("Submit");
-        hintButton = new Button("Hint");
-        answerButton = new Button("Answer");
+        submitButton = new Button(GeneralSetting.getString("button.submit"));
+        hintButton = new Button(GeneralSetting.getString("button.hint"));
+        answerButton = new Button(GeneralSetting.getString("button.answer"));
 
         submitButton.setPrefWidth(100);
         hintButton.setPrefWidth(100);
@@ -202,7 +199,7 @@ public class EducationModeView extends BorderPane {
         questionPane.getStyleClass().add("education-outline");
         questionPane.setBorder(Border.stroke(Color.BLACK));
 
-        questionText = new Text("Select 'New' to get a question");
+        questionText = new Text(GeneralSetting.getString("text.question"));
         questionText.setFont(new Font(QUESTION_FONT_SIZE));
         questionText.getStyleClass().add("question-text");
         questionPane.setTop(questionText);
@@ -235,27 +232,27 @@ public class EducationModeView extends BorderPane {
 
         // Radio button groups
         modeGroup = new ToggleGroup();
-        Node virtualOption = createCustomRadioOption("Virtual", modeGroup);
-        Node realOption = createCustomRadioOption("Real", modeGroup);
+        Node virtualOption = createCustomRadioOption(GeneralSetting.getString("radioButton.virtual"), modeGroup);
+        Node realOption = createCustomRadioOption(GeneralSetting.getString("radioButton.real"), modeGroup);
         VBox modeGroupBox = new VBox(10, virtualOption, realOption);
 
         sizeGroup = new ToggleGroup();
-        Node biggerOption = createCustomRadioOption("Bigger", sizeGroup);
-        Node smallerOption = createCustomRadioOption("Smaller", sizeGroup);
+        Node biggerOption = createCustomRadioOption(GeneralSetting.getString("radioButton.bigger"), sizeGroup);
+        Node smallerOption = createCustomRadioOption(GeneralSetting.getString("radioButton.smaller"), sizeGroup);
         VBox sizeGroupBox = new VBox(10, biggerOption, smallerOption);
 
         orientationGroup = new ToggleGroup();
-        Node uprightOption = createCustomRadioOption("Upright", orientationGroup);
-        Node invertedOption = createCustomRadioOption("Inverted", orientationGroup);
+        Node uprightOption = createCustomRadioOption(GeneralSetting.getString("radioButton.upright"), orientationGroup);
+        Node invertedOption = createCustomRadioOption(GeneralSetting.getString("radioButton.inverted"), orientationGroup);
         VBox orientationGroupBox = new VBox(10, uprightOption, invertedOption);
 
         // User input and new question button
         userInputField = new TextField();
         userInputField.setFont(new Font(INPUT_FONT_SIZE));
-        userInputField.setPromptText("Enter distance answer");
+        userInputField.setPromptText(GeneralSetting.getString("text.distance"));
         userInputField.setMaxWidth(Double.MAX_VALUE);
 
-        newQuestionButton = new Button("New Question");
+        newQuestionButton = new Button(GeneralSetting.getString("button.newQuestion"));
         newQuestionButton.setMaxWidth(Double.MAX_VALUE);
 
         container.getChildren().addAll(modeGroupBox, sizeGroupBox, orientationGroupBox, userInputField, newQuestionButton);

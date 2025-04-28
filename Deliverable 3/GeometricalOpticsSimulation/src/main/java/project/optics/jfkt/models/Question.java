@@ -26,244 +26,244 @@ public class Question {
 
     // ========== EASY QUESTIONS ========== //
     public static final Question CONCAVE_MIRROR_QUESTION = new Question(
-            "Use the mirror equation: 1/f = 1/dₒ + 1/di",
-            "20 cm,real,any,inverted",
+            GeneralSetting.getString("question.concaveMirror.hint"),
+            GeneralSetting.getString("question.concaveMirror.answer"),
             Difficulty.EASY,
-            "A concave mirror has a focal length of 10 cm. If an object is placed 20 cm in front of it, where is the image formed?",
+            GeneralSetting.getString("question.concaveMirror.text"),
             "/images/easy2.png"
     );
 
     public static final Question REFRACTION_QUESTION = new Question(
-            "Use Snell's Law: n₁sinθ₁ = n₂sinθ₂",
-            "48.6",
+            GeneralSetting.getString("question.refraction1.hint"),
+            GeneralSetting.getString("question.refraction1.answer"),
             Difficulty.EASY,
-            "A light ray traveling in glass (n₁ = 1.5) enters the air (n₂ = 1.0) at an angle of 30° from the normal. What is the angle of refraction?",
+            GeneralSetting.getString("question.refraction1.text"),
             "/images/easy1.png"
     );
 
     public static final Question REFRACTION2_QUESTION = new Question(
-            "Use Snell's Law: n₁sinθ₁ = n₂sinθ₂",
-            "32.1",
+            GeneralSetting.getString("question.refraction2.hint"),
+            GeneralSetting.getString("question.refraction2.answer"),
             Difficulty.EASY,
-            "Light travels from air (n₁ = 1.0) into water (n₂ = 1.33) at an angle of incidence of 45°. What is the angle of refraction?",
+            GeneralSetting.getString("question.refraction2.text"),
             "/images/easy3.png"
     );
 
     public static final Question FISH_DEPTH_QUESTION = new Question(
-            "Use the formula: d = n × d' where d is real depth and d' is apparent depth",
-            "3.99 m",
+            GeneralSetting.getString("question.fishDepth.hint"),
+            GeneralSetting.getString("question.fishDepth.answer"),
             Difficulty.EASY,
-            "A fish appears closer to the surface than it really is due to refraction. If the refractive index of water is n = 1.33 and the apparent depth is d' = 3m, find the real depth (d).",
+            GeneralSetting.getString("question.fishDepth.text"),
             "/images/easy4.png"
     );
 
     public static final Question MIRROR_TYPE_QUESTION = new Question(
-            "Only one type of mirror always produces virtual, upright, and reduced images",
-            "Convex mirror",
+            GeneralSetting.getString("question.mirrorType.hint"),
+            GeneralSetting.getString("question.mirrorType.answer"),
             Difficulty.EASY,
-            "A mirror forms a virtual, upright, and reduced image. What type of mirror is it?",
+            GeneralSetting.getString("question.mirrorType.text"),
             "/images/easy5.png"
     );
 
     public static final Question CONVEX_MIRROR_QUESTION = new Question(
-            "Use the mirror equation: 1/f = 1/dₒ + 1/di (remember f is negative for convex mirrors)",
-            "-10 cm,virtual,smaller,upright",
+            GeneralSetting.getString("question.convexMirror.hint"),
+            GeneralSetting.getString("question.convexMirror.answer"),
             Difficulty.EASY,
-            "A convex mirror has a focal length of -15 cm. An object is placed 30 cm in front of it. Find the image distance.",
+            GeneralSetting.getString("question.convexMirror.text"),
             "/images/easy6.png"
     );
 
     public static final Question LIGHT_SPEED_QUESTION = new Question(
-            "The speed of light inside a medium is given by v = c/n where c = 3×10⁸ m/s",
-            "2x10^8 m/s",
+            GeneralSetting.getString("question.lightSpeed.hint"),
+            GeneralSetting.getString("question.lightSpeed.answer"),
             Difficulty.EASY,
-            "A light ray enters a glass prism (n = 1.5) at an angle of 40°. What is the speed of light inside the prism?",
+            GeneralSetting.getString("question.lightSpeed.text"),
             "/images/easy7.png"
     );
 
     public static final Question PLANE_MIRROR_QUESTION = new Question(
-            "The image distance in a plane mirror is always equal to the object distance.",
-            "3 m",
+            GeneralSetting.getString("question.planeMirror.hint"),
+            GeneralSetting.getString("question.planeMirror.answer"),
             Difficulty.EASY,
-            "A person stands 1.5 meters in front of a plane mirror. How far is their image from them?",
+            GeneralSetting.getString("question.planeMirror.text"),
             "/images/easy8.png"
     );
 
     public static final Question DIAMOND_QUESTION = new Question(
-            "The speed of light inside a medium is given by v=c/n",
-            "1.24x10^8 m/s",
+            GeneralSetting.getString("question.diamond.hint"),
+            GeneralSetting.getString("question.diamond.answer"),
             Difficulty.EASY,
-            "The refractive index of diamond is 2.42. What is the speed of light inside the diamond? (Speed of light in vacuum: 3×10⁸ m/s)",
+            GeneralSetting.getString("question.diamond.text"),
             "/images/easy9.png"
     );
 
     public static final Question CONVERGING_LENS_QUESTION = new Question(
-            "Use the thin lens equation: 1/f = 1/dₒ + 1/di and the magnification equation: -di/dₒ",
-            "-1,real,any,inverted",
+            GeneralSetting.getString("question.convergingLens.hint"),
+            GeneralSetting.getString("question.convergingLens.answer"),
             Difficulty.EASY,
-            "A converging lens has a focal length of 15 cm. An object is placed 30 cm away. What are the image characteristics (real/virtual, upright/inverted) and find the magnification?",
+            GeneralSetting.getString("question.convergingLens.text"),
             "/images/easy10.png"
     );
 
     // ========== MEDIUM QUESTIONS ========== //
     public static final Question CRITICAL_ANGLE_QUESTION = new Question(
-            "Use the critical angle formula: θc = sin⁻¹(n₂/n₁)",
-            "62.5",
+            GeneralSetting.getString("question.criticalAngle.hint"),
+            GeneralSetting.getString("question.criticalAngle.answer"),
             Difficulty.MEDIUM,
-            "A light ray travels from glass (n = 1.5) to water (n = 1.33). What is the critical angle at which total internal reflection occurs?",
+            GeneralSetting.getString("question.criticalAngle.text"),
             "/images/medium1.png"
     );
 
     public static final Question TELESCOPE_MAGNIFICATION_QUESTION = new Question(
-            "M = fₒ/fₑ",
-            "20",
+            GeneralSetting.getString("question.telescopeMagnification.hint"),
+            GeneralSetting.getString("question.telescopeMagnification.answer"),
             Difficulty.MEDIUM,
-            "A telescope has an objective lens (f = 100 cm) and eyepiece (f = 5 cm). What is the angular magnification?",
+            GeneralSetting.getString("question.telescopeMagnification.text"),
             "/images/medium2.png"
     );
 
     public static final Question SIMPLE_MAGNIFIER_QUESTION = new Question(
-            "M = 1 + D/f where D is near point distance (25 cm)",
-            "3.5",
+            GeneralSetting.getString("question.simpleMagnifier.hint"),
+            GeneralSetting.getString("question.simpleMagnifier.answer"),
             Difficulty.MEDIUM,
-            "A simple magnifier has a focal length of 10 cm. What is its angular magnification for a normal eye?",
+            GeneralSetting.getString("question.simpleMagnifier.text"),
             "/images/medium3.png"
     );
 
     public static final Question MICROSCOPE_MAGNIFICATION_QUESTION = new Question(
-            "M = Mₒ × Mₑ = (L/fₒ) × (D/fₑ)",
-            "500",
+            GeneralSetting.getString("question.microscopeMagnification.hint"),
+            GeneralSetting.getString("question.microscopeMagnification.answer"),
             Difficulty.MEDIUM,
-            "A microscope has an objective lens of focal length 4 mm and an eyepiece lens of focal length 20 mm. What is the total magnification if the tube length is 160 mm?",
+            GeneralSetting.getString("question.microscopeMagnification.text"),
             "/images/medium4.png"
     );
 
     public static final Question TELESCOPE_FOCAL_LENGTH_QUESTION = new Question(
-            "Telescope magnification depends on focal length",
-            "Magnification increases",
+            GeneralSetting.getString("question.telescopeFocalLength.hint"),
+            GeneralSetting.getString("question.telescopeFocalLength.answer"),
             Difficulty.MEDIUM,
-            "If the focal length of an objective lens in a telescope is increased, what happens to its magnification?",
+            GeneralSetting.getString("question.telescopeFocalLength.text"),
             "/images/medium5.png"
     );
 
     public static final Question CONVEX_LENS_IMAGE_QUESTION = new Question(
-            "Use the lens equation: 1/f = 1/dₒ + 1/di",
-            "7.5 cm",
+            GeneralSetting.getString("question.convexLensImage.hint"),
+            GeneralSetting.getString("question.convexLensImage.answer"),
             Difficulty.MEDIUM,
-            "A converging lens of focal length 5 cm is used as a magnifier. If the object is placed at 3 cm, find the image distance.",
+            GeneralSetting.getString("question.convexLensImage.text"),
             "/images/medium6.png"
     );
 
     public static final Question MAGNIFIER_POSITION_QUESTION = new Question(
-            "The object must be placed where the image remains virtual",
-            "Inside the focal point",
+            GeneralSetting.getString("question.magnifierPosition.hint"),
+            GeneralSetting.getString("question.magnifierPosition.answer"),
             Difficulty.MEDIUM,
-            "If a converging lens is used as a magnifier, should the object be placed inside or outside the focal point?",
+            GeneralSetting.getString("question.magnifierPosition.text"),
             "/images/medium7.png"
     );
 
     public static final Question SIMPLE_MAGNIFIER_IMAGE_QUESTION = new Question(
-            "The image is always on the same side as the object",
-            "virtual,bigger,upright",
+            GeneralSetting.getString("question.simpleMagnifierImage.hint"),
+            GeneralSetting.getString("question.simpleMagnifierImage.answer"),
             Difficulty.MEDIUM,
-            "What kind of image does a simple magnifier produce?",
+            GeneralSetting.getString("question.simpleMagnifierImage.text"),
             "/images/medium8.png"
     );
 
     public static final Question MAGNIFIER_FOCAL_LENGTH_QUESTION = new Question(
-            "Rearrange the formula M = 1 + D/f to solve for f",
-            "6.25 cm",
+            GeneralSetting.getString("question.magnifierFocalLength.hint"),
+            GeneralSetting.getString("question.magnifierFocalLength.answer"),
             Difficulty.MEDIUM,
-            "A simple magnifier provides a 5× magnification. If the near point is 25 cm, what is the focal length of the lens?",
+            GeneralSetting.getString("question.magnifierFocalLength.text"),
             "/images/medium9.png"
     );
 
     public static final Question LENS_MAGNIFICATION_QUESTION = new Question(
-            "First find di using the lens equation, then use M = -di/dₒ",
-            "2",
+            GeneralSetting.getString("question.lensMagnification.hint"),
+            GeneralSetting.getString("question.lensMagnification.answer"),
             Difficulty.MEDIUM,
-            "What is the magnification if an object is placed 5 cm in front of a convex lens with a focal length of 10 cm?",
+            GeneralSetting.getString("question.lensMagnification.text"),
             "/images/medium10.png"
     );
 
     // ========== HARD QUESTIONS ========== //
     public static final Question TWO_LENS_SYSTEM_QUESTION = new Question(
-            "Solve for the intermediate location using the lens equation: 1/f = 1/dₒ + 1/di",
-            "100 cm",
+            GeneralSetting.getString("question.twoLensSystem.hint"),
+            GeneralSetting.getString("question.twoLensSystem.answer"),
             Difficulty.HARD,
-            "A two-lens system consists of a converging lens (f = 10 cm) placed 30 cm in front of an object. A converging lens (f = 20 cm) is placed 40 cm behind the first lens. Where is the final image?",
+            GeneralSetting.getString("question.twoLensSystem.text"),
             "/images/hard1.png"
     );
 
     public static final Question DIVERGING_CONVERGING_LENS_QUESTION = new Question(
-            "Use the lens equation for both lenses, solving for the first image location, then use that as the object for the second lens",
-            "15.88 cm",
+            GeneralSetting.getString("question.divergingConvergingLens.hint"),
+            GeneralSetting.getString("question.divergingConvergingLens.answer"),
             Difficulty.HARD,
-            "A diverging lens (f = 15 cm) is placed 20 cm from an object. A converging lens (f = 10 cm) is placed 30 cm behind the first lens. Where is the final image?",
+            GeneralSetting.getString("question.divergingConvergingLens.text"),
             "/images/hard2.png"
     );
 
     public static final Question MICROSCOPE_IMAGE_LOCATION_QUESTION = new Question(
-            "Solve for the first image location using the lens equation, then use that as the object for the second lens",
-            "infinity",
+            GeneralSetting.getString("question.microscopeImageLocation.hint"),
+            GeneralSetting.getString("question.microscopeImageLocation.answer"),
             Difficulty.HARD,
-            "A microscope has an objective lens (f = 2 cm) and an eyepiece lens (f = 5 cm). The object is placed 2.5 cm from the objective lens. Where is the final image located?",
+            GeneralSetting.getString("question.microscopeImageLocation.text"),
             "/images/hard3.png"
     );
 
     public static final Question MULTI_MEDIUM_REFRACTION_QUESTION = new Question(
-            "Use Snell's Law: n₁sinθ₁ = n₂sinθ₂",
-            "32.1",
+            GeneralSetting.getString("question.multiMediumRefraction.hint"),
+            GeneralSetting.getString("question.multiMediumRefraction.answer"),
             Difficulty.HARD,
-            "A light ray passes from air (n = 1.00) into glass (n = 1.5) and then into water (n = 1.33). If the initial angle of incidence is 45°, find the final angle in water.",
+            GeneralSetting.getString("question.multiMediumRefraction.text"),
             "/images/hard4.png"
     );
 
     public static final Question LASER_BEAM_REFRACTION_QUESTION = new Question(
-            "Use Snell's Law: n₁sinθ₁ = n₂sinθ₂",
-            "35.4",
+            GeneralSetting.getString("question.laserBeamRefraction.hint"),
+            GeneralSetting.getString("question.laserBeamRefraction.answer"),
             Difficulty.HARD,
-            "A laser beam travels from air (n = 1.00) into oil (n = 1.46) and then into a polymer (n = 1.25). The initial angle is 50°. What is the final angle in the polymer?",
+            GeneralSetting.getString("question.laserBeamRefraction.text"),
             "/images/hard5.png"
     );
 
     public static final Question LENS_MIRROR_SYSTEM_QUESTION = new Question(
-            "Find the image formed by the lens using the lens equation. Treat that image as the object for the mirror.",
-            "4.3 cm",
+            GeneralSetting.getString("question.lensMirrorSystem.hint"),
+            GeneralSetting.getString("question.lensMirrorSystem.answer"),
             Difficulty.HARD,
-            "A converging lens (f = 15 cm) is placed 30 cm away from a concave mirror (f = -10 cm). An object is placed 45 cm in front of the converging lens. Where is the final image located?",
+            GeneralSetting.getString("question.lensMirrorSystem.text"),
             "/images/hard6.png"
     );
 
     public static final Question TELESCOPE_LENS_SEPARATION_QUESTION = new Question(
-            "In normal adjustment, the final image is at infinity, meaning the intermediate image is at the focal point of the eyepiece.",
-            "105 cm",
+            GeneralSetting.getString("question.telescopeLensSeparation.hint"),
+            GeneralSetting.getString("question.telescopeLensSeparation.answer"),
             Difficulty.HARD,
-            "A telescope has an objective lens (f = 100 cm) and an eyepiece (f = 5 cm). If the object is at infinity, what is the separation between the lenses for normal adjustment?",
+            GeneralSetting.getString("question.telescopeLensSeparation.text"),
             "/images/medium2.png"
     );
 
     public static final Question CONCAVE_MIRROR_LENS_SYSTEM_QUESTION = new Question(
-            "Solve for the first image using the lens equation. Use that image as the object for the concave mirror.",
-            "16.67 cm",
+            GeneralSetting.getString("question.concaveMirrorLensSystem.hint"),
+            GeneralSetting.getString("question.concaveMirrorLensSystem.answer"),
             Difficulty.HARD,
-            "A concave mirror (f = 20 cm) is placed 50 cm behind a converging lens (f = 25 cm). An object is 30 cm in front of the comverging lens. Where is the final image?",
+            GeneralSetting.getString("question.concaveMirrorLensSystem.text"),
             "/images/hard8.png"
     );
 
     public static final Question DIVERGING_LENS_MIRROR_SYSTEM_QUESTION = new Question(
-            "Solve for the first image using the mirror equation. Use that image as the object for the diverging lens.",
-            "3.53 cm",
+            GeneralSetting.getString("question.divergingLensMirrorSystem.hint"),
+            GeneralSetting.getString("question.divergingLensMirrorSystem.answer"),
             Difficulty.HARD,
-            "A diverging lens (f = 30 cm) is placed 20 cm behind a convex mirror (f = 40 cm). An object is placed 60 cm in front of the mirror. Where is the final image?",
+            GeneralSetting.getString("question.divergingLensMirrorSystem.text"),
             "/images/hard9.png"
     );
 
     public static final Question CONCAVE_MIRROR_LENS_SYSTEM2_QUESTION = new Question(
-            "Use the lens equation to find the first image. Use the mirror equation for the second image.",
-            "2.86 cm",
+            GeneralSetting.getString("question.concaveMirrorLensSystem2.hint"),
+            GeneralSetting.getString("question.concaveMirrorLensSystem2.answer"),
             Difficulty.HARD,
-            "A concave mirror (f = 25 cm) is placed 40 cm behind a converging lens (f = 30 cm). An object is placed 20 cm in front of the lens. Where is the final image?",
+            GeneralSetting.getString("question.concaveMirrorLensSystem2.text"),
             "/images/hard10.png"
     );
 

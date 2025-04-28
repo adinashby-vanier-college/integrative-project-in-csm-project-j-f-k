@@ -14,9 +14,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import project.optics.jfkt.enums.Difficulty;
+import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.models.Question;
-import project.optics.jfkt.views.EducationModeView;
 import project.optics.jfkt.views.SelectionView;
+import project.optics.jfkt.views.EducationModeView;
 
 import java.io.InputStream;
 import java.util.*;
@@ -109,7 +110,7 @@ public class EducationModeController {
 
         view.setRadioButtonsEnabled(isMirrorQuestion || isButtonOnlyQuestion);
         view.setUserInputDisabled(isButtonOnlyQuestion);
-        view.getUserInputField().setPromptText(isButtonOnlyQuestion ? "Select options below" : "Enter distance answer");
+        view.getUserInputField().setPromptText(isButtonOnlyQuestion ? GeneralSetting.getString("text.selectOption") : GeneralSetting.getString("text.distance"));
 
         // Clear previous selections
         view.getModeGroup().getToggles().forEach(t -> t.setSelected(false));
@@ -216,7 +217,7 @@ public class EducationModeController {
                 checkStandardQuestionAnswer();
             }
         } catch (Exception e) {
-            view.getAnswerText().setText("Error checking answer. Please try again.");
+            view.getAnswerText().setText(GeneralSetting.getString("text.errorChecking"));
             view.getAnswerText().setFill(Color.RED);
             e.printStackTrace();
         }
@@ -227,17 +228,19 @@ public class EducationModeController {
             String[] correctParts = currentQuestion.getAnswer().split(",");
 
             if (correctParts.length < 3) {
-                view.getAnswerText().setText("Invalid question configuration");
+                view.getAnswerText().setText(
+                        GeneralSetting.getString("text.invalidConfig")
+                );
                 view.getAnswerText().setFill(Color.RED);
                 return;
             }
 
-            String correctMode = correctParts[0].trim();
-            String correctSize = correctParts[1].trim();
+            String correctMode        = correctParts[0].trim();
+            String correctSize        = correctParts[1].trim();
             String correctOrientation = correctParts[2].trim();
 
-            String selectedMode = getSelectedMode();
-            String selectedSize = getSelectedSize();
+            String selectedMode        = getSelectedMode();
+            String selectedSize        = getSelectedSize();
             String selectedOrientation = getSelectedOrientation();
 
             StringBuilder feedback = new StringBuilder();
@@ -245,56 +248,70 @@ public class EducationModeController {
             // Check mode
             boolean modeCorrect = correctMode.equalsIgnoreCase(selectedMode);
             if (!modeCorrect) {
-                feedback.append("Incorrect image type. ");
+                feedback.append(
+                        GeneralSetting.getString("text.incorrectImageType")
+                );
             }
 
             // Check size
             boolean sizeCorrect = correctSize.equalsIgnoreCase(selectedSize);
             if (!sizeCorrect) {
-                feedback.append("Incorrect size. ");
+                feedback.append(
+                        GeneralSetting.getString("text.incorrectSize")
+                );
             }
 
             // Check orientation
             boolean orientationCorrect = correctOrientation.equalsIgnoreCase(selectedOrientation);
             if (!orientationCorrect) {
-                feedback.append("Incorrect orientation. ");
+                feedback.append(
+                        GeneralSetting.getString("text.incorrectOrientation")
+                );
             }
 
             // Final validation
             if (modeCorrect && sizeCorrect && orientationCorrect) {
-                view.getAnswerText().setText("Correct! " + currentQuestion.getAnswer());
+                view.getAnswerText().setText(
+                        GeneralSetting.getString("text.correctAnswer")
+                                + currentQuestion.getAnswer()
+                );
                 view.getAnswerText().setFill(Color.GREEN);
             } else {
                 view.getAnswerText().setText(feedback.toString().trim());
                 view.getAnswerText().setFill(Color.RED);
             }
+
         } catch (Exception e) {
-            view.getAnswerText().setText("Error checking answer. Please try again.");
+            view.getAnswerText().setText(
+                    GeneralSetting.getString("text.checkError")
+            );
             view.getAnswerText().setFill(Color.RED);
             e.printStackTrace();
         }
     }
+
+
 
     private void checkMirrorQuestionAnswer() {
         try {
             String[] correctParts = currentQuestion.getAnswer().split(",");
 
             if (correctParts.length < 4) {
-                view.getAnswerText().setText("Invalid question configuration");
+                view.getAnswerText().setText(GeneralSetting.getString("text.invalidConfig"));
                 view.getAnswerText().setFill(Color.RED);
                 return;
             }
 
-            String correctDistance = correctParts[0].trim();
-            String correctMode = correctParts[1].trim();
-            String correctSize = correctParts[2].trim();
+            String correctDistance    = correctParts[0].trim();
+            String correctMode        = correctParts[1].trim();
+            String correctSize        = correctParts[2].trim();
             String correctOrientation = correctParts[3].trim();
 
             String userAnswer = view.getUserInputField().getText().trim();
             boolean distanceCorrect = userAnswer.equalsIgnoreCase(correctDistance);
 
-            String selectedMode = getSelectedMode();
-            String selectedSize = getSelectedSize();
+            String selectedMode        = getSelectedMode();
+            String selectedSize        = getSelectedSize();
             String selectedOrientation = getSelectedOrientation();
 
             StringBuilder feedback = new StringBuilder();
@@ -302,40 +319,45 @@ public class EducationModeController {
             // Check mode
             boolean modeCorrect = correctMode.equalsIgnoreCase(selectedMode);
             if (!modeCorrect) {
-                feedback.append("Incorrect image type. ");
+                feedback.append(GeneralSetting.getString("text.incorrectImageType"));
             }
 
             // Check size
-            boolean sizeCorrect = correctSize.equalsIgnoreCase("any")
+            boolean sizeCorrect = "any".equalsIgnoreCase(correctSize)
                     ? !selectedSize.isEmpty()
                     : correctSize.equalsIgnoreCase(selectedSize);
             if (!sizeCorrect) {
-                if (correctSize.equals("any")) {
-                    feedback.append("Please select an image size. ");
+                if ("any".equalsIgnoreCase(correctSize)) {
+                    feedback.append(GeneralSetting.getString("text.selectImageSize"));
                 } else {
-                    feedback.append("Incorrect size. ");
+                    feedback.append(GeneralSetting.getString("text.incorrectSize"));
                 }
             }
 
             // Check orientation
             boolean orientationCorrect = correctOrientation.equalsIgnoreCase(selectedOrientation);
             if (!orientationCorrect) {
-                feedback.append("Incorrect orientation. ");
+                feedback.append(GeneralSetting.getString("text.incorrectOrientation"));
             }
 
             // Final validation
             if (distanceCorrect && modeCorrect && sizeCorrect && orientationCorrect) {
-                view.getAnswerText().setText("Correct! " + currentQuestion.getAnswer());
+                view.getAnswerText().setText(
+                        GeneralSetting.getString("text.correctAnswer")
+                                + currentQuestion.getAnswer()
+                );
                 view.getAnswerText().setFill(Color.GREEN);
             } else {
                 if (!distanceCorrect) {
-                    feedback.insert(0, "Incorrect distance. ");
+                    // put distance error at front
+                    feedback.insert(0, GeneralSetting.getString("text.incorrectDistance"));
                 }
                 view.getAnswerText().setText(feedback.toString().trim());
                 view.getAnswerText().setFill(Color.RED);
             }
+
         } catch (Exception e) {
-            view.getAnswerText().setText("Error checking answer. Please try again.");
+            view.getAnswerText().setText(GeneralSetting.getString("text.checkError"));
             view.getAnswerText().setFill(Color.RED);
             e.printStackTrace();
         }
@@ -376,10 +398,10 @@ public class EducationModeController {
         String correctAnswer = currentQuestion.getAnswer().split("\\(")[0].trim();
 
         if (userAnswer.equalsIgnoreCase(correctAnswer)) {
-            view.getAnswerText().setText("Correct! " + currentQuestion.getAnswer());
+            view.getAnswerText().setText(GeneralSetting.getString("text.correct") + currentQuestion.getAnswer());
             view.getAnswerText().setFill(Color.GREEN);
         } else {
-            view.getAnswerText().setText("Incorrect. Try again or click 'Answer'.");
+            view.getAnswerText().setText(GeneralSetting.getString("text.incorrect"));
             view.getAnswerText().setFill(Color.RED);
         }
     }
@@ -389,7 +411,7 @@ public class EducationModeController {
     }
 
     private void showAnswer() {
-        view.getAnswerText().setText("Answer: " + currentQuestion.getAnswer());
+        view.getAnswerText().setText(GeneralSetting.getString("label.answer") + currentQuestion.getAnswer());
         view.getAnswerText().setFill(Color.BLUE);
     }
 }
