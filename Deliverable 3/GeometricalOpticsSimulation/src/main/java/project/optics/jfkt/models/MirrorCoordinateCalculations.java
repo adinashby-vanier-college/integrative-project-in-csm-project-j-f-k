@@ -98,14 +98,49 @@ public class MirrorCoordinateCalculations {
             //ray going through center
             x = centerX;
             y = centerY;
-            coordinate = new CoordinateModel(x,y);
+            coordinate = new CoordinateModel(x, y);
             secondCoordinateSet.add(coordinate);
+            if (objectDistance == focalLength){
+                double deltaY = centerY - (centerY-objectHeight*scale);
+                double deltaX = (centerX + focalLength*scale) - (centerX - objectDistance*scale);
+                double slope = -deltaX/deltaY;
+                y = centerY * 2;
+                x = y/slope;
+                coordinate = new CoordinateModel(x, y);
+                secondCoordinateSet.add(coordinate);
+            }
+
+
 
             //ray going through Focal
             x = centerX - (radius - Math.sqrt(squareTerm2));
             y = yImageCoordinate;
-            coordinate = new CoordinateModel(x,y);
-            thirdCoordinateSet.add(coordinate);
+            if (!Double.isNaN(x)) {
+                coordinate = new CoordinateModel(x, y);
+                thirdCoordinateSet.add(coordinate);
+            } else if (focalLength == objectDistance){
+                double deltaY = centerY - (centerY-objectHeight*scale);
+                double deltaX = (centerX + focalLength*scale) - (centerX - objectDistance*scale);
+                double slope = deltaY/deltaX;
+                x = centerX;
+                y = centerY - (centerX - (centerX - objectDistance*scale))*slope;
+                coordinate = new CoordinateModel(x, y);
+                thirdCoordinateSet.add(coordinate);
+                slope = -1/slope;
+                y = centerY * 2;
+                x = y/slope;
+                coordinate = new CoordinateModel(x, y);
+                thirdCoordinateSet.add(coordinate);
+            } else{
+                double deltaY = centerY - (centerY-objectHeight*scale);
+                double deltaX = (centerX + focalLength*scale) - (centerX - objectDistance*scale);
+                double slope = deltaY/deltaX;
+                System.out.println("THis is the slope: " + slope);
+                x = centerX;
+                y = centerY - (centerX - (centerX - objectDistance*scale))*slope;
+                coordinate = new CoordinateModel(x , y);
+                thirdCoordinateSet.add(coordinate);
+            }
 
             //ray going straight to mirror
             if (objectHeight <= Math.abs(2*focalLength)) {
@@ -113,14 +148,21 @@ public class MirrorCoordinateCalculations {
                 y = centerY - objectHeight * scale;
                 coordinate = new CoordinateModel(x,y);
                 firstCoordinateSet.add(coordinate);
-
+                if (objectDistance == focalLength){
+                    double deltaY = centerY - (centerY-objectHeight*scale);
+                    double deltaX = (centerX + focalLength*scale) - (centerX - objectDistance*scale);
+                    double slope = -deltaX/deltaY;
+                    y = centerY * 2;
+                    x = y/slope;
+                    coordinate = new CoordinateModel(x,y);
+                    firstCoordinateSet.add(coordinate);
+                }
             } else {
                 x = centerX*2;
                 y = centerY - objectHeight*scale;
                 coordinate = new CoordinateModel(x,y);
                 firstCoordinateSet.add(coordinate);
                 firstCoordinateSet.add(coordinate);
-
             }
             //ray going to image height and distance
             x = xImageCoordinate;
@@ -129,8 +171,12 @@ public class MirrorCoordinateCalculations {
             if (firstCoordinateSet.size()<3){
                 firstCoordinateSet.add(coordinate);
             }
-            secondCoordinateSet.add(coordinate);
-            thirdCoordinateSet.add(coordinate);
+            if (secondCoordinateSet.size()<3) {
+                secondCoordinateSet.add(coordinate);
+            }
+            if (thirdCoordinateSet.size()<3) {
+                thirdCoordinateSet.add(coordinate);
+            }
         }
     }
 

@@ -71,6 +71,9 @@ public class RefractionView extends Pane {
 
         // Disable user inputs when the animation status is modified
         animationStatusProperty.addListener((observable, oldValue, newValue) -> refractionController.onAnimationStatusChanged(newValue, locationSlider, angleSlider, newLayer));
+
+        // add audio
+        refractionController.addAudioWhenStartAndFinish();
     }
 
     private Region createMenu() {
@@ -422,6 +425,10 @@ public class RefractionView extends Pane {
 
     public void setAnimationStatus(AnimationStatus animationStatus) {
         animationStatusProperty.set(animationStatus);
+    }
+
+    public SimpleObjectProperty<AnimationStatus> animationStatusProperty() {
+        return animationStatusProperty;
     }
 
     public void setIncidentLocation(double incidentLocation) {
