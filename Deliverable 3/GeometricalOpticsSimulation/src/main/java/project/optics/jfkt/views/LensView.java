@@ -142,6 +142,7 @@ public class LensView extends BaseView {
             header.setFont(new Font(40));
             header.setTextAlignment(TextAlignment.CENTER);
             header.setUnderline(true);
+            header.getStyleClass().add("parameters-header");
             VBox.setMargin(header, new Insets(0, 0, 20, 0));
 
             HBox objectDistanceHBox = createParameterHBox("Object Distance", "8.0");
@@ -159,6 +160,7 @@ public class LensView extends BaseView {
             // === Ray Length Slider ===
             Text rayLengthLabel = new Text("Ray Length:");
             rayLengthLabel.setFont(new Font(20));
+            rayLengthLabel.getStyleClass().add("ray-length-label");
             rayLengthSlider = new Slider(0, 100, 100);
             rayLengthSlider.setShowTickLabels(true);
             rayLengthSlider.setShowTickMarks(true);
@@ -229,6 +231,7 @@ public class LensView extends BaseView {
         textField.setAlignment(Pos.CENTER);
         textField.setPrefWidth(100);
         textField.setPrefHeight(30);
+        textField.getStyleClass().add("parameter-field");
 
         hbox.getChildren().addAll(label, textField);
         return hbox;
@@ -754,7 +757,9 @@ public class LensView extends BaseView {
             // Wrapper VBox for each lens entry
             VBox lensGroup = new VBox(5);
             lensGroup.setPadding(new Insets(10));
-            lensGroup.setStyle("-fx-border-color: grey; -fx-border-width: 1; -fx-background-color: #f5f5f5;");
+            lensGroup.getStyleClass().add("lens-background");
+            lensGroup.setStyle("-fx-border-color: grey; -fx-border-width: 1;");
+
 
             String labelText = (focalLength > 0 ? "Converging" : "Diverging") + " Lens #" + lensCounter++;
 
@@ -768,7 +773,6 @@ public class LensView extends BaseView {
             TextField focalField = (TextField) lensFocalLengthBox.getChildren().get(1);
             extraLensFields.add(new TextField[]{positionField, focalField});
 
-            // "X" remove button
             Button removeBtn = new Button("X");
             removeBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
             removeBtn.setOnAction(e -> {
@@ -776,7 +780,6 @@ public class LensView extends BaseView {
                 extraLensFields.removeIf(pair -> pair[0] == positionField && pair[1] == focalField);
                 resetLensLabels();
             });
-
 
             HBox header = new HBox(lensLabel, removeBtn);
             header.setAlignment(Pos.CENTER_LEFT);

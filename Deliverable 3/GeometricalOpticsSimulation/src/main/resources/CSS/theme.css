@@ -382,3 +382,25 @@
 .radio-button {
     -fx-font-family: inherit;
 }
+/* Add to theme.css */
+.lens-background {
+    -fx-background-color: #f5f5f5;
+}
+
+.dark-mode .lens-background {
+    -fx-background-color: #333333;
+    -fx-border-color: white !important;
+}
+/* Add these to theme.css */
+.parameters-header {
+    -fx-fill: black;
+}
+
+.ray-length-label {
+    -fx-fill: black;
+}
+
+.dark-mode .parameters-header,
+.dark-mode .ray-length-label {
+    -fx-fill: white;
+}
