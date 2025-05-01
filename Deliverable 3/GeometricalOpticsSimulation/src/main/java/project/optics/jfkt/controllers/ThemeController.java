@@ -99,8 +99,14 @@ public class ThemeController {
                     ThemeController.class.getResource("/css/theme.css").toExternalForm()
             );
 
+            // Apply current font
+            String fontStyle = "-fx-font-family: '" + currentFont + "';";
+            scene.getRoot().setStyle(fontStyle);
+
             // Force CSS application
             scene.getRoot().applyCss();
         }
     }
-}
+        }
+
+

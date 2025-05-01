@@ -73,6 +73,7 @@ public class RefractionController {
         });
     }
 
+
     public void onNewLayerButtonPressed(RefractionView refractionView, ArrayList<HBox> layers, VBox frame, HBox plusSignLayer) {
         if (refraction.getLayerCount() < 4) {
             // create layer choosing stage

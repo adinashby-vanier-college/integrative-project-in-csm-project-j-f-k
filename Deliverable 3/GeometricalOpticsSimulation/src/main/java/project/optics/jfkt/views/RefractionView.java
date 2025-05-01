@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import project.optics.jfkt.controllers.RefractionController;
+import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.enums.AnimationStatus;
 import project.optics.jfkt.enums.Material;
 import project.optics.jfkt.models.Refraction;
@@ -46,6 +48,10 @@ public class RefractionView extends Pane {
     private Button newLayer;
     private SimpleObjectProperty<AnimationStatus> animationStatusProperty = new SimpleObjectProperty<>(AnimationStatus.PREPARED);
     private ToggleGroup animationSpeed;
+    private Label parameterLbl;
+    private Label angleLbl;
+    private Label incidentPointLbl;
+
 
     public RefractionView() {
         // add all components to the scene
@@ -74,7 +80,42 @@ public class RefractionView extends Pane {
 
         // add audio
         refractionController.addAudioWhenStartAndFinish();
+        // Add font change listener
+        ThemeController.addFontChangeListener(this::updateFont);
+
+        // Apply current font initially
+        updateFont(ThemeController.getCurrentFont());
     }
+    private void updateFont(String font) {
+        // Apply font to all text elements in the refraction view
+        String fontStyle = "-fx-font-family: '" + font + "';";
+        this.setStyle(fontStyle);
+
+        // Apply to specific components that might need it
+        if (angleSlider != null) {
+            angleSlider.setStyle(fontStyle);
+        }
+        if (locationSlider != null) {
+            locationSlider.setStyle(fontStyle);
+        }
+        if (animationSpeed != null) {
+            animationSpeed.getToggles().forEach(toggle -> {
+                RadioButton radio = (RadioButton) toggle;
+                radio.setStyle(fontStyle);
+            });
+        }
+
+        // Apply to parameter labels
+        if (parameterLbl != null) parameterLbl.setStyle(fontStyle);
+        if (angleLbl != null) angleLbl.setStyle(fontStyle);
+        if (incidentPointLbl != null) incidentPointLbl.setStyle(fontStyle);
+
+        // Force a CSS refresh
+        if (this.getScene() != null) {
+            this.getScene().getRoot().applyCss();
+        }
+    }
+
 
     private Region createMenu() {
         return util.createMenu();
@@ -101,17 +142,14 @@ public class RefractionView extends Pane {
 
         HBox layer1 = new HBox();
         layer1.setBorder(Border.stroke(Color.BLACK));
-        layer1.getStyleClass().addAll("refraction-layer", "refraction-text");
         VBox.setVgrow(layer1, Priority.ALWAYS);
 
         HBox layer2 = new HBox();
         layer2.setBorder(Border.stroke(Color.BLACK));
-        layer2.getStyleClass().addAll("refraction-layer", "refraction-text");
         VBox.setVgrow(layer2, Priority.ALWAYS);
 
         HBox layer3 = new HBox();
         layer3.setBorder(Border.stroke(Color.BLACK));
-        layer3.getStyleClass().addAll("refraction-layer", "refraction-text");
         VBox.setVgrow(layer3, Priority.ALWAYS);
 
         layers.add(layer1);
@@ -120,14 +158,13 @@ public class RefractionView extends Pane {
     }
 
     private StackPane createAnimationPane() {
-        // The outerPane including the layers and the trail of animation
         StackPane animationPane = new StackPane();
         animationPane.getStyleClass().addAll("refraction-animation-pane", "refraction-text");
         this.animationPane = animationPane;
 
-        // The pane displaying the trail and the object of animation
         Pane trailPane = new Pane();
         trailPane.setMouseTransparent(true);
+        trailPane.getStyleClass().add("refraction-text");
         animationPane.heightProperty().addListener((observable, oldValue, newValue) -> {
             trailPane.setPrefHeight(newValue.doubleValue());
         });
@@ -136,7 +173,6 @@ public class RefractionView extends Pane {
         });
         this.trailPane = trailPane;
 
-        // initialize the pane
         VBox layerPane = new VBox();
         layerPane.setPrefHeight(ANIMATION_PANE_HEIGHT);
         layerPane.setBorder(Border.stroke(Color.BLACK));
@@ -145,6 +181,7 @@ public class RefractionView extends Pane {
 
         animationPane.getChildren().addAll(layerPane, trailPane);
         trailPane.toFront();
+
 
         // create the object of animation
         object = new Circle(5);
@@ -269,35 +306,43 @@ public class RefractionView extends Pane {
         RadioButton fast = new RadioButton("Fast");
         normal.setSelected(true);
 
-        ToggleGroup toggleGroup = new ToggleGroup();
+        slow.getStyleClass().addAll("refraction-text", "refraction-radio-text");
+        normal.getStyleClass().addAll("refraction-text", "refraction-radio-text");
+        fast.getStyleClass().addAll("refraction-text", "refraction-radio-text");
 
+        ToggleGroup toggleGroup = new ToggleGroup();
         slow.setToggleGroup(toggleGroup);
         normal.setToggleGroup(toggleGroup);
         fast.setToggleGroup(toggleGroup);
 
-        toggleGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) -> refractionController.onAnimationSpeedChanged(newVal));
+        toggleGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) ->
+                refractionController.onAnimationSpeedChanged(newVal));
 
         animationSpeed = toggleGroup;
 
         HBox container = new HBox(20, slow, normal, fast);
+        container.getStyleClass().addAll("refraction-text", "refraction-radio-container");
 
         return container;
     }
 
     private Region createParameters() {
         GridPane parameters = new GridPane(5, 10);
+        parameters.getStyleClass().addAll("refraction-parameters", "refraction-text");
 
-        Label parameterLbl = new Label("Parameters");
+        parameterLbl = new Label("Parameters");
+        parameterLbl.getStyleClass().addAll("refraction-header", "refraction-parameters-header", "parameter-label");
         parameters.add(parameterLbl, 0, 0, 2, 1);
 
-        Label angleLbl = new Label("Incident angle (to vertical)");
+        angleLbl = new Label("Incident angle (to vertical)");
+        angleLbl.getStyleClass().addAll("refraction-label", "refraction-parameters-label", "parameter-label");
         parameters.add(angleLbl, 0, 1);
 
-        Label incidentPointLbl = new Label("Incident location");
+        incidentPointLbl = new Label("Incident location");
+        incidentPointLbl.getStyleClass().addAll("refraction-label", "refraction-parameters-label", "parameter-label");
         parameters.add(incidentPointLbl, 0, 2);
 
         parameters.add(createAngleComponent(), 1, 1, 2, 1);
-
         parameters.add(createLocationComponent(), 1, 2, 2, 1);
 
         return parameters;
@@ -309,19 +354,20 @@ public class RefractionView extends Pane {
         angleSlider.setMinorTickCount(5);
         angleSlider.setSnapToTicks(true);
         angleSlider.setBlockIncrement(0.5);
+        angleSlider.getStyleClass().add("refraction-text");
 
-        // update incident angle with the angle slider dynamically
-        angleSlider.valueProperty().addListener((observable, oldValue, newValue) -> refractionController.onInitialAngleChanged(newValue.doubleValue(), locationSlider.getValue()));
+        angleSlider.valueProperty().addListener((observable, oldValue, newValue) ->
+                refractionController.onInitialAngleChanged(newValue.doubleValue(), locationSlider.getValue()));
 
         Text angleValue = new Text();
         angleValue.setWrappingWidth(45);
+        angleValue.getStyleClass().add("refraction-value");
 
         StringConverter<Number> converter = new NumberStringConverter();
-
         Bindings.bindBidirectional(angleValue.textProperty(), angleSlider.valueProperty(), converter);
 
         HBox container = new HBox(10, angleSlider, angleValue);
-
+        container.getStyleClass().add("refraction-text");
         this.angleSlider = angleSlider;
 
         return container;
@@ -333,27 +379,30 @@ public class RefractionView extends Pane {
         locationSlider.setMajorTickUnit(15);
         locationSlider.setMinorTickCount(5);
         locationSlider.setSnapToTicks(true);
+        locationSlider.getStyleClass().add("refraction-text");
 
         this.widthProperty().addListener((obs, oldVal, newVal) -> {
             locationSlider.setMax(newVal.doubleValue());
         });
         locationSlider.setBlockIncrement(1);
         locationSlider.setMin(0);
-        locationSlider.valueProperty().addListener((observable, oldVal, newVal) -> refractionController.onInitialLocationChanged(newVal.doubleValue()));
+        locationSlider.valueProperty().addListener((observable, oldVal, newVal) ->
+                refractionController.onInitialLocationChanged(newVal.doubleValue()));
 
         Text locationValue = new Text();
         locationValue.setWrappingWidth(60);
+        locationValue.getStyleClass().add("refraction-value");
 
         StringConverter<Number> converter = new NumberStringConverter();
-
         Bindings.bindBidirectional(locationValue.textProperty(), locationSlider.valueProperty(), converter);
 
         HBox container = new HBox(10, locationSlider, locationValue);
-
+        container.getStyleClass().add("refraction-text");
         this.locationSlider = locationSlider;
 
         return container;
     }
+
 
     public void setChosenLayer(Material chosenLayer) {
         this.chosenLayer = chosenLayer;

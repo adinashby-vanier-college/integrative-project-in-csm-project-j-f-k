@@ -36,6 +36,7 @@ public class ThemeView extends BorderPane {
             ThemeController.setCurrentFont(selectedFont);
 
             this.setStyle("-fx-font-family: '" + selectedFont + "';");
+
         });
 
         // Dark mode and light mode buttons in a horizontal box
