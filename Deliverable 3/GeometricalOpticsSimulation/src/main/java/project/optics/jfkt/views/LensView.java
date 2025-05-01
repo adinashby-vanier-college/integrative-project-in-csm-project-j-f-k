@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Random;
 
 public class LensView extends BaseView {
+    private final List<Text> parameterLabels = new ArrayList<>();
     private LensesController controller;
     private VBox paramVBox;
     private static final double DEFAULT_SCALE = 50.0;
@@ -82,16 +83,39 @@ public class LensView extends BaseView {
     private TextField magnificationField;
     private TextField numRaysField;
     private Button applyButton;
+    private Text parametersHeader;
+
+    private Text rayLengthLabel;
+    private List<Label> lensLabels = new ArrayList<>();
+    private List<Text> focalLabels = new ArrayList<>();
 
     public LensView() {
         super("Lenses");
         initializeView();
         setupZoomControls();
         runRayIntersectionTest();
+        updateFonts(ThemeController.getCurrentFont());
 
+        // Add font change listener
+        ThemeController.addFontChangeListener(this::updateFonts);
 
         this.controller = new LensesController(new LensesModel(3, 8.0, 2.0, -0.5, 4.0), this);
         showDefaultLensSystem();
+    }
+    private void updateFonts(String font) {
+        String fontStyle = "-fx-font-family: '" + font + "';";
+
+        if (parametersHeader != null) parametersHeader.setStyle(fontStyle);
+        for (Text label : parameterLabels) {
+            label.setStyle(fontStyle);
+        }
+        if (rayLengthLabel != null) rayLengthLabel.setStyle(fontStyle);
+        for (Label label : lensLabels) {
+            label.setStyle(fontStyle);
+        }
+        for (Text label : focalLabels) {
+            label.setStyle(fontStyle);
+        }
     }
 
     private void initializeView() {
@@ -138,12 +162,12 @@ public class LensView extends BaseView {
             paramVBox.getChildren().clear();
 
             // === Static Fields ===
-            Text header = new Text("Parameters:");
-            header.setFont(new Font(40));
-            header.setTextAlignment(TextAlignment.CENTER);
-            header.setUnderline(true);
-            header.getStyleClass().add("parameters-header");
-            VBox.setMargin(header, new Insets(0, 0, 20, 0));
+            parametersHeader = new Text("Parameters:");
+            parametersHeader.setFont(new Font(40));
+            parametersHeader.setTextAlignment(TextAlignment.CENTER);
+            parametersHeader.setUnderline(true);
+            parametersHeader.getStyleClass().add("lensview-parameters-header");
+            VBox.setMargin(parametersHeader, new Insets(0, 0, 20, 0));
 
             HBox objectDistanceHBox = createParameterHBox("Object Distance", "8.0");
             HBox objectHeightHBox = createParameterHBox("Object Height", "2.0");
@@ -158,9 +182,9 @@ public class LensView extends BaseView {
             numRaysField = (TextField) numExtraRaysHBox.getChildren().get(1);
 
             // === Ray Length Slider ===
-            Text rayLengthLabel = new Text("Ray Length:");
+            rayLengthLabel = new Text("Ray Length:");
             rayLengthLabel.setFont(new Font(20));
-            rayLengthLabel.getStyleClass().add("ray-length-label");
+            rayLengthLabel.getStyleClass().add("lensview-ray-length-label");
             rayLengthSlider = new Slider(0, 100, 100);
             rayLengthSlider.setShowTickLabels(true);
             rayLengthSlider.setShowTickMarks(true);
@@ -183,7 +207,7 @@ public class LensView extends BaseView {
             scrollContent.setPadding(new Insets(10));
             scrollContent.setPrefWidth(400);
             scrollContent.getChildren().addAll(
-                    header,
+                    parametersHeader,
                     objectDistanceHBox,
                     objectHeightHBox,
                     focalLengthHBox,
@@ -224,7 +248,8 @@ public class LensView extends BaseView {
 
         Text label = new Text(labelText);
         label.setFont(new Font(20));
-        label.getStyleClass().add("parameter-label");
+        label.getStyleClass().add("lensview-parameter-label");
+
 
         TextField textField = new TextField(defaultValue);
         textField.setFont(new Font(18));
@@ -733,8 +758,10 @@ public class LensView extends BaseView {
             Text label = new Text(
                     lensX - 20, adjustedCenterY - halfLensHeight - 10,
                     lens.isConverging() ? "Converging" : "Diverging"
+
             );
             label.setFont(new Font(14));
+
             label.setFill(lens.isConverging() ? Color.BLUE : Color.RED);
 
             pane.getChildren().addAll(lensLine, label);
@@ -760,7 +787,7 @@ public class LensView extends BaseView {
             lensGroup.getStyleClass().add("lens-background");
             lensGroup.setStyle("-fx-border-color: grey; -fx-border-width: 1;");
 
-
+            // Rest of the method remains the same...
             String labelText = (focalLength > 0 ? "Converging" : "Diverging") + " Lens #" + lensCounter++;
 
             Label lensLabel = new Label(labelText);

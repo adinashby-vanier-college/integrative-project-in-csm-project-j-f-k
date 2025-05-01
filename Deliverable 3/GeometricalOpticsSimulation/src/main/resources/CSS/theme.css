@@ -472,3 +472,77 @@
 .dark-mode .layer-choosing-label {
     -fx-text-fill: white !important;
 }
+/* LensView Specific Styles */
+.lensview-parameters-header {
+    -fx-font-size: 40px !important;
+    -fx-font-weight: bold;
+    -fx-fill: black;
+}
+
+.lensview-parameter-label {
+    -fx-font-size: 20px !important;
+    -fx-fill: black;
+}
+
+.lensview-ray-length-label {
+    -fx-font-size: 20px !important;
+    -fx-fill: black;
+}
+
+.lensview-lens-label {
+    -fx-font-size: 14px !important;
+}
+
+.lensview-focal-label {
+    -fx-font-size: 14px !important;
+    -fx-fill: black;
+}
+
+/* Dark Mode Overrides */
+.dark-mode .lensview-parameters-header,
+.dark-mode .lensview-parameter-label,
+.dark-mode .lensview-ray-length-label,
+.dark-mode .lensview-focal-label {
+    -fx-fill: white !important;
+}
+
+.dark-mode .lensview-lens-label {
+    -fx-text-fill: white !important;
+}
+/* LensView Specific Text Styles */
+.lensview-parameters-header {
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-fill: black;
+}
+
+.lensview-parameter-label {
+    -fx-font-size: 20px;
+    -fx-fill: black;
+}
+
+.lensview-ray-length-label {
+    -fx-font-size: 20px;
+    -fx-fill: black;
+}
+
+.lensview-lens-label {
+    -fx-font-size: 14px;
+}
+
+.lensview-focal-label {
+    -fx-font-size: 14px;
+    -fx-fill: black;
+}
+
+/* Dark Mode Overrides */
+.dark-mode .lensview-parameters-header,
+.dark-mode .lensview-parameter-label,
+.dark-mode .lensview-ray-length-label,
+.dark-mode .lensview-focal-label {
+    -fx-fill: white !important;
+}
+
+.dark-mode .lensview-lens-label {
+    -fx-text-fill: white !important;
+}
