@@ -104,7 +104,13 @@ public class LensView extends BaseView {
     }
     private void updateFonts(String font) {
         String fontStyle = "-fx-font-family: '" + font + "';";
-
+        if (paramVBox != null) {
+            paramVBox.lookupAll(".parameter-label").forEach(node -> {
+                if (node instanceof Text) {
+                    ((Text)node).setStyle(fontStyle);
+                }
+            });
+        }
         if (parametersHeader != null) parametersHeader.setStyle(fontStyle);
         for (Text label : parameterLabels) {
             label.setStyle(fontStyle);
@@ -247,16 +253,13 @@ public class LensView extends BaseView {
         hbox.setPadding(new Insets(5, 10, 5, 10));
 
         Text label = new Text(labelText);
-        label.setFont(new Font(20));
-        label.getStyleClass().add("lensview-parameter-label");
-
+        label.getStyleClass().add("lensview-ray-length-label");
 
         TextField textField = new TextField(defaultValue);
         textField.setFont(new Font(18));
         textField.setAlignment(Pos.CENTER);
         textField.setPrefWidth(100);
         textField.setPrefHeight(30);
-        textField.getStyleClass().add("parameter-field");
 
         hbox.getChildren().addAll(label, textField);
         return hbox;
@@ -418,8 +421,8 @@ public class LensView extends BaseView {
         // Labels
         Text nearLabel = new Text(lensX - focalLengthPx - 20, centerY - 10, "F");
         Text farLabel = new Text(lensX + focalLengthPx + 10, centerY - 10, "F'");
-        nearLabel.getStyleClass().add("focal-label");
-        farLabel.getStyleClass().add("focal-label");
+        nearLabel.getStyleClass().add("lensview-ray-length-label");
+        farLabel.getStyleClass().add("lensview-ray-length-label");
 
         pane.getChildren().addAll(nearFocal, farFocal, nearLabel, farLabel);
     }
@@ -440,7 +443,7 @@ public class LensView extends BaseView {
 
         // Label
         Text label = new Text(x - 30, baseY - heightPx/2, "Object");
-        label.getStyleClass().add("lens-label");
+        label.getStyleClass().add("lensview-ray-length-label");
 
         pane.getChildren().addAll(objLine, arrowHead, label);
     }
@@ -760,7 +763,7 @@ public class LensView extends BaseView {
                     lens.isConverging() ? "Converging" : "Diverging"
 
             );
-            label.setFont(new Font(14));
+            label.getStyleClass().add("lensview-ray-length-label");
 
             label.setFill(lens.isConverging() ? Color.BLUE : Color.RED);
 
@@ -787,11 +790,11 @@ public class LensView extends BaseView {
             lensGroup.getStyleClass().add("lens-background");
             lensGroup.setStyle("-fx-border-color: grey; -fx-border-width: 1;");
 
-            // Rest of the method remains the same...
+
             String labelText = (focalLength > 0 ? "Converging" : "Diverging") + " Lens #" + lensCounter++;
 
             Label lensLabel = new Label(labelText);
-            lensLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+            lensLabel.getStyleClass().add("lensview-ray-length-label");
 
             HBox lensPositionBox = createParameterHBox("Position", String.valueOf(position));
             HBox lensFocalLengthBox = createParameterHBox("Focal Length", String.valueOf(focalLength));

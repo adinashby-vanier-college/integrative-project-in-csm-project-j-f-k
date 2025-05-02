@@ -16,8 +16,8 @@
 .hint-text,
 .question-text,
 .param-text,
-.option-text,
-.choice-text,
+
+
 .header-text,
 .parameter-label,
 .lens-label,
@@ -67,8 +67,7 @@
 .light-mode .hint-text,
 .light-mode .question-text,
 .light-mode .param-text,
-.light-mode .option-text,
-.light-mode .choice-text,
+
 .light-mode .header-text,
 .light-mode .parameter-label,
 .light-mode .lens-label,
@@ -81,7 +80,24 @@
 .dark-mode {
     -fx-background-color: #222222;
 }
+.option-text,
+.choice-text {
+    -fx-font-family: inherit !important;
+    -fx-font-size: 20px;
+}
 
+/* Theme-specific colors */
+.light-mode .option-text,
+.light-mode .choice-text {
+    -fx-text-fill: black;
+    -fx-fill: black;
+}
+
+.dark-mode .option-text,
+.dark-mode .choice-text {
+    -fx-text-fill: white;
+    -fx-fill: white;
+}
 .dark-mode .text,
 .dark-mode .label,
 .dark-mode .check-box .text,
@@ -92,14 +108,14 @@
 .dark-mode .hint-text,
 .dark-mode .question-text,
 .dark-mode .param-text,
-.dark-mode .option-text,
-.dark-mode .choice-text,
+
 .dark-mode .header-text,
 .dark-mode .parameter-label,
 .dark-mode .lens-label,
 .dark-mode .focal-label {
     -fx-text-fill: white;
     -fx-fill: white;
+
 }
 
 /* Rectangle and Border Styling */
@@ -439,99 +455,40 @@
 
 
 /* Lens Background */
-.lens-background {
-    -fx-background-color: #f5f5f5;
-}
-
 .dark-mode .lens-background {
     -fx-background-color: #333333;
     -fx-border-color: white !important;
 }
 
-/* Parameters Header */
-.parameters-header {
-    -fx-fill: black;
-}
-
-.ray-length-label {
-    -fx-fill: black;
-}
-
-.dark-mode .parameters-header,
-.dark-mode .ray-length-label {
-    -fx-fill: white;
-}
 
 
-.layer-choosing-label {
-    -fx-font-family: inherit;
-    -fx-font-size: 14px;
-    -fx-text-fill: -fx-text-base-color;
-}
 
-.dark-mode .layer-choosing-label {
-    -fx-text-fill: white !important;
-}
 /* LensView Specific Styles */
-.lensview-parameters-header {
-    -fx-font-size: 40px !important;
-    -fx-font-weight: bold;
-    -fx-fill: black;
-}
-
-.lensview-parameter-label {
-    -fx-font-size: 20px !important;
-    -fx-fill: black;
-}
-
 .lensview-ray-length-label {
     -fx-font-size: 20px !important;
     -fx-fill: black;
 }
 
-.lensview-lens-label {
-    -fx-font-size: 14px !important;
-}
 
-.lensview-focal-label {
-    -fx-font-size: 14px !important;
-    -fx-fill: black;
-}
+
 
 /* Dark Mode Overrides */
 .dark-mode .lensview-parameters-header,
-.dark-mode .lensview-parameter-label,
 .dark-mode .lensview-ray-length-label,
-.dark-mode .lensview-focal-label {
-    -fx-fill: white !important;
-}
 
-.dark-mode .lensview-lens-label {
-    -fx-text-fill: white !important;
-}
-/* LensView Specific Text Styles */
+
+
+    /* LensView Specific Text Styles */
 .lensview-parameters-header {
     -fx-font-size: 40px;
     -fx-font-weight: bold;
     -fx-fill: black;
 }
 
-.lensview-parameter-label {
-    -fx-font-size: 20px;
-    -fx-fill: black;
-}
+
 
 .lensview-ray-length-label {
     -fx-font-size: 20px;
-    -fx-fill: black;
-}
-
-.lensview-lens-label {
-    -fx-font-size: 14px;
-}
-
-.lensview-focal-label {
-    -fx-font-size: 14px;
     -fx-fill: black;
 }
 
@@ -543,6 +500,4 @@
     -fx-fill: white !important;
 }
 
-.dark-mode .lensview-lens-label {
-    -fx-text-fill: white !important;
-}
+
