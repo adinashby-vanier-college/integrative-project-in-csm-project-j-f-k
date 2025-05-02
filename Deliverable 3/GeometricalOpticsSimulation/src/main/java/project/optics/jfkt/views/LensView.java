@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -208,7 +209,7 @@ public class LensView extends BaseView {
             buttonHBox.setAlignment(Pos.CENTER);
             VBox.setMargin(buttonHBox, new Insets(20, 0, 0, 0));
 
-            // === Rebuild the actual scrollable VBox ===
+            // === Rebuild scrollable VBox ===
             VBox scrollContent = new VBox(10);
             scrollContent.setPadding(new Insets(10));
             scrollContent.setPrefWidth(400);
@@ -221,31 +222,44 @@ public class LensView extends BaseView {
                     rayLengthBox
             );
 
-            // Replace your paramVBox reference with the one inside the ScrollPane
             this.paramVBox = scrollContent;
 
-            // === Wrap the scrollable part in a ScrollPane ===
             ScrollPane scrollPane = new ScrollPane(scrollContent);
-            scrollPane.setPrefSize(420, 600); // Leave room for Apply button
+            scrollPane.setPrefSize(420, 600);
             scrollPane.setFitToWidth(true);
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             scrollPane.setStyle("-fx-background-color: transparent;");
 
-            // === Final VBox to contain scroll + Apply button ===
             VBox paramVBoxContainer = new VBox(scrollPane, buttonHBox);
             paramVBoxContainer.setPrefSize(420, 720);
             paramVBoxContainer.setPadding(new Insets(10));
             paramVBoxContainer.setSpacing(10);
 
-            // === Replace old VBox from BaseView with the new scrollable container ===
-            baseCenter.getChildren().removeIf(node -> node instanceof VBox);
-            baseCenter.getChildren().add(paramVBoxContainer);
+            // === Setup SplitPane ===
+            Pane animpane = getAnimpane(); // from BaseView
+
+            SplitPane splitPane = new SplitPane();
+            splitPane.setOrientation(Orientation.HORIZONTAL);
+
+            paramVBoxContainer.setMinWidth(300);
+            paramVBoxContainer.setPrefWidth(420);
+
+            animpane.setMinWidth(800);
+            animpane.setPrefWidth(1500);
+            animpane.setMaxWidth(Double.MAX_VALUE);
+
+            splitPane.getItems().addAll(paramVBoxContainer, animpane);
+            splitPane.setDividerPositions(0.22); // 22% param pane width
+
+            baseCenter.getChildren().clear();
+            baseCenter.getChildren().add(splitPane);
+
+            return baseCenter;
         }
 
         return baseCenter;
     }
-
 
     private HBox createParameterHBox(String labelText, String defaultValue) {
         HBox hbox = new HBox(15);
@@ -389,25 +403,41 @@ public class LensView extends BaseView {
         pane.getChildren().add(axis);
     }
 
-
     private void drawMainLens(Pane pane) {
         double adjustedCenterX = centerX + offsetX;
         double adjustedCenterY = centerY + offsetY;
 
-        double zoomFactor = scale / DEFAULT_SCALE;
-        double halfLensHeight = 150 * zoomFactor; // 150 is your original base height
+        // Calculate object and image Y positions
+        double objTopY = adjustedCenterY - lastObjectHeight * scale;
+        double objBottomY = adjustedCenterY;
 
-        Line lens = new Line(
-                adjustedCenterX,
-                adjustedCenterY - halfLensHeight,
-                adjustedCenterX,
-                adjustedCenterY + halfLensHeight
-        );
+        double u = lastObjectDistance * scale;
+        double f = lastFocalLength * scale;
+
+        double imageDistance = 1 / ((1 / f) - (1 / u));
+        double magnification = -imageDistance / u;
+        double imageHeight = lastObjectHeight * magnification * scale;
+        double imageTopY = adjustedCenterY - imageHeight;
+
+        // Check ray deviation — especially for diverging red ray
+        double redDeviation = 0;
+        if (f < 0) {
+            double virtualFocalX = adjustedCenterX - Math.abs(f);
+            redDeviation = Math.abs((objTopY - adjustedCenterY) / (adjustedCenterX - virtualFocalX) * 150); // predict ray height offset 150px ahead
+        }
+
+        // Use max height from object, image, or diverging ray
+        double maxDeviation = Math.max(Math.abs(adjustedCenterY - objTopY), Math.abs(adjustedCenterY - imageTopY));
+        maxDeviation = Math.max(maxDeviation, redDeviation);
+
+        double lensHalfHeight = maxDeviation;
+
+        Line lens = new Line(adjustedCenterX, adjustedCenterY - lensHalfHeight,
+                adjustedCenterX, adjustedCenterY + lensHalfHeight);
 
         lens.setStrokeWidth(3);
         pane.getChildren().add(lens);
     }
-
 
     private void drawFocalPoints(double lensX, double centerY, double focalLengthPx, Pane pane) {
         // Near focal point (F)
@@ -458,92 +488,94 @@ public class LensView extends BaseView {
 
         double imageDistance = 1 / ((1 / f) - (1 / u));
         double imageX = lensX + imageDistance;
-        double imageHeight = -(imageDistance / u) * (lensY - objTopY);
+        double magnification = -imageDistance / u;
+        double imageHeight = magnification * (lensY - objTopY);
         double imageY = lensY - imageHeight;
 
-        double extension = getRayExtensionBeyondImage(150); // control how far ray extends past image
+        double extension = getRayExtensionBeyondImage(150);  // base * slider % (0 to 1)
+        boolean isVirtual = (isConverging && u < f) || (!isConverging);
 
-        // === Ray 1: Parallel to axis → refracted through or away from focal point
+        // === RED RAY: Parallel to axis → refracted through/away from focal point ===
         Line ray1 = new Line(objX, objTopY, lensX, objTopY);
         Line ray1Refracted;
+        ray1.setStroke(Color.RED);
 
-        if (isConverging) {
+        if (isVirtual) {
+            ray1Refracted = new Line(lensX, objTopY, lensX + extension, objTopY);
+            drawVirtualBacktrace(pane, lensX, objTopY, imageX, imageY, extension, Color.RED);
+        } else {
             double dx = imageX - lensX;
             double dy = imageY - objTopY;
             double slope = dy / dx;
-
             ray1Refracted = new Line(lensX, objTopY,
                     imageX + extension, imageY + slope * extension);
-
-        } else {
-            double virtualFocalX = lensX - Math.abs(f);
-            double slope = (objTopY - lensY) / (lensX - virtualFocalX);
-
-            ray1Refracted = new Line(lensX, objTopY,
-                    lensX + extension, objTopY + slope * extension);
-
-            // Create virtual backtrace safely
-            double dx = lensX - imageX;
-            double dy = objTopY - imageY;
-            double dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist > 1e-5 && dist < 5000) {  // only if the virtual distance is reasonable
-                double unitX = dx / dist;
-                double unitY = dy / dist;
-
-                double backExtension = Math.min(extension, 200); // limit back extension
-                Line virtualBack = new Line(
-                        lensX, objTopY,
-                        lensX - unitX * backExtension, objTopY - unitY * backExtension
-                );
-                virtualBack.setStroke(Color.ORANGE); // Make it lighter to distinguish
-                virtualBack.getStrokeDashArray().addAll(5d, 5d);
-                pane.getChildren().add(virtualBack);
-            }
         }
-
-        ray1.setStroke(Color.RED);
         ray1Refracted.setStroke(Color.RED);
         pane.getChildren().addAll(ray1, ray1Refracted);
 
-        // === Ray 2: Through center
-        Line ray2 = new Line(objX, objTopY, imageX + extension,
-                imageY + (imageY - lensY != 0 ? (imageY - lensY) * extension / (imageX - lensX) : 0));
+        // === BLUE RAY: Through center of lens ===
+        Line ray2 = new Line(objX, objTopY, lensX, lensY);
         ray2.setStroke(Color.BLUE);
         pane.getChildren().add(ray2);
 
-        // === Ray 3: Toward focal point → refracted parallel
-        Line ray3;
+        Line ray2Refracted = new Line(lensX, lensY, imageX, imageY);
+        ray2Refracted.setStroke(Color.BLUE);
+
+        double dx2 = imageX - lensX;
+        double dy2 = imageY - lensY;
+
+        if (isVirtual && u < f) {
+            drawVirtualBacktrace(pane, lensX, lensY, imageX, imageY, extension, Color.BLUE);
+            ray2Refracted.setEndX(lensX + extension);
+            ray2Refracted.setEndY(lensY + (dy2 / dx2) * extension);
+        } else {
+            ray2Refracted.setEndX(imageX + extension);
+            ray2Refracted.setEndY(imageY + (dy2 / dx2) * extension);
+        }
+        pane.getChildren().add(ray2Refracted);
+
+        // === GREEN RAY: Through near focal → refracted parallel ===
+        double nearFocalX = lensX - f;
+        double targetY = lensY + (objTopY - lensY) * f / (objX - nearFocalX);
+        Line ray3 = new Line(objX, objTopY, lensX, targetY);
+        ray3.setStroke(Color.GREEN);
+
         Line ray3Refracted;
-
-        if (isConverging) {
-            double nearFocalX = lensX - f;
-            double targetY = lensY + (objTopY - lensY) * f / (objX - nearFocalX);
-
-            ray3 = new Line(objX, objTopY, lensX, targetY);
-
-            double dx = imageX - lensX;
-            double dy = imageY - targetY;
-            double slope = dy / dx;
-
+        if (isVirtual) {
+            ray3Refracted = new Line(lensX, targetY, lensX + extension, targetY);
+            drawVirtualBacktrace(pane, lensX, targetY, imageX, imageY, extension, Color.GREEN);
+        } else {
+            double dx3 = imageX - lensX;
+            double dy3 = imageY - targetY;
+            double slope = dy3 / dx3;
             ray3Refracted = new Line(lensX, targetY,
                     imageX + extension, imageY + slope * extension);
-
-        } else {
-            double farFocalX = lensX + Math.abs(f);
-            double slope = (lensY - objTopY) / (farFocalX - objX);
-            double intersectY = objTopY + slope * (lensX - objX);
-
-            ray3 = new Line(objX, objTopY, lensX, intersectY);
-            ray3Refracted = new Line(lensX, intersectY,
-                    lensX + extension, intersectY);
         }
-
-        ray3.setStroke(Color.GREEN);
         ray3Refracted.setStroke(Color.GREEN);
         pane.getChildren().addAll(ray3, ray3Refracted);
     }
 
+    private void drawVirtualBacktrace(Pane pane, double startX, double startY,
+                                      double imageX, double imageY,
+                                      double extension, Color color) {
+        double dx = imageX - startX;
+        double dy = imageY - startY;
+        double dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist > 1e-5) {
+            double unitX = dx / dist;
+            double unitY = dy / dist;
+
+            double endX = imageX + unitX * extension;
+            double endY = imageY + unitY * extension;
+
+            Line backtrace = new Line(startX, startY, endX, endY);
+            backtrace.setStroke(color);
+            backtrace.setStrokeWidth(1);
+            backtrace.getStrokeDashArray().addAll(6.0, 6.0);
+            pane.getChildren().add(backtrace);
+        }
+    }
 
     private void drawImageArrow(double x, double centerY, double heightPx, Pane pane) {
         if (Double.isNaN(x) || Double.isNaN(centerY) || Math.abs(x) > 5000) {

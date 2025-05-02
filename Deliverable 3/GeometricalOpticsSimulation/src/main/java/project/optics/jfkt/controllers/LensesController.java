@@ -62,8 +62,8 @@ public class LensesController {
             double magnification = parseDouble(view.getMagnificationField(), "Magnification");
             int numRays = parseInt(view.getNumExtraRaysField(), "Number of Extra Rays");
 
-            if (objectDistance <= 0 || objectHeight <= 0 || numRays < 0) {
-                throw new IllegalArgumentException("Check parameter values (positive and rays from 0 to how many you want).");
+            if (numRays < 0) {
+                throw new IllegalArgumentException("Illegal parameter values");
             }
 
             model.setObjectDistance(objectDistance);

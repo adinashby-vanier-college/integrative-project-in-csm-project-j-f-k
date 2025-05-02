@@ -43,12 +43,12 @@ public class LensesModel {
 
     public double getObjectDistance() { return objectDistance; }
     public void setObjectDistance(double objectDistance) {
-        this.objectDistance = Math.abs(objectDistance); // Always positive
+        this.objectDistance = objectDistance;
     }
 
     public double getObjectHeight() { return objectHeight; }
     public void setObjectHeight(double objectHeight) {
-        this.objectHeight = Math.abs(objectHeight); // Always positive
+        this.objectHeight = objectHeight;
     }
 
     public double getMagnification() { return magnification; }
