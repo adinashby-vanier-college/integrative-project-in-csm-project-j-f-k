@@ -34,6 +34,7 @@ public class SelectionView extends BorderPane {
         this.setTop(util.createMenu());
         this.setCenter(createCenter());
         this.setBottom(createBottom());
+
     }
 
     private void applyCurrentFont() {

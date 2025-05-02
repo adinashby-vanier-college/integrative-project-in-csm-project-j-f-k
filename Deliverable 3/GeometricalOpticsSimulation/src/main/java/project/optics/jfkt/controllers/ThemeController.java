@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static project.optics.jfkt.MainApp.primaryStage;
+
 public class ThemeController {
-    private final Util util = new Util();
+
     private static String currentTheme = "light-mode"; // default theme
     private static String currentFont = "Arial"; // default font
     private static List<Consumer<String>> fontChangeListeners = new ArrayList<>();
@@ -22,7 +24,10 @@ public class ThemeController {
         MainView mainView = new MainView(MainApp.primaryStage);
         Scene scene = new Scene(mainView);
         applyTheme(scene);
-        util.switchScene(scene);
+        primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
+        primaryStage.centerOnScreen();
     }
     private static List<Consumer<String>> themeChangeListeners = new ArrayList<>();
 
