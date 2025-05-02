@@ -23,7 +23,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(new MainView(primaryStage));
+        Scene scene = new Scene(new CreateAccountView());
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("Geometrical Optics Simulation");
         primaryStage.setScene(scene);
