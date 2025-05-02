@@ -3,6 +3,7 @@ package project.optics.jfkt.views;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
@@ -972,7 +973,6 @@ public class LensView extends BaseView {
         System.out.println("Loop mode is now " + (loopEnabled ? "ON" : "OFF"));
     }
 
-
     private void animateLensStage(double objX, double objTopY, double lensX, double lensY,
                                   double focalLengthPx, int numExtraRays, double offsetSeconds) {
         double u = lensX - objX;
@@ -985,27 +985,24 @@ public class LensView extends BaseView {
         double imageHeight = magnification * (lensY - objTopY);
         double imageY = lensY - imageHeight;
         boolean isConverging = f > 0;
+        boolean isVirtual = (isConverging && u < f) || (!isConverging);
 
         double rayExtension = getRayLengthFactor() * 150;
-
         Pane animPane = getAnimpane();
 
         double nearFocalX = lensX - f;
         double targetY = lensY + (objTopY - lensY) * f / (objX - nearFocalX);
 
-        // === Phase 1: Before lens (incident rays)
-        Line ray1 = new Line(objX, objTopY, objX, objTopY); // Red (parallel)
-        Line ray2 = new Line(objX, objTopY, objX, objTopY); // Blue (through center)
-        Line ray3 = new Line(objX, objTopY, objX, objTopY); // Green (through near focal)
+        Line ray1 = new Line(objX, objTopY, objX, objTopY); // Red
+        Line ray2 = new Line(objX, objTopY, objX, objTopY); // Blue
+        Line ray3 = new Line(objX, objTopY, objX, objTopY); // Green
 
         ray1.setStroke(Color.RED);
         ray2.setStroke(Color.BLUE);
         ray3.setStroke(Color.GREEN);
-
         animPane.getChildren().addAll(ray1, ray2, ray3);
 
-        double speed = 1.0; // seconds for each phase
-
+        double speed = 1.0;
         Timeline phase1 = new Timeline();
         Timeline phase2 = new Timeline();
 
@@ -1021,7 +1018,6 @@ public class LensView extends BaseView {
         );
 
         phase1.setOnFinished(e -> {
-            // === Phase 2: After lens (refracted rays)
             Line ray1Refracted = new Line(lensX, objTopY, lensX, objTopY);
             Line ray2Refracted = new Line(lensX, lensY, lensX, lensY);
             Line ray3Refracted = new Line(lensX, targetY, lensX, targetY);
@@ -1029,61 +1025,66 @@ public class LensView extends BaseView {
             ray1Refracted.setStroke(Color.RED);
             ray2Refracted.setStroke(Color.BLUE);
             ray3Refracted.setStroke(Color.GREEN);
-
             animPane.getChildren().addAll(ray1Refracted, ray2Refracted, ray3Refracted);
 
-            if (isConverging) {
-                // Converging Lens
+            if (isVirtual) {
+                animateBacktrace(ray1Refracted, lensX, objTopY, imageX, imageY, Color.RED, animPane, phase2, speed + 0.2);
+                animateBacktrace(ray2Refracted, lensX, lensY, imageX, imageY, Color.BLUE, animPane, phase2, speed + 0.4);
+                animateBacktrace(ray3Refracted, lensX, targetY, imageX, imageY, Color.GREEN, animPane, phase2, speed + 0.6);
+            } else {
                 double slope1 = (imageY - objTopY) / (imageX - lensX);
                 double slope2 = (imageY - lensY) / (imageX - lensX);
+                double slope3 = (imageY - targetY) / (imageX - lensX);
 
                 phase2.getKeyFrames().addAll(
-                        new KeyFrame(Duration.seconds(speed),
+                        new KeyFrame(Duration.seconds(speed + 0.2),
                                 new KeyValue(ray1Refracted.endXProperty(), imageX + rayExtension),
                                 new KeyValue(ray1Refracted.endYProperty(), imageY + slope1 * rayExtension)),
-                        new KeyFrame(Duration.seconds(speed + 0.2),
+                        new KeyFrame(Duration.seconds(speed + 0.4),
                                 new KeyValue(ray2Refracted.endXProperty(), imageX + rayExtension),
                                 new KeyValue(ray2Refracted.endYProperty(), imageY + slope2 * rayExtension)),
-                        new KeyFrame(Duration.seconds(speed + 0.4),
+                        new KeyFrame(Duration.seconds(speed + 0.6),
                                 new KeyValue(ray3Refracted.endXProperty(), imageX + rayExtension),
-                                new KeyValue(ray3Refracted.endYProperty(), targetY))
-                );
-            } else {
-                // Diverging Lens
-                double virtualFocalX = lensX - Math.abs(f);
-                double slope1 = (objTopY - lensY) / (lensX - virtualFocalX);
-
-                phase2.getKeyFrames().addAll(
-                        new KeyFrame(Duration.seconds(speed),
-                                new KeyValue(ray1Refracted.endXProperty(), lensX + rayExtension),
-                                new KeyValue(ray1Refracted.endYProperty(), objTopY + slope1 * rayExtension)),
-                        new KeyFrame(Duration.seconds(speed + 0.2),
-                                new KeyValue(ray2Refracted.endXProperty(), lensX + rayExtension),
-                                new KeyValue(ray2Refracted.endYProperty(), lensY)),
-                        new KeyFrame(Duration.seconds(speed + 0.4),
-                                new KeyValue(ray3Refracted.endXProperty(), lensX + rayExtension),
-                                new KeyValue(ray3Refracted.endYProperty(), targetY))
+                                new KeyValue(ray3Refracted.endYProperty(), imageY + slope3 * rayExtension))
                 );
             }
 
             phase2.play();
         });
 
-        // Black static image arrow for the image
+        // Image Arrow
         Line imageArrow = new Line(imageX, lensY, imageX, imageY);
         imageArrow.setStroke(Color.BLACK);
         imageArrow.setStrokeWidth(2);
-
-        Polygon arrowHead = new Polygon(
-                imageX, imageY,
-                imageX - 5, imageY + 10,
-                imageX + 5, imageY + 10
-        );
+        Polygon arrowHead = new Polygon(imageX, imageY, imageX - 5, imageY + 10, imageX + 5, imageY + 10);
         arrowHead.setFill(Color.BLACK);
-
         animPane.getChildren().addAll(imageArrow, arrowHead);
 
         phase1.play();
+    }
+
+    private void animateBacktrace(Line baseRay, double startX, double startY, double imageX, double imageY,
+                                  Color color, Pane animPane, Timeline timeline, double delay) {
+        double dx = imageX - startX;
+        double dy = imageY - startY;
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 1e-4) return;
+
+        double unitX = dx / dist;
+        double unitY = dy / dist;
+        double extension = getRayLengthFactor() * 150;
+
+        Line backtrace = new Line(startX, startY, startX, startY);
+        backtrace.setStroke(color);
+        backtrace.setStrokeWidth(1.5);
+        backtrace.getStrokeDashArray().setAll(6.0, 6.0);
+        animPane.getChildren().add(backtrace);
+
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(delay),
+                        new KeyValue(backtrace.endXProperty(), imageX),
+                        new KeyValue(backtrace.endYProperty(), imageY))
+        );
     }
 
     //Test cases
