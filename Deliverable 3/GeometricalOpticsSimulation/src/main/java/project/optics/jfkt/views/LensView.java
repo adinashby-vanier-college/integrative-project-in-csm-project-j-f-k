@@ -242,7 +242,7 @@ public class LensView extends BaseView {
 
             SplitPane splitPane = new SplitPane();
             splitPane.setOrientation(Orientation.HORIZONTAL);
-
+            splitPane.getStyleClass().add("content-container");
             paramVBoxContainer.setMinWidth(300);
             paramVBoxContainer.setPrefWidth(420);
 
