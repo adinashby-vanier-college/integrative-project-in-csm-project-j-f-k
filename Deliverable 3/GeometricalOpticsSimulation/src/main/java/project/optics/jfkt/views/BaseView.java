@@ -3,6 +3,7 @@ package project.optics.jfkt.views;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,9 +15,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import project.optics.jfkt.controllers.BaseViewController;
+import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.utils.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class BaseView extends BorderPane {
@@ -38,6 +41,12 @@ public class BaseView extends BorderPane {
     private HBox zoomhbox;
     private Button zoomin;
     private Button zoomout;
+    private VBox paramVBox;
+    private Text parametersHeader;
+    private final List<Text> parameterLabels = new ArrayList<>();
+    private Text rayLengthLabel;
+    private List<Label> lensLabels = new ArrayList<>();
+    private List<Text> focalLabels = new ArrayList<>();
 
     public BaseView(String type) {
         if (type.contentEquals("Mirrors")) {
@@ -53,22 +62,43 @@ public class BaseView extends BorderPane {
         this.setTop(util.createMenu());
         this.setCenter(createCenter());
         this.setBottom(createBottom());
+        updateFonts(ThemeController.getCurrentFont());
     }
-
+    private void updateFonts(String font) {
+        String fontStyle = "-fx-font-family: '" + font + "';";
+        if (paramVBox != null) {
+            paramVBox.lookupAll(".parameter-label").forEach(node -> {
+                if (node instanceof Text) {
+                    ((Text)node).setStyle(fontStyle);
+                }
+            });
+        }
+        if (parametersHeader != null) parametersHeader.setStyle(fontStyle);
+        for (Text label : parameterLabels) {
+            label.setStyle(fontStyle);
+        }
+        if (rayLengthLabel != null) rayLengthLabel.setStyle(fontStyle);
+        for (Label label : lensLabels) {
+            label.setStyle(fontStyle);
+        }
+        for (Text label : focalLabels) {
+            label.setStyle(fontStyle);
+        }
+    }
     Region createCenter() {
         HBox mainpane = new HBox();
         mainpane.setPrefSize(1920, 1080);
 
         VBox paramvbox = new VBox();
-        Text paramheadertext = new Text();
-        paramheadertext.getStyleClass().add("param-text");
-        Font paramheaderfont = new Font(40);
-        paramheadertext.setText("Parameters:");
-        paramheadertext.setFont(paramheaderfont);
-        paramheadertext.setTextAlignment(TextAlignment.CENTER);
-        paramheadertext.setUnderline(true);
+        parametersHeader = new Text("Parameters:");
+        parametersHeader.setFont(new Font(40));
+        parametersHeader.setTextAlignment(TextAlignment.CENTER);
+        parametersHeader.setUnderline(true);
+        parametersHeader.getStyleClass().add("lensview-parameters-header");
+
+        parametersHeader.setUnderline(true);
         paramvbox.setPrefSize(420, 720);
-        paramvbox.getChildren().add(paramheadertext);
+        paramvbox.getChildren().add(parametersHeader);
         paramvbox.getChildren().addAll(createParamHbox("Focal Length"), createParamHbox("Object Distance"), createParamHbox("Object Height"));
 
         animpane = new Pane();
@@ -151,7 +181,7 @@ public class BaseView extends BorderPane {
 
         Pane choicepane = new Pane();
         Text choicetext = new Text();
-        choicetext.getStyleClass().add("choice-text");
+        choicetext.getStyleClass().add("lensview-ray-length-label");
         Font font1 = new Font(36);
         Font font2 = new Font(28);
         choicetext.setText(type);
@@ -161,11 +191,11 @@ public class BaseView extends BorderPane {
         choicehbox.setAlignment(Pos.CENTER);
         Pane optionpane1 = new Pane();
         Text optiontext1 = new Text();
-        optiontext1.getStyleClass().add("option-text");
+        optiontext1.getStyleClass().add("lensview-ray-length-label");
         optionbutton1 = new Button("", null);
         Pane optionpane2 = new Pane();
         Text optiontext2 = new Text();
-        optiontext2.getStyleClass().add("option-text");
+        optiontext2.getStyleClass().add("lensview-ray-length-label");
         optionbutton2 = new Button("", null);
 
         optionpane1.setPrefSize(160, 160);
@@ -211,10 +241,9 @@ public class BaseView extends BorderPane {
         paramhbox.setAlignment(Pos.CENTER);
 
         Text paramtext = new Text();
-        paramtext.getStyleClass().add("param-text");
-        Font textfont = new Font(30);
+        paramtext.getStyleClass().add("lensview-ray-length-label");
         paramtext.setText(Text);
-        paramtext.setFont(textfont);
+
 
         paramhbox.getChildren().add(paramtext);
 

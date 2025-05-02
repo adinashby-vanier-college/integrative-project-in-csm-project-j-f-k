@@ -67,7 +67,6 @@
 .light-mode .hint-text,
 .light-mode .question-text,
 .light-mode .param-text,
-
 .light-mode .header-text,
 .light-mode .parameter-label,
 .light-mode .lens-label,
@@ -80,24 +79,7 @@
 .dark-mode {
     -fx-background-color: #222222;
 }
-.option-text,
-.choice-text {
-    -fx-font-family: inherit !important;
-    -fx-font-size: 20px;
-}
 
-/* Theme-specific colors */
-.light-mode .option-text,
-.light-mode .choice-text {
-    -fx-text-fill: black;
-    -fx-fill: black;
-}
-
-.dark-mode .option-text,
-.dark-mode .choice-text {
-    -fx-text-fill: white;
-    -fx-fill: white;
-}
 .dark-mode .text,
 .dark-mode .label,
 .dark-mode .check-box .text,
