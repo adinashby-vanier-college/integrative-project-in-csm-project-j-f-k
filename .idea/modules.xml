@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GeometricalOpticsSimulation.iml" filepath="$PROJECT_DIR$/.idea/modules/GeometricalOpticsSimulation.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/integrative-project-in-csm-project-j-f-k.iml" filepath="$PROJECT_DIR$/.idea/integrative-project-in-csm-project-j-f-k.iml" />
     </modules>
   </component>
