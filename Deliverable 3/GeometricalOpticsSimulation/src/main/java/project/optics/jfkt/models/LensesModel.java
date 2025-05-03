@@ -43,7 +43,7 @@ public class LensesModel {
 
     public double getObjectDistance() { return objectDistance; }
     public void setObjectDistance(double objectDistance) {
-        this.objectDistance = objectDistance;
+        this.objectDistance = Math.abs(objectDistance);
     }
 
     public double getObjectHeight() { return objectHeight; }
