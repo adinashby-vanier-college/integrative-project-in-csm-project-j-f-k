@@ -73,7 +73,6 @@ public class RefractionController {
         });
     }
 
-
     public void onNewLayerButtonPressed(RefractionView refractionView, ArrayList<HBox> layers, VBox frame, HBox plusSignLayer) {
         if (refraction.getLayerCount() < 4) {
             // create layer choosing stage
@@ -158,7 +157,7 @@ public class RefractionController {
         return true;
     }
 
-    private List<Point2D> calculate3() {
+    public List<Point2D> calculate3() {
         List<Point2D> path = new ArrayList<>();
 
         // Starting conditions: initial position and incident angle (degrees relative to vertical)
@@ -249,7 +248,7 @@ public class RefractionController {
      *
      * @return a list of points that the object goes through (path of animation) when there are two layers
      */
-    private List<Point2D> calculate2(double currentY) {
+    public List<Point2D> calculate2(double currentY) {
         List<Point2D> path = new ArrayList<>();
 
         // Convert the incident angle from degrees (relative to the vertical) to radians.

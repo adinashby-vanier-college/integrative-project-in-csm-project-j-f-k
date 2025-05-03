@@ -5,12 +5,21 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
+ext {
+    javafxVersion = "22.0.2"
+}
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
     mavenLocal()
 }
-def javafxVersion = "22.0.2"  
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
+}
+
 dependencies {
     // The following .jars are pulled from:
     //@see: https://repo.maven.apache.org/maven2/org/openjfx/    
@@ -27,7 +36,7 @@ dependencies {
 }
 //-- Loads the JavaFX modules of the selected JavaFX version.
 javafx {    
-    version = "22.0.2"
+    version = javafxVersion
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
 }
 // Apply a specific Java toolchain to ease working on different environments.
@@ -42,4 +51,15 @@ application {
    //       that contains the main method your would like to run.
    mainClass = 'project.optics.jfkt.MainApp'
 }
+
+tasks.named('test') {
+    // calling function to execute
+    // tests under JUnit 5
+    useJUnitPlatform()
+}
+
+test {
+    useJUnitPlatform()
+}
+
  

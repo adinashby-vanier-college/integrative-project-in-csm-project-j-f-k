@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import project.optics.jfkt.controllers.LoginController;
 import project.optics.jfkt.views.LoginView;
+import project.optics.jfkt.views.MainView;
 
 public class MainApp extends Application {
     public static Stage primaryStage;
@@ -25,7 +26,7 @@ public class MainApp extends Application {
 
         // Set up the stage
         primaryStage.setTitle("Geometrical Optics Simulation");
-        primaryStage.setScene(new Scene(loginView, 800, 600));
+        primaryStage.setScene(new Scene(new MainView(primaryStage)));
         primaryStage.setFullScreen(true);
         primaryStage.show();
     }
