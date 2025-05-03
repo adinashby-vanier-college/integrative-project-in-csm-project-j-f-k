@@ -1,22 +1,26 @@
+// CreateAccountView.java
 package project.optics.jfkt.views;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import project.optics.jfkt.controllers.CreateAccountController;
+import project.optics.jfkt.controllers.LoginController;
 
 public class CreateAccountView extends VBox {
-    private Button backButton;
-    private final CreateAccountController createAccountController = new CreateAccountController();
+    private final CreateAccountController controller;
+    private TextField usernameField;
+    private PasswordField passwordField;
+    private PasswordField confirmPasswordField;
 
-    public CreateAccountView() {
+    public CreateAccountView(Stage primaryStage, LoginController loginController) {
+        this.controller = new CreateAccountController(primaryStage, loginController);
+        initializeUI();
+    }
+
+    private void initializeUI() {
         setAlignment(Pos.CENTER);
         setSpacing(20);
         setPadding(new Insets(30));
@@ -37,30 +41,64 @@ public class CreateAccountView extends VBox {
         col2.setPercentWidth(60);
         grid.getColumnConstraints().addAll(col1, col2);
 
+        // Username field
         grid.add(new Label("Username:"), 0, 0);
-        grid.add(new TextField(), 1, 0);
+        usernameField = new TextField();
+        grid.add(usernameField, 1, 0);
 
+        // Password field
         grid.add(new Label("Password:"), 0, 1);
-        grid.add(new PasswordField(), 1, 1);
+        passwordField = new PasswordField();
+        grid.add(passwordField, 1, 1);
 
-        Label passAgainLabel = new Label("Input Password Again:");
+        // Confirm password field
+        Label passAgainLabel = new Label("Confirm Password:");
         passAgainLabel.setWrapText(true);
         passAgainLabel.setMaxWidth(140);
         grid.add(passAgainLabel, 0, 2);
-        grid.add(new PasswordField(), 1, 2);
+        confirmPasswordField = new PasswordField();
+        grid.add(confirmPasswordField, 1, 2);
 
+        // Buttons
         HBox buttonBox = new HBox(15);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        backButton = new Button("Back");
-        backButton.setOnAction(event -> createAccountController.onBackButtonPressed());
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> controller.onBackButtonPressed());
+
         Button submitButton = new Button("Submit");
+        submitButton.setOnAction(event -> handleRegistration());
+
         buttonBox.getChildren().addAll(backButton, submitButton);
         grid.add(buttonBox, 1, 3);
 
         getChildren().addAll(titleLabel, grid);
     }
 
-    public Button getBackButton() {
-        return backButton;
+    private void handleRegistration() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
+
+        if (!password.equals(confirmPassword)) {
+            showAlert("Password Mismatch", "The passwords you entered do not match.");
+            return;
+        }
+
+        try {
+            if (controller.registerUser(username, password)) {
+                showAlert("Success", "Account created successfully!");
+                controller.onBackButtonPressed();
+            }
+        } catch (Exception e) {
+            showAlert("Registration Error", e.getMessage());
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

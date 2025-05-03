@@ -6,13 +6,24 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import project.optics.jfkt.controllers.LoginController;
 
 public class LoginView extends VBox {
     private Hyperlink createLink;
-    private final LoginController loginController = new LoginController();
+    private final LoginController controller;
+    private final Stage primaryStage;
+    private TextField usernameField;
+    private PasswordField passwordField;
+    private Label statusLabel;
 
-    public LoginView() {
+    public LoginView(Stage primaryStage, LoginController controller) {
+        this.primaryStage = primaryStage;
+        this.controller = controller;
+        initializeUI();
+    }
+
+    private void initializeUI() {
         // Center the VBox content both horizontally and vertically
         setAlignment(Pos.CENTER);
         setSpacing(20);
@@ -30,35 +41,66 @@ public class LoginView extends VBox {
         grid.setPadding(new Insets(20));
         grid.setMaxWidth(300);
 
-        // Username
+        // Username field
         grid.add(new Label("Username:"), 0, 0);
-        grid.add(new TextField(), 1, 0);
+        usernameField = new TextField();
+        grid.add(usernameField, 1, 0);
 
-        // Password
+        // Password field
         grid.add(new Label("Password:"), 0, 1);
-        grid.add(new PasswordField(), 1, 1);
+        passwordField = new PasswordField();
+        grid.add(passwordField, 1, 1);
 
         // Buttons: Refresh & Login
         HBox buttonBox = new HBox(15);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         Button refreshButton = new Button("Refresh");
         Button loginButton = new Button("Login");
+        loginButton.setOnAction(event -> handleLogin());
         buttonBox.getChildren().addAll(refreshButton, loginButton);
         grid.add(buttonBox, 1, 2);
 
         // Create Account link
         createLink = new Hyperlink("Create Account");
-        createLink.setOnAction(event -> loginController.onLinkClicked());
+        createLink.setOnAction(event -> controller.onLinkClicked(primaryStage));
         HBox linkBox = new HBox();
         linkBox.setAlignment(Pos.CENTER);
         linkBox.setPadding(new Insets(10, 0, 0, 0));
         linkBox.getChildren().add(createLink);
         grid.add(linkBox, 1, 3);
 
+        // Status label
+        statusLabel = new Label();
+        grid.add(statusLabel, 0, 4, 2, 1);
+
         getChildren().addAll(titleLabel, grid);
     }
 
-    public Hyperlink getCreateLink() {
-        return createLink;
+    private void handleLogin() {
+        try {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+
+            if (controller.handleLogin(username, password)) {
+
+                MainView mainView = new MainView(primaryStage);
+                primaryStage.getScene().setRoot(mainView);
+            } else {
+                showError("Invalid username or password");
+            }
+        } catch (Exception e) {
+            showError("Login error: " + e.getMessage());
+        } finally {
+            passwordField.clear();
+        }
+    }
+
+    private void showError(String message) {
+        statusLabel.setStyle("-fx-text-fill: red;");
+        statusLabel.setText(message);
+    }
+    public void setCredentials(String username, String password) {
+        this.usernameField.setText(username);
+        this.passwordField.setText(password);
     }
 }
