@@ -9,7 +9,7 @@ import java.nio.file.attribute.PosixFilePermission;
 public class UserManager {
     public record User(String username, String encryptedPassword) {
         public User {
-            username = username.trim().toLowerCase();
+            username = username.trim();
             if (username.isEmpty() || encryptedPassword == null) {
                 throw new IllegalArgumentException("Invalid user data");
             }
@@ -28,7 +28,7 @@ public class UserManager {
             System.err.println("Could not create data directory: " + e.getMessage());
         }
         this.users = loadUsers();
-        printDebugInfo(); // For troubleshooting
+
     }
 
     private void setFilePermissions() throws IOException {
@@ -41,7 +41,7 @@ public class UserManager {
                         PosixFilePermission.OWNER_EXECUTE
                 ));
             } catch (UnsupportedOperationException e) {
-                // Windows system, permissions not needed
+
             }
         }
     }
@@ -93,26 +93,7 @@ public class UserManager {
         }
     }
 
-    public void printDebugInfo() {
-        System.out.println("\n=== User Manager Debug Info ===");
-        System.out.println("Data directory: " + DATA_DIR);
-        System.out.println("Data file: " + USER_DATA_FILE);
-        System.out.println("File exists: " + Files.exists(Paths.get(USER_DATA_FILE)));
 
-        // Print actual file content
-        if (Files.exists(Paths.get(USER_DATA_FILE))) {
-            System.out.println("\nFile content:");
-            try {
-                Files.lines(Paths.get(USER_DATA_FILE)).forEach(System.out::println);
-            } catch (IOException e) {
-                System.err.println("Could not read file: " + e.getMessage());
-            }
-        }
-
-        System.out.println("\nCurrent users (" + users.size() + "):");
-        users.forEach((name, user) -> System.out.println("  " + name + " - " + user.encryptedPassword()));
-        System.out.println("==============================\n");
-    }
 
     public User createUser(String username, String encryptedPassword) {
         User newUser = new User(username, encryptedPassword);
@@ -142,6 +123,6 @@ public class UserManager {
     }
 
     private String normalizeUsername(String username) {
-        return username == null ? null : username.trim().toLowerCase();
+        return username == null ? null : username.trim();
     }
 }

@@ -40,7 +40,7 @@ public class LoginController {
                 n = (BigInteger) ois.readObject();
                 e = (BigInteger) ois.readObject();
                 d = (BigInteger) ois.readObject();
-                System.out.println("Loaded existing RSA keys");
+
             } catch (Exception e) {
                 System.err.println("Error loading keys, generating new ones: " + e.getMessage());
                 generateNewKeys();
@@ -81,50 +81,24 @@ public class LoginController {
 
     public boolean handleLogin(String username, String password) {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
-            System.out.println("Login attempt with empty credentials");
             return false;
         }
 
         Optional<UserManager.User> userOpt = userManager.findUser(username);
         if (userOpt.isEmpty()) {
-            System.out.println("User not found: " + username);
             return false;
         }
 
         UserManager.User user = userOpt.get();
         try {
             String decryptedPassword = decrypt(user.encryptedPassword());
-            System.out.println("Debug - Stored encrypted: " + user.encryptedPassword());
-            System.out.println("Debug - Decrypted password: " + decryptedPassword);
-            System.out.println("Debug - Input password: " + password);
-
-            boolean match = password.equals(decryptedPassword);
-            System.out.println("Password match: " + match);
-            return match;
-        } catch (Exception e) {
-            System.err.println("Decryption error for user " + username + ": " + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean updatePassword(String username, String currentPassword, String newPassword) {
-        if (!handleLogin(username, currentPassword)) {
-            return false;
-        }
-        try {
-            String newEncryptedPassword = encrypt(newPassword);
-            return userManager.updatePassword(username, newEncryptedPassword);
+            return password.equals(decryptedPassword);
         } catch (Exception e) {
             return false;
         }
     }
 
-    public boolean deleteUser(String username, String password) {
-        if (!handleLogin(username, password)) {
-            return false;
-        }
-        return userManager.deleteUser(username);
-    }
+
 
     protected String encrypt(String plaintext) {
         BigInteger M = new BigInteger(plaintext.getBytes());
