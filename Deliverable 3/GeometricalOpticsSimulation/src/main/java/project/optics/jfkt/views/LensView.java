@@ -89,6 +89,8 @@ public class LensView extends BaseView {
     private TextField numRaysField;
     private Button applyButton;
     private Text parametersHeader;
+    private CheckBox showLabelsCheckBox;
+
 
     private Text rayLengthLabel;
     private List<Label> lensLabels = new ArrayList<>();
@@ -215,6 +217,10 @@ public class LensView extends BaseView {
             buttonHBox.setAlignment(Pos.CENTER);
             VBox.setMargin(buttonHBox, new Insets(20, 0, 0, 0));
 
+            //Checkbox
+            showLabelsCheckBox = new CheckBox("Show Image/Focal Labels");
+            showLabelsCheckBox.setSelected(true); // default ON
+
             // === Rebuild scrollable VBox ===
             VBox scrollContent = new VBox(10);
             scrollContent.setPadding(new Insets(10));
@@ -225,7 +231,8 @@ public class LensView extends BaseView {
                     objectHeightHBox,
                     focalLengthHBox,
                     numExtraRaysHBox,
-                    rayLengthBox
+                    rayLengthBox,
+                    showLabelsCheckBox
             );
 
             this.paramVBox = scrollContent;
@@ -353,7 +360,7 @@ public class LensView extends BaseView {
         // Draw components
         drawOpticalAxis(animPane);
         drawMainLens(animPane);
-        drawFocalPoints(adjustedCenterX, adjustedCenterY, scaledFL, animPane);
+        drawFocalPoints(adjustedCenterX, adjustedCenterY, scaledFL, animPane,1);
 
         // Step 1: Draw initial object and rays to main lens
         double objX = adjustedCenterX - (objectDistance * scale);
@@ -396,10 +403,11 @@ public class LensView extends BaseView {
 
 // Step 4: Draw the lens lines
         drawExtraLensLines(extraLenses,animPane);
+        int index = 2;
         for (LensesModel.Lens lens : extraLenses) {
             double lensX = adjustedCenterX + lens.getPosition() * scale;
             double f2 = lens.getFocalLength() * scale;
-            drawFocalPoints(lensX, adjustedCenterY, f2, animPane);
+            drawFocalPoints(lensX, adjustedCenterY, f2, animPane,index++);
         }
 
         setupZoomControls(); // Re-add zoom controls
@@ -448,22 +456,24 @@ public class LensView extends BaseView {
         pane.getChildren().add(lens);
     }
 
-    private void drawFocalPoints(double lensX, double centerY, double focalLengthPx, Pane pane) {
-        // Near focal point (F)
+    private void drawFocalPoints(double lensX, double centerY, double focalLengthPx, Pane pane, int lensIndex) {
+        // Near focal point
         Circle nearFocal = new Circle(lensX - focalLengthPx, centerY, 5);
         nearFocal.setFill(Color.DARKBLUE);
+        Text nearLabel = new Text(lensX - focalLengthPx - 30, centerY - 10, "F" + lensIndex);
 
-        // Far focal point (F')
+        // Far focal point
         Circle farFocal = new Circle(lensX + focalLengthPx, centerY, 5);
         farFocal.setFill(Color.DARKBLUE);
+        Text farLabel = new Text(lensX + focalLengthPx + 10, centerY - 10, "F'" + lensIndex);
 
-        // Labels
-        Text nearLabel = new Text(lensX - focalLengthPx - 20, centerY - 10, "F");
-        Text farLabel = new Text(lensX + focalLengthPx + 10, centerY - 10, "F'");
         nearLabel.getStyleClass().add("lensview-ray-length-label");
         farLabel.getStyleClass().add("lensview-ray-length-label");
 
-        pane.getChildren().addAll(nearFocal, farFocal, nearLabel, farLabel);
+        pane.getChildren().addAll(nearFocal, farFocal);
+        if (showLabelsCheckBox == null || showLabelsCheckBox.isSelected()) {
+            pane.getChildren().addAll(nearLabel, farLabel);
+        }
     }
 
     private void drawObject(double x, double baseY, double heightPx, Pane pane) {
@@ -484,7 +494,10 @@ public class LensView extends BaseView {
         Text label = new Text(x - 30, baseY - heightPx/2, "Object");
         label.getStyleClass().add("lensview-ray-length-label");
 
-        pane.getChildren().addAll(objLine, arrowHead, label);
+        pane.getChildren().addAll(objLine, arrowHead);
+        if (showLabelsCheckBox == null || showLabelsCheckBox.isSelected()) {
+            pane.getChildren().add(label);
+        }
     }
 
     private void drawAllPrincipalRays(double objX, double objTopY,
@@ -723,6 +736,7 @@ public class LensView extends BaseView {
         double currBaseY = adjustedCenterY;
         System.out.println("CurrBaseY: "+currBaseY);
         double currObjHeight = currBaseY - currObjTopY;
+        int imageCounter = 2;
 
         for (LensesModel.Lens lens : lenses) {
             double lensX = adjustedCenterX + lens.getPosition() * scale;
@@ -736,9 +750,13 @@ public class LensView extends BaseView {
             double imageX = lensX + v;
             double magnification = -v / u;
             double imageHeight = currObjHeight * magnification;
+            double imageTopY = currBaseY-imageHeight;
 
             // === Draw the rays using consistent vertical baseline ===
             drawAllPrincipalRays(currObjX, currObjTopY, lensX, currBaseY, focalLengthPx, pane);
+
+            // Draw extra lens
+            drawExtraLens(pane, lensX, currBaseY, currObjTopY, imageTopY, isConverging);
 
             // === Draw image arrow at correct position ===
             if (Math.abs(imageX) < 5000 && Math.abs(imageHeight) < 5000) {
@@ -748,6 +766,11 @@ public class LensView extends BaseView {
                     drawVirtualImageArrow(imageX, currBaseY, imageHeight, pane);
                 }
             }
+            // Label the image
+            String info = String.format("Image %d\nM=%.2f", imageCounter++, magnification);
+            Text label = new Text(imageX + 10, currBaseY - imageHeight / 2, info);
+            label.getStyleClass().add("lensview-ray-length-label");
+            pane.getChildren().add(label);
 
             //For next lens
             currObjX = imageX;
@@ -760,78 +783,52 @@ public class LensView extends BaseView {
         double adjustedCenterX = centerX + offsetX;
         double adjustedCenterY = centerY + offsetY;
 
-        double objX = adjustedCenterX - lastObjectDistance * scale;
-        double objTopY = adjustedCenterY - lastObjectHeight * scale;
-        double objHeight = lastObjectHeight * scale;
-
-        // === Determine global max height ===
-        double maxHeight = Math.abs(objHeight);
-        double currObjX = objX;
-        double currObjTopY = objTopY;
-        double currBaseY = adjustedCenterY;
-        double currObjHeight = objHeight;
-
+        int lensIndex = 2;
         for (LensesModel.Lens lens : extraLenses) {
             double lensX = adjustedCenterX + lens.getPosition() * scale;
             double focalLengthPx = lens.getFocalLength() * scale;
-            double u = lensX - currObjX;
-            if (u == 0) continue;
 
-            double v = 1 / ((1 / focalLengthPx) - (1 / u));
-            double magnification = -v / u;
-            double imageHeight = currObjHeight * magnification;
-
-            maxHeight = Math.max(maxHeight, Math.abs(imageHeight));
-
-            // Prepare for next lens
-            currObjX = lensX + v;
-            currObjTopY = currBaseY - imageHeight;
-            currObjHeight = imageHeight;
-        }
-
-        // === Draw extra lenses using global max height ===
-        objX = adjustedCenterX - lastObjectDistance * scale;
-        objTopY = adjustedCenterY - lastObjectHeight * scale;
-        objHeight = lastObjectHeight * scale;
-
-        for (LensesModel.Lens lens : extraLenses) {
-            double lensX = adjustedCenterX + lens.getPosition() * scale;
-            double focalLengthPx = lens.getFocalLength() * scale;
-            boolean isConverging = lens.isConverging();
-
-            drawExtraLens(pane, lensX, adjustedCenterY, objX, objTopY, focalLengthPx, isConverging, maxHeight);
-
-            double u = lensX - objX;
-            if (u == 0) continue;
-
-            double v = 1 / ((1 / focalLengthPx) - (1 / u));
-            double magnification = -v / u;
-            double imageHeight = objHeight * magnification;
-
-            objX = lensX + v;
-            objTopY = adjustedCenterY - imageHeight;
-            objHeight = imageHeight;
+            // Only draw focal points, since the lens body is now drawn in drawMultiLensSystem()
+            drawFocalPoints(lensX, adjustedCenterY, focalLengthPx, pane,lensIndex++);
         }
     }
 
+
     private void drawExtraLens(Pane pane, double lensX, double lensY,
-                               double objX, double objTopY, double focalLengthPx,
-                               boolean isConverging, double maxHeight) {
+                               double objTopY, double imageTopY, boolean isConverging) {
+
+        double objDeviation = Math.abs(lensY - objTopY);
+        double imageDeviation = Math.abs(lensY - imageTopY);
+
+        double redDeviation = 0;
+        if (!isConverging) {
+            double virtualFocalX = lensX - 50; // 1 unit focal in px (approx)
+            redDeviation = Math.abs((objTopY - lensY) / (lensX - virtualFocalX) * 150);
+        }
+
+        double maxDeviation = Math.max(objDeviation, imageDeviation);
+        maxDeviation = Math.max(maxDeviation, redDeviation);
+
         double minAllowed = 30;
         double maxAllowed = 300;
-        double lensHalfHeight = Math.max(minAllowed, Math.min(maxHeight, maxAllowed));
+        maxDeviation = Math.max(minAllowed, Math.min(maxDeviation, maxAllowed));
 
-        Line lensLine = new Line(lensX, lensY - lensHalfHeight, lensX, lensY + lensHalfHeight);
+        Line lensLine = new Line(lensX, lensY - maxDeviation, lensX, lensY + maxDeviation);
         lensLine.setStrokeWidth(3);
         lensLine.setStroke(isConverging ? Color.BLUE : Color.RED);
         if (!isConverging) lensLine.getStrokeDashArray().addAll(5d, 5d);
 
-        Text label = new Text(lensX - 25, lensY - lensHalfHeight - 10, isConverging ? "Converging" : "Diverging");
+        Text label = new Text(lensX - 25, lensY - maxDeviation - 10,
+                isConverging ? "Converging" : "Diverging");
         label.setFill(isConverging ? Color.BLUE : Color.RED);
         label.getStyleClass().add("lensview-ray-length-label");
 
-        pane.getChildren().addAll(lensLine, label);
+        pane.getChildren().addAll(lensLine);
+        if (showLabelsCheckBox == null || showLabelsCheckBox.isSelected()) {
+            pane.getChildren().add(label);
+        }
     }
+
 
     // Adds converging lens parameters with default values
     public void addConvergingLensParams(double defaultPosition, double defaultFocalLength) {
@@ -921,8 +918,7 @@ public class LensView extends BaseView {
 
         drawOpticalAxis(animPane);
         drawMainLens(animPane);
-        drawFocalPoints(adjustedCenterX, adjustedCenterY, lastFocalLength * scale, animPane);
-        drawExtraLensLines(lastExtraLenses, animPane);
+        drawFocalPoints(adjustedCenterX, adjustedCenterY, lastFocalLength * scale, animPane,1);
 
         double objX = adjustedCenterX - lastObjectDistance * scale;
         double objTopY = adjustedCenterY - lastObjectHeight * scale;
