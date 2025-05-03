@@ -5,8 +5,8 @@ public class CoordinateModel {
     double Y;
 
     public CoordinateModel(double X, double Y){
-        this.X= X;
-        this.Y= Y;
+        this.X= (double) Math.round(X * 10) /10;
+        this.Y= (double) Math.round(Y * 10) /10;
     }
 
     public double getX() {

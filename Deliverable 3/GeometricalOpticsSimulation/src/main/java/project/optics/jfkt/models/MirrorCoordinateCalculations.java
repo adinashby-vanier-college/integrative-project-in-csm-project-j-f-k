@@ -135,7 +135,6 @@ public class MirrorCoordinateCalculations {
                 double deltaY = centerY - (centerY-objectHeight*scale);
                 double deltaX = (centerX + focalLength*scale) - (centerX - objectDistance*scale);
                 double slope = deltaY/deltaX;
-                System.out.println("THis is the slope: " + slope);
                 x = centerX;
                 y = centerY - (centerX - (centerX - objectDistance*scale))*slope;
                 coordinate = new CoordinateModel(x , y);

@@ -182,7 +182,7 @@ public class MirrorView extends BaseView {
             System.out.println("Coordinate y " + (i+1) +" :" + secondCoordinateSet.get(i).getY());
             getAnimpane().getChildren().add(coordinate);
         }
-
+        System.out.println("CenterX: " + centerX + ", CenterY: " + centerY);
     }
 
     public void playAnim(){
