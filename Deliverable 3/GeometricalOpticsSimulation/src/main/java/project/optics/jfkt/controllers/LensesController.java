@@ -21,7 +21,7 @@ public class LensesController {
         this.model = model;
         this.view = view;
         initialize();
-        System.out.println("LensesController initialized");
+        //System.out.println("LensesController initialized");
     }
 
     private void initialize() {
@@ -31,48 +31,48 @@ public class LensesController {
 
     private void setupViewListeners() {
         view.getApplyButton().setOnAction(e -> {
-            System.out.println("Apply clicked!");
+            //System.out.println("Apply clicked!");
             applyParameters();
         });
 
         view.getConvergingButton().setOnAction(e -> {
-            System.out.println("Converging Lens added.");
+            //System.out.println("Converging Lens added.");
             view.addConvergingLensParams(10.0, 4.0);
         });
 
         view.getDivergingButton().setOnAction(e -> {
-            System.out.println("Diverging Lens added.");
+            //System.out.println("Diverging Lens added.");
             view.addDivergingLensParams(10.0, -4.0);
         });
 
         // === Animation Buttons ===
         view.getPlaybutton().setOnAction(e -> {
-            System.out.println("Play clicked.");
+            //System.out.println("Play clicked.");
             onPlayPressed();
         });
 
         view.getPausebutton().setOnAction(e -> {
-            System.out.println("Pause clicked.");
+            //System.out.println("Pause clicked.");
             onPausePressed();
         });
 
         view.getRedobutton().setOnAction(e -> {
-            System.out.println("Restart clicked.");
+            //System.out.println("Restart clicked.");
             onRestartPressed();
         });
 
         view.getSlowbutton().setOnAction(e -> {
-            System.out.println("Step Back clicked.");
+            //System.out.println("Step Back clicked.");
             onStepBackPressed();
         });
 
         view.getNormalbutton().setOnAction(e -> {
-            System.out.println("ToggleLoop Pressed.");
+            //System.out.println("ToggleLoop Pressed.");
             onToggleLoopPressed();
         });
 
         view.getFastbutton().setOnAction(e -> {
-            System.out.println("Step Forward clicked.");
+            //System.out.println("Step Forward clicked.");
             onStepForwardPressed();
         });
     }

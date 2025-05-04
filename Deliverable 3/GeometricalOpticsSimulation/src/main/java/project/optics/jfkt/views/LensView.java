@@ -1,9 +1,6 @@
 package project.optics.jfkt.views;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -27,6 +24,7 @@ import javafx.util.Duration;
 import project.optics.jfkt.controllers.LensesController;
 import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.models.GeneralSetting;
+import project.optics.jfkt.models.LensMath;
 import project.optics.jfkt.models.LensesModel;
 
 import java.util.ArrayList;
@@ -329,7 +327,7 @@ public class LensView extends BaseView {
                            double magnification, double focalLength,
                            List<LensesModel.Lens> extraLenses) {
 
-        System.out.println("CenterY: "+centerY);
+        //System.out.println("CenterY: "+centerY);
 
         double adjustedCenterX = centerX + offsetX;
         double adjustedCenterY = centerY + offsetY;
@@ -390,7 +388,7 @@ public class LensView extends BaseView {
                 drawVirtualImageArrow(imageX, adjustedCenterY, imageHeight, animPane);
             }
         } else {
-            System.out.println("Skipping drawing image arrow because out of bounds");
+            //System.out.println("Skipping drawing image arrow because out of bounds");
         }
 
 
@@ -504,11 +502,10 @@ public class LensView extends BaseView {
         double f = focalLengthPx;
         boolean isConverging = f > 0;
 
-        double imageDistance = 1 / ((1 / f) - (1 / u));
-        double imageX = lensX + imageDistance;
-        double magnification = -imageDistance / u;
-        double imageHeight = magnification * (lensY - objTopY);  // lensY already includes offset
-        double imageY = lensY - imageHeight;
+        double v = LensMath.calculateImageDistance(u, f);
+        double m = LensMath.calculateMagnification(v, u);
+        double imageX = LensMath.calculateImageX(lensX, v);
+        double imageY = LensMath.calculateImageY(lensY, objTopY, m);
 
         double extension = getRayExtension(); // scaled
         boolean isVirtual = (isConverging && u < f) || (!isConverging);
@@ -602,7 +599,7 @@ public class LensView extends BaseView {
 
     private void drawImageArrow(double x, double baseY, double heightPx, Pane pane) {
         if (Double.isNaN(x) || Double.isNaN(baseY) || Math.abs(x) > 5000) {
-            System.out.println("Skipping real image arrow (out of bounds)");
+            //System.out.println("Skipping real image arrow (out of bounds)");
             return;
         }
 
@@ -636,7 +633,7 @@ public class LensView extends BaseView {
 
     private void drawVirtualImageArrow(double x, double baseY, double heightPx, Pane pane) {
         if (Double.isNaN(x) || Double.isNaN(baseY) || Math.abs(x) > 5000 || Math.abs(heightPx) > 5000) {
-            System.out.println("Skipping virtual image arrow (out of bounds)");
+            //System.out.println("Skipping virtual image arrow (out of bounds)");
             return;
         }
 
@@ -730,7 +727,7 @@ public class LensView extends BaseView {
         double currObjX = objX;
         double currObjTopY = objTopY;
         double currBaseY = adjustedCenterY;
-        System.out.println("CurrBaseY: "+currBaseY);
+        //System.out.println("CurrBaseY: "+currBaseY);
         double currObjHeight = currBaseY - currObjTopY;
         int imageCounter = 2;
 
@@ -742,11 +739,11 @@ public class LensView extends BaseView {
             double u = lensX - currObjX;
             if (u == 0) continue;
 
-            double v = 1 / ((1 / focalLengthPx) - (1 / u));
-            double imageX = lensX + v;
-            double magnification = -v / u;
-            double imageHeight = currObjHeight * magnification;
-            double imageTopY = currBaseY-imageHeight;
+            double v = LensMath.calculateImageDistance(u, focalLengthPx);
+            double m = LensMath.calculateMagnification(v, u);
+            double imageX = LensMath.calculateImageX(lensX, v);
+            double imageHeight = currObjHeight * m;
+            double imageTopY = currBaseY - imageHeight;
 
             // === Draw the rays using consistent vertical baseline ===
             drawAllPrincipalRays(currObjX, currObjTopY, lensX, currBaseY, focalLengthPx, pane);
@@ -763,7 +760,7 @@ public class LensView extends BaseView {
                 }
             }
             // Label the image
-            String info = String.format("Image %d\nM=%.2f", imageCounter++, magnification);
+            String info = String.format("Image %d\nM=%.2f", imageCounter++, m);
             Text label = new Text(imageX + 10, currBaseY - imageHeight / 2, info);
             label.getStyleClass().add("lensview-ray-length-label");
             pane.getChildren().add(label);
@@ -901,7 +898,7 @@ public class LensView extends BaseView {
     public void startAnimation() {
         StopAnimation(); // Reset any running animation
 
-        System.out.println("Starting animation... Loop mode: " + (loopEnabled ? "ON" : "OFF"));
+        //System.out.println("Starting animation... Loop mode: " + (loopEnabled ? "ON" : "OFF"));
 
         animationTimeline = new Timeline();
         animationTimeline.setCycleCount(loopEnabled ? Timeline.INDEFINITE : 1);
@@ -917,7 +914,7 @@ public class LensView extends BaseView {
         double adjustedCenterX = centerX + offsetX;
         double adjustedCenterY = centerY + offsetY;
 
-        // === Redraw essential elements ===
+        // === Redraw static components ===
         drawOpticalAxis(animPane);
         drawMainLens(animPane);
         drawFocalPoints(adjustedCenterX, adjustedCenterY, lastFocalLength * scale, animPane, 1);
@@ -927,37 +924,52 @@ public class LensView extends BaseView {
 
         drawObject(objX, adjustedCenterY, lastObjectHeight * scale, animPane);
 
-        // === Animate main lens stage ===
-        animateLensStage(objX, objTopY, adjustedCenterX, adjustedCenterY,
-                lastFocalLength * scale, lastNumRays, 0.0, animationTimeline);
+        // === Phase 1 animation ===
+        double totalDuration = animateLensStage(
+                objX, objTopY,
+                adjustedCenterX, adjustedCenterY,
+                lastFocalLength * scale,
+                lastNumRays,
+                0.0,
+                animationTimeline
+        );
 
-        // === Animate and draw each extra lens ===
+        // === Animate extra lenses ===
         for (int i = 0; i < lastExtraLenses.size(); i++) {
             LensesModel.Lens lens = lastExtraLenses.get(i);
             double lensX = adjustedCenterX + lens.getPosition() * scale;
             double lensF = lens.getFocalLength() * scale;
 
-            double objectX = lastImageX;
-            double objectY = lastImageY;
+            // Compute and draw the lens body
+            boolean isConverging = lensF > 0;
+            double u = lensX - lastImageX;
+            double v = LensMath.calculateImageDistance(u, lensF);
+            double m = LensMath.calculateMagnification(v, u);
+            double imageHeight = m * (adjustedCenterY - lastImageY);
+            double imageTopY = adjustedCenterY - imageHeight;
 
+            drawExtraLens(animPane, lensX, adjustedCenterY, lastImageY, imageTopY, isConverging);
+
+
+            // Draw focal points
             drawFocalPoints(lensX, adjustedCenterY, lensF, animPane, i + 2);
-            animateLensStage(objectX, objectY, lensX, adjustedCenterY,
-                    lensF, lastNumRays, 2.0 * (i + 1), animationTimeline);
 
-            // Draw extra lens line based on current object and predicted image height
-            double u = lensX - objectX;
-            if (u != 0) {
-                double v = 1 / ((1 / lensF) - (1 / u));
-                double imageY = adjustedCenterY - ((-v / u) * (adjustedCenterY - objectY));
-                drawExtraLens(animPane, lensX, adjustedCenterY, objectY, imageY, lens.isConverging());
-            }
+            // Animate rays through this lens
+            totalDuration += animateLensStage(
+                    lastImageX, lastImageY,
+                    lensX, adjustedCenterY,
+                    lensF,
+                    lastNumRays,
+                    totalDuration,
+                    animationTimeline
+            );
         }
 
         animationTimeline.play();
     }
 
     public void StopAnimation() {
-        System.out.println("Stop");
+        //System.out.println("Stop");
         if (animationTimeline != null) {
             animationTimeline.stop();
             animationTimeline = null;
@@ -965,7 +977,7 @@ public class LensView extends BaseView {
     }
 
     public void stopAnimation() {
-        System.out.println("Pause");
+        //System.out.println("Pause");
         if (animationTimeline != null) {
             animationTimeline.pause();
         }
@@ -976,7 +988,7 @@ public class LensView extends BaseView {
             animationTimeline.pause(); // Pause current animation
             currentKeyframeIndex = Math.min(currentKeyframeIndex + 1, keyframeTimes.size() - 1);
             animationTimeline.jumpTo(keyframeTimes.get(currentKeyframeIndex));
-            System.out.println("Jumped to frame: " + currentKeyframeIndex);
+            //System.out.println("Jumped to frame: " + currentKeyframeIndex);
         }
     }
 
@@ -985,27 +997,28 @@ public class LensView extends BaseView {
             animationTimeline.pause(); // Pause current animation
             currentKeyframeIndex = Math.max(currentKeyframeIndex - 1, 0);
             animationTimeline.jumpTo(keyframeTimes.get(currentKeyframeIndex));
-            System.out.println("Jumped to frame: " + currentKeyframeIndex);
+            //System.out.println("Jumped to frame: " + currentKeyframeIndex);
         }
     }
 
     public void toggleLoopMode() {
         loopEnabled = !loopEnabled;
-        System.out.println("Loop mode is now " + (loopEnabled ? "ON" : "OFF"));
+        //System.out.println("Loop mode is now " + (loopEnabled ? "ON" : "OFF"));
     }
-    private void animateLensStage(double objX, double objTopY, double lensX, double lensY,
-                                  double focalLengthPx, int numExtraRays, double offsetSeconds,
-                                  Timeline timeline)
-    {
+
+    private double animateLensStage(double objX, double objTopY, double lensX, double lensY,
+                                    double focalLengthPx, int numExtraRays, double offsetSeconds,
+                                    Timeline timeline) {
+
         double u = lensX - objX;
-        if (u == 0) return;
+        if (u == 0) return 0;
 
         double f = focalLengthPx;
-        double v = 1 / ((1 / f) - (1 / u));
-        double imageX = lensX + v;
-        double magnification = -v / u;
-        double imageHeight = magnification * (lensY - objTopY);
-        double imageY = lensY - imageHeight;
+        double v = LensMath.calculateImageDistance(u, f);
+        double m = LensMath.calculateMagnification(v, u);
+        double imageX = LensMath.calculateImageX(lensX, v);
+        double imageY = LensMath.calculateImageY(lensY, objTopY, m);
+
         boolean isConverging = f > 0;
         boolean isVirtual = (isConverging && u < f) || (!isConverging);
 
@@ -1015,9 +1028,9 @@ public class LensView extends BaseView {
         double nearFocalX = lensX - f;
         double targetY = lensY + (objTopY - lensY) * f / (objX - nearFocalX);
 
-        Line ray1 = new Line(objX, objTopY, objX, objTopY); // Red
-        Line ray2 = new Line(objX, objTopY, objX, objTopY); // Blue
-        Line ray3 = new Line(objX, objTopY, objX, objTopY); // Green
+        Line ray1 = new Line(objX, objTopY, objX, objTopY);
+        Line ray2 = new Line(objX, objTopY, objX, objTopY);
+        Line ray3 = new Line(objX, objTopY, objX, objTopY);
 
         ray1.setStroke(Color.RED);
         ray2.setStroke(Color.BLUE);
@@ -1026,18 +1039,17 @@ public class LensView extends BaseView {
 
         double speed = 1.0;
 
-        KeyFrame kf1 = new KeyFrame(Duration.seconds(offsetSeconds + speed),
-                new KeyValue(ray1.endXProperty(), lensX));
-        KeyFrame kf2 = new KeyFrame(Duration.seconds(offsetSeconds + speed),
-                new KeyValue(ray2.endXProperty(), lensX),
-                new KeyValue(ray2.endYProperty(), lensY));
-        KeyFrame kf3 = new KeyFrame(Duration.seconds(offsetSeconds + speed),
-                new KeyValue(ray3.endXProperty(), lensX),
-                new KeyValue(ray3.endYProperty(), targetY));
+        timeline.getKeyFrames().addAll(
+                new KeyFrame(Duration.seconds(offsetSeconds + speed),
+                        new KeyValue(ray1.endXProperty(), lensX)),
+                new KeyFrame(Duration.seconds(offsetSeconds + speed),
+                        new KeyValue(ray2.endXProperty(), lensX),
+                        new KeyValue(ray2.endYProperty(), lensY)),
+                new KeyFrame(Duration.seconds(offsetSeconds + speed),
+                        new KeyValue(ray3.endXProperty(), lensX),
+                        new KeyValue(ray3.endYProperty(), targetY))
+        );
 
-        timeline.getKeyFrames().addAll(kf1, kf2, kf3);
-
-        // Refracted rays
         Line ray1Refracted = new Line(lensX, objTopY, lensX, objTopY);
         Line ray2Refracted = new Line(lensX, lensY, lensX, lensY);
         Line ray3Refracted = new Line(lensX, targetY, lensX, targetY);
@@ -1102,7 +1114,6 @@ public class LensView extends BaseView {
             }
         }
 
-        // Draw image arrow
         Line imageArrow = new Line(imageX, lensY, imageX, imageY);
         imageArrow.setStroke(Color.BLACK);
         imageArrow.setStrokeWidth(2);
@@ -1112,6 +1123,8 @@ public class LensView extends BaseView {
 
         lastImageX = imageX;
         lastImageY = imageY;
+
+        return speed + 1.5;
     }
 
     private void animateBacktrace(Line baseRay, double startX, double startY, double imageX, double imageY,
