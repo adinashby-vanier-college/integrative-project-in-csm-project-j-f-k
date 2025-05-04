@@ -403,7 +403,16 @@ public class LensView extends BaseView {
 // Step 2: Compute image from main lens
         double u = adjustedCenterX - objX;
         double f = focalLength * scale;
+
+// Handle the special case: object at focal point → image at infinity
+        if (Math.abs(u - f) < 1e-5) {
+            // Skip image + extra lenses
+            setupZoomControls();
+            return;
+        }
+
         double v = 1 / ((1 / f) - (1 / u));
+
         double imageX = adjustedCenterX + v;
         magnification = -v / u;
         double imageHeight = objectHeight * magnification * scale;
@@ -440,7 +449,7 @@ public class LensView extends BaseView {
             drawFocalPoints(lensX, adjustedCenterY, f2, animPane,index++);
         }
 
-        setupZoomControls(); // Re-add zoom controls
+        //setupZoomControls(); // Re-add zoom controls
     }
 
     private void drawOpticalAxis(Pane pane) {
@@ -460,6 +469,26 @@ public class LensView extends BaseView {
 
         double u = lastObjectDistance * scale;
         double f = lastFocalLength * scale;
+
+        // Prevent invalid computation when object at focal point
+        if (Math.abs(u - f) < 1e-5) {
+            // Fallback lens height (e.g., default to object height)
+            double lensHeight = lastObjectHeight * scale;
+
+            Line lens = new Line(adjustedCenterX, adjustedCenterY - lensHeight,
+                    adjustedCenterX, adjustedCenterY + lensHeight);
+            lens.setStrokeWidth(3);
+
+            if (showLabelsCheckBox == null || showLabelsCheckBox.isSelected()) {
+                Text lensLabel = new Text(adjustedCenterX - 30, adjustedCenterY - lensHeight - 10, "Main Lens");
+                lensLabel.setFill(Color.BLACK);
+                lensLabel.getStyleClass().add("lensview-ray-length-label");
+                pane.getChildren().add(lensLabel);
+            }
+
+            pane.getChildren().add(lens);
+            return; // Done
+        }
 
         double imageDistance = 1 / ((1 / f) - (1 / u));
         double magnification = -imageDistance / u;

@@ -42,4 +42,22 @@ class LensMathTest {
         assertEquals(expectedY, actualY, 0.001);
     }
 
+    @Test
+    void testObjectAtFocalPoint() {
+        double u = 50.0;
+        double f = 50.0;
+        double v = LensMath.calculateImageDistance(u, f);
+        assertEquals(Double.POSITIVE_INFINITY, v);
+    }
+
+    @Test
+    void testZeroObjectDistanceThrows() {
+        double u = 0;
+        double f = 50.0;
+        assertThrows(ArithmeticException.class, () -> {
+            LensMath.calculateImageDistance(u, f);
+        });
+    }
+
+
 }
