@@ -58,8 +58,9 @@ class LoginControllerTest {
     @Test
     void testPasswordTooLong() {
         // Create a password that's too long for the modulus
-        String tooLongPassword = "AB".repeat(500);
+        String tooLongPassword = "A".repeat(500); // Longer than RSA modulus can handle
+        assertThrows(IllegalArgumentException.class, () -> {
             loginController.encrypt(tooLongPassword);
-        ;
+        });
     }
 }
