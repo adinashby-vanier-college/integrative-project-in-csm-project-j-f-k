@@ -61,20 +61,11 @@ public class LensesController {
             onRestartPressed();
         });
 
-        view.getSlowbutton().setOnAction(e -> {
-            //System.out.println("Step Back clicked.");
-            onStepBackPressed();
-        });
-
         view.getNormalbutton().setOnAction(e -> {
             //System.out.println("ToggleLoop Pressed.");
             onToggleLoopPressed();
         });
 
-        view.getFastbutton().setOnAction(e -> {
-            //System.out.println("Step Forward clicked.");
-            onStepForwardPressed();
-        });
     }
 
 
@@ -99,19 +90,11 @@ public class LensesController {
             model.setNumRays(numRays);
 
             model.clearExtraLenses();
-            view.clearLensColors(); // clear old colors
-            Random rand = new Random();
 
             for (TextField[] fields : view.extraLensFields) {
                 double position = parseDouble(fields[0].getText(), "Lens Position");
                 double lensFocalLength = parseDouble(fields[1].getText(), "Lens Focal Length");
                 model.addExtraLens(position, lensFocalLength);
-
-                // Random color for this lens
-                Color color1 = Color.hsb(rand.nextDouble() * 360, 0.7, 0.9);
-                Color color2 = Color.hsb(rand.nextDouble() * 360, 0.7, 0.9);
-                Color color3 = Color.hsb(rand.nextDouble() * 360, 0.7, 0.9);
-                view.addLensColors(color1, color2, color3);
             }
 
             view.resetDragOffset();
@@ -154,8 +137,6 @@ public class LensesController {
         );
     }
 
-
-
     // Animation logic handlers
     public void onPlayPressed() {
         view.startAnimation();
@@ -170,13 +151,6 @@ public class LensesController {
         view.startAnimation();
     }
 
-     public void onStepBackPressed() {
-        view.stepBackAnimation(); // backward
-    }
-
-    public void onStepForwardPressed() {
-        view.stepForwardAnimation(); // forward
-    }
 
     public void onToggleLoopPressed() {
         view.toggleLoopMode(); // loop ON/OFF
