@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import project.optics.jfkt.controllers.SelectionController;
 import project.optics.jfkt.controllers.ThemeController;
+import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.utils.Util;
 
 public class SelectionView extends BorderPane {
@@ -86,9 +87,9 @@ public class SelectionView extends BorderPane {
         HBox buttons = new HBox(150);
         buttons.setAlignment(Pos.CENTER);
 
-        hard = new Button("Hard");
-        medium = new Button("Medium");
-        easy = new Button("Easy");
+        hard = new Button(GeneralSetting.getString("button.hard"));
+        medium = new Button(GeneralSetting.getString("button.medium"));
+        easy = new Button(GeneralSetting.getString("button.easy"));
 
         // Apply current font to buttons
         updateButtonFonts();
@@ -108,7 +109,7 @@ public class SelectionView extends BorderPane {
     private Region createBottom() {
         HBox container = new HBox();
 
-        back = new Button("Back");
+        back = new Button(GeneralSetting.getString("button.back"));
         // Apply current font to back button
         updateButtonFonts();
         back.setOnAction(event -> selectionController.onBackButtonPressed());

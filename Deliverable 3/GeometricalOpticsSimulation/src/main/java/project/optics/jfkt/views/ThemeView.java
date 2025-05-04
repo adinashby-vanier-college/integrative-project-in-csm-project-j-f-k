@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import project.optics.jfkt.controllers.ThemeController;
+import project.optics.jfkt.models.GeneralSetting;
 
 public class ThemeView extends BorderPane {
 
@@ -24,12 +25,12 @@ public class ThemeView extends BorderPane {
         themeSettingsBox.setPadding(new Insets(20));
 
         // Sample text with current font
-        Label sampleText = new Label("Sample Text");
+        Label sampleText = new Label(GeneralSetting.getString("label.sampleText"));
         sampleText.setStyle("-fx-font-size: 16;");
 
         // ComboBox for font selection
         ComboBox<String> fontComboBox = new ComboBox<>();
-        fontComboBox.getItems().addAll("Arial", "Times New Roman", "Verdana", "Comic Sans MS");
+        fontComboBox.getItems().addAll(GeneralSetting.getString("comboBoxItem.arial"), GeneralSetting.getString("comboBoxItem.times"), GeneralSetting.getString("comboBoxItem.verdana"), GeneralSetting.getString("comboBoxItem.comic"));
         fontComboBox.setValue(ThemeController.getCurrentFont());
         fontComboBox.setOnAction(e -> {
             String selectedFont = fontComboBox.getValue();
@@ -43,13 +44,13 @@ public class ThemeView extends BorderPane {
         HBox themeButtonsBox = new HBox(20);
         themeButtonsBox.setAlignment(Pos.CENTER);
 
-        Button darkMode = new Button("Dark Mode");
+        Button darkMode = new Button(GeneralSetting.getString("button.dark"));
         darkMode.setOnAction(e -> {
             controller.setDarkMode();
             ThemeController.applyTheme(this.getScene());
         });
 
-        Button lightMode = new Button("Light Mode");
+        Button lightMode = new Button(GeneralSetting.getString("button.light"));
         lightMode.setOnAction(e -> {
             controller.setLightMode();
             ThemeController.applyTheme(this.getScene());
@@ -78,15 +79,15 @@ public class ThemeView extends BorderPane {
         themeButtonsBox.getChildren().addAll(darkModeBox, lightModeBox);
 
         // Create a back button
-        Button backButton = new Button("Back");
+        Button backButton = new Button(GeneralSetting.getString("button.back"));
         backButton.setOnAction(e -> controller.onBackButtonPressed());
 
         // Add all components to the VBox
         themeSettingsBox.getChildren().addAll(
-                new Label("Choose Font:"),
+                new Label(GeneralSetting.getString("label.chooseFont")),
                 fontComboBox,
 
-                new Label("Choose Theme:"),
+                new Label(GeneralSetting.getString("label.chooseTheme")),
                 themeButtonsBox,
                 backButton
         );

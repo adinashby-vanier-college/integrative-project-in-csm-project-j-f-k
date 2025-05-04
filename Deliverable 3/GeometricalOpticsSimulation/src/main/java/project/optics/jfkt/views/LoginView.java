@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import project.optics.jfkt.controllers.LoginController;
+import project.optics.jfkt.models.GeneralSetting;
 
 public class LoginView extends VBox {
     private Hyperlink createLink;
@@ -30,7 +31,7 @@ public class LoginView extends VBox {
         setPadding(new Insets(30));
 
         // Title
-        Label titleLabel = new Label("Geometric Optics Simulation Login");
+            Label titleLabel = new Label(GeneralSetting.getString("title.login"));
         titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
         // Grid for form
@@ -42,12 +43,12 @@ public class LoginView extends VBox {
         grid.setMaxWidth(300);
 
         // Username field
-        grid.add(new Label("Username:"), 0, 0);
+        grid.add(new Label(GeneralSetting.getString("label.userName")), 0, 0);
         usernameField = new TextField();
         grid.add(usernameField, 1, 0);
 
         // Password field
-        grid.add(new Label("Password:"), 0, 1);
+        grid.add(new Label(GeneralSetting.getString("label.password")), 0, 1);
         passwordField = new PasswordField();
         grid.add(passwordField, 1, 1);
 
@@ -55,13 +56,13 @@ public class LoginView extends VBox {
         HBox buttonBox = new HBox(15);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
-        Button loginButton = new Button("Login");
+        Button loginButton = new Button(GeneralSetting.getString("button.login"));
         loginButton.setOnAction(event -> handleLogin());
         buttonBox.getChildren().addAll( loginButton);
         grid.add(buttonBox, 1, 2);
 
         // Create Account link
-        createLink = new Hyperlink("Create Account");
+        createLink = new Hyperlink(GeneralSetting.getString("label.createAccount"));
         createLink.setOnAction(event -> controller.onLinkClicked(primaryStage));
         HBox linkBox = new HBox();
         linkBox.setAlignment(Pos.CENTER);
@@ -86,10 +87,10 @@ public class LoginView extends VBox {
                 MainView mainView = new MainView(primaryStage);
                 primaryStage.getScene().setRoot(mainView);
             } else {
-                showError("Invalid username or password");
+                showError(GeneralSetting.getString("text.invalid"));
             }
         } catch (Exception e) {
-            showError("Login error: " + e.getMessage());
+            showError(GeneralSetting.getString("text.loginErr") + e.getMessage());
         } finally {
             passwordField.clear();
         }
