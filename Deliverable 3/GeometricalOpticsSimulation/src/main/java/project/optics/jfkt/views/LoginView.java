@@ -54,10 +54,10 @@ public class LoginView extends VBox {
         // Buttons: Refresh & Login
         HBox buttonBox = new HBox(15);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        Button refreshButton = new Button("Refresh");
+
         Button loginButton = new Button("Login");
         loginButton.setOnAction(event -> handleLogin());
-        buttonBox.getChildren().addAll(refreshButton, loginButton);
+        buttonBox.getChildren().addAll( loginButton);
         grid.add(buttonBox, 1, 2);
 
         // Create Account link

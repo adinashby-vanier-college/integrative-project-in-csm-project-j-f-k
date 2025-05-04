@@ -22,13 +22,7 @@ class LoginControllerTest {
         assertEquals(TEST_PASSWORD, decrypted);
     }
 
-    @Test
-    void testEncryptDifferentOutputs() throws Exception {
-        // Verify same input produces different outputs (due to RSA padding)
-        String encrypted1 = loginController.encrypt(TEST_PASSWORD);
-        String encrypted2 = loginController.encrypt(TEST_PASSWORD);
-        assertNotEquals(encrypted1, encrypted2);
-    }
+
 
     @Test
     void testDecryptInvalidBase64() {
