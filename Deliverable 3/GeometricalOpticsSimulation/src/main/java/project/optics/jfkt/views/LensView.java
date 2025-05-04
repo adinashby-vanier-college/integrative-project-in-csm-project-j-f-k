@@ -1,5 +1,6 @@
 package project.optics.jfkt.views;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -59,14 +60,6 @@ public class LensView extends BaseView {
     private boolean loopEnabled = false; // controlled by 6th button
 
     // Buttons for animation control (set in createBottom)
-    private Button stepBackButton;
-    private Button stepForwardButton;
-    private Button sixthButton;
-
-    public Button getStepBackButton() { return stepBackButton; }
-    public Button getStepForwardButton() { return stepForwardButton; }
-    public Button getSixthButton() { return sixthButton; }
-
     private final List<Duration> keyframeTimes = new ArrayList<>();
     private int currentKeyframeIndex = 0;
 
@@ -98,9 +91,11 @@ public class LensView extends BaseView {
 
     public LensView() {
         super("Lenses");
+        getSlowbutton().setVisible(false);
+        getFastbutton().setVisible(false);
+
         initializeView();
         setupZoomControls();
-        runRayIntersectionTest();
         updateFonts(ThemeController.getCurrentFont());
 
         // Add font change listener
@@ -903,65 +898,81 @@ public class LensView extends BaseView {
 
     //Animation
     public void startAnimation() {
-        stopAnimation();
+        StopAnimation(); // Reset any running animation
+
+        System.out.println("Starting animation... Loop mode: " + (loopEnabled ? "ON" : "OFF"));
+
+        animationTimeline = new Timeline();
+        animationTimeline.setCycleCount(loopEnabled ? Timeline.INDEFINITE : 1);
+        keyframeTimes.clear();
+        currentKeyframeIndex = 0;
+
+        Pane animPane = getAnimpane();
+
+        // === Clear everything except zoom controls ===
+        animPane.getChildren().removeIf(node -> !(node instanceof HBox));
+        animatedRays.clear();
 
         double adjustedCenterX = centerX + offsetX;
         double adjustedCenterY = centerY + offsetY;
 
-        Pane animPane = getAnimpane();
-        animPane.getChildren().removeIf(node -> !(node instanceof HBox)); // Keep zoom controls only
-
-        animatedRays.clear();
-        animationTimeline = new Timeline();
-        keyframeTimes.clear();
-        currentKeyframeIndex = 0;
-
+        // === Redraw essential elements ===
         drawOpticalAxis(animPane);
         drawMainLens(animPane);
-        drawFocalPoints(adjustedCenterX, adjustedCenterY, lastFocalLength * scale, animPane,1);
+        drawFocalPoints(adjustedCenterX, adjustedCenterY, lastFocalLength * scale, animPane, 1);
 
         double objX = adjustedCenterX - lastObjectDistance * scale;
         double objTopY = adjustedCenterY - lastObjectHeight * scale;
 
         drawObject(objX, adjustedCenterY, lastObjectHeight * scale, animPane);
 
-        // Main lens animation
+        // === Animate main lens stage ===
         animateLensStage(objX, objTopY, adjustedCenterX, adjustedCenterY,
-                lastFocalLength * scale, lastNumRays, 0.0);
+                lastFocalLength * scale, lastNumRays, 0.0, animationTimeline);
 
-        // Recursive extra lens animation
+        // === Animate and draw each extra lens ===
         for (int i = 0; i < lastExtraLenses.size(); i++) {
             LensesModel.Lens lens = lastExtraLenses.get(i);
             double lensX = adjustedCenterX + lens.getPosition() * scale;
             double lensF = lens.getFocalLength() * scale;
 
-            // Use stored image from last animation step
             double objectX = lastImageX;
             double objectY = lastImageY;
 
-            animateLensStage(objectX, objectY, lensX, adjustedCenterY, lensF, lastNumRays, 2.0 * (i + 1));
+            drawFocalPoints(lensX, adjustedCenterY, lensF, animPane, i + 2);
+            animateLensStage(objectX, objectY, lensX, adjustedCenterY,
+                    lensF, lastNumRays, 2.0 * (i + 1), animationTimeline);
+
+            // Draw extra lens line based on current object and predicted image height
+            double u = lensX - objectX;
+            if (u != 0) {
+                double v = 1 / ((1 / lensF) - (1 / u));
+                double imageY = adjustedCenterY - ((-v / u) * (adjustedCenterY - objectY));
+                drawExtraLens(animPane, lensX, adjustedCenterY, objectY, imageY, lens.isConverging());
+            }
         }
+
+        animationTimeline.play();
     }
 
-    public void stopAnimation() {
+    public void StopAnimation() {
+        System.out.println("Stop");
         if (animationTimeline != null) {
             animationTimeline.stop();
             animationTimeline = null;
         }
     }
 
-    public void pauseAnimation() {
-        if (animationTimeline != null) animationTimeline.pause();
+    public void stopAnimation() {
+        System.out.println("Pause");
+        if (animationTimeline != null) {
+            animationTimeline.pause();
+        }
     }
-
-    public void restartAnimation() {
-        stopAnimation();
-        startAnimation();
-    }
-
 
     public void stepForwardAnimation() {
         if (animationTimeline != null && !keyframeTimes.isEmpty()) {
+            animationTimeline.pause(); // Pause current animation
             currentKeyframeIndex = Math.min(currentKeyframeIndex + 1, keyframeTimes.size() - 1);
             animationTimeline.jumpTo(keyframeTimes.get(currentKeyframeIndex));
             System.out.println("Jumped to frame: " + currentKeyframeIndex);
@@ -970,6 +981,7 @@ public class LensView extends BaseView {
 
     public void stepBackAnimation() {
         if (animationTimeline != null && !keyframeTimes.isEmpty()) {
+            animationTimeline.pause(); // Pause current animation
             currentKeyframeIndex = Math.max(currentKeyframeIndex - 1, 0);
             animationTimeline.jumpTo(keyframeTimes.get(currentKeyframeIndex));
             System.out.println("Jumped to frame: " + currentKeyframeIndex);
@@ -980,9 +992,10 @@ public class LensView extends BaseView {
         loopEnabled = !loopEnabled;
         System.out.println("Loop mode is now " + (loopEnabled ? "ON" : "OFF"));
     }
-
     private void animateLensStage(double objX, double objTopY, double lensX, double lensY,
-                                  double focalLengthPx, int numExtraRays, double offsetSeconds) {
+                                  double focalLengthPx, int numExtraRays, double offsetSeconds,
+                                  Timeline timeline)
+    {
         double u = lensX - objX;
         if (u == 0) return;
 
@@ -1011,95 +1024,82 @@ public class LensView extends BaseView {
         animPane.getChildren().addAll(ray1, ray2, ray3);
 
         double speed = 1.0;
-        Timeline phase1 = new Timeline();
-        Timeline phase2 = new Timeline();
 
-        // Animate from object to lens
-        phase1.getKeyFrames().addAll(
-                new KeyFrame(Duration.seconds(offsetSeconds + speed),
-                        new KeyValue(ray1.endXProperty(), lensX)),
-                new KeyFrame(Duration.seconds(offsetSeconds + speed),
-                        new KeyValue(ray2.endXProperty(), lensX),
-                        new KeyValue(ray2.endYProperty(), lensY)),
-                new KeyFrame(Duration.seconds(offsetSeconds + speed),
-                        new KeyValue(ray3.endXProperty(), lensX),
-                        new KeyValue(ray3.endYProperty(), targetY))
-        );
+        KeyFrame kf1 = new KeyFrame(Duration.seconds(offsetSeconds + speed),
+                new KeyValue(ray1.endXProperty(), lensX));
+        KeyFrame kf2 = new KeyFrame(Duration.seconds(offsetSeconds + speed),
+                new KeyValue(ray2.endXProperty(), lensX),
+                new KeyValue(ray2.endYProperty(), lensY));
+        KeyFrame kf3 = new KeyFrame(Duration.seconds(offsetSeconds + speed),
+                new KeyValue(ray3.endXProperty(), lensX),
+                new KeyValue(ray3.endYProperty(), targetY));
 
-        phase1.setOnFinished(e -> {
-            // Refracted rays start at lens
-            Line ray1Refracted = new Line(lensX, objTopY, lensX, objTopY);
-            Line ray2Refracted = new Line(lensX, lensY, lensX, lensY);
-            Line ray3Refracted = new Line(lensX, targetY, lensX, targetY);
+        timeline.getKeyFrames().addAll(kf1, kf2, kf3);
 
-            ray1Refracted.setStroke(Color.RED);
-            ray2Refracted.setStroke(Color.BLUE);
-            ray3Refracted.setStroke(Color.GREEN);
-            animPane.getChildren().addAll(ray1Refracted, ray2Refracted, ray3Refracted);
+        // Refracted rays
+        Line ray1Refracted = new Line(lensX, objTopY, lensX, objTopY);
+        Line ray2Refracted = new Line(lensX, lensY, lensX, lensY);
+        Line ray3Refracted = new Line(lensX, targetY, lensX, targetY);
 
-            double slope1, slope2, slope3;
+        ray1Refracted.setStroke(Color.RED);
+        ray2Refracted.setStroke(Color.BLUE);
+        ray3Refracted.setStroke(Color.GREEN);
+        animPane.getChildren().addAll(ray1Refracted, ray2Refracted, ray3Refracted);
 
-            if (isVirtual) {
-                // Diverging rays go away from lens as if from image point
-                slope1 = (objTopY - imageY) / (lensX - imageX);
-                slope2 = (lensY - imageY) / (lensX - imageX);
-                slope3 = (targetY - imageY) / (lensX - imageX);
+        double slope1, slope2, slope3;
 
-                // Animate solid rays diverging away from lens
-                phase2.getKeyFrames().addAll(
-                        new KeyFrame(Duration.seconds(speed + 0.2),
-                                new KeyValue(ray1Refracted.endXProperty(), lensX + rayExtension),
-                                new KeyValue(ray1Refracted.endYProperty(), objTopY + slope1 * rayExtension)),
-                        new KeyFrame(Duration.seconds(speed + 0.4),
-                                new KeyValue(ray2Refracted.endXProperty(), lensX + rayExtension),
-                                new KeyValue(ray2Refracted.endYProperty(), lensY + slope2 * rayExtension)),
-                        new KeyFrame(Duration.seconds(speed + 0.6),
-                                new KeyValue(ray3Refracted.endXProperty(), lensX + rayExtension),
-                                new KeyValue(ray3Refracted.endYProperty(), targetY + slope3 * rayExtension))
+        if (isVirtual) {
+            slope1 = (objTopY - imageY) / (lensX - imageX);
+            slope2 = (lensY - imageY) / (lensX - imageX);
+            slope3 = (targetY - imageY) / (lensX - imageX);
+
+            timeline.getKeyFrames().addAll(
+                    new KeyFrame(Duration.seconds(offsetSeconds + speed + 0.2),
+                            new KeyValue(ray1Refracted.endXProperty(), lensX + rayExtension),
+                            new KeyValue(ray1Refracted.endYProperty(), objTopY + slope1 * rayExtension)),
+                    new KeyFrame(Duration.seconds(offsetSeconds + speed + 0.4),
+                            new KeyValue(ray2Refracted.endXProperty(), lensX + rayExtension),
+                            new KeyValue(ray2Refracted.endYProperty(), lensY + slope2 * rayExtension)),
+                    new KeyFrame(Duration.seconds(offsetSeconds + speed + 0.6),
+                            new KeyValue(ray3Refracted.endXProperty(), lensX + rayExtension),
+                            new KeyValue(ray3Refracted.endYProperty(), targetY + slope3 * rayExtension))
+            );
+
+            animateBacktrace(ray1Refracted, lensX, objTopY, imageX, imageY, Color.RED, animPane, timeline, offsetSeconds + speed + 0.8);
+            animateBacktrace(ray2Refracted, lensX, lensY, imageX, imageY, Color.BLUE, animPane, timeline, offsetSeconds + speed + 1.0);
+            animateBacktrace(ray3Refracted, lensX, targetY, imageX, imageY, Color.GREEN, animPane, timeline, offsetSeconds + speed + 1.2);
+
+        } else {
+            slope1 = (imageY - objTopY) / (imageX - lensX);
+            slope2 = (imageY - lensY) / (imageX - lensX);
+            slope3 = (imageY - targetY) / (imageX - lensX);
+
+            timeline.getKeyFrames().addAll(
+                    new KeyFrame(Duration.seconds(offsetSeconds + speed + 0.2),
+                            new KeyValue(ray1Refracted.endXProperty(), imageX),
+                            new KeyValue(ray1Refracted.endYProperty(), imageY)),
+                    new KeyFrame(Duration.seconds(offsetSeconds + speed + 0.4),
+                            new KeyValue(ray2Refracted.endXProperty(), imageX),
+                            new KeyValue(ray2Refracted.endYProperty(), imageY)),
+                    new KeyFrame(Duration.seconds(offsetSeconds + speed + 0.6),
+                            new KeyValue(ray3Refracted.endXProperty(), imageX),
+                            new KeyValue(ray3Refracted.endYProperty(), imageY))
+            );
+
+            if (getRayLengthFactor() > 0) {
+                timeline.getKeyFrames().addAll(
+                        new KeyFrame(Duration.seconds(offsetSeconds + speed + 0.8),
+                                new KeyValue(ray1Refracted.endXProperty(), imageX + rayExtension),
+                                new KeyValue(ray1Refracted.endYProperty(), imageY + slope1 * rayExtension)),
+                        new KeyFrame(Duration.seconds(offsetSeconds + speed + 1.0),
+                                new KeyValue(ray2Refracted.endXProperty(), imageX + rayExtension),
+                                new KeyValue(ray2Refracted.endYProperty(), imageY + slope2 * rayExtension)),
+                        new KeyFrame(Duration.seconds(offsetSeconds + speed + 1.2),
+                                new KeyValue(ray3Refracted.endXProperty(), imageX + rayExtension),
+                                new KeyValue(ray3Refracted.endYProperty(), imageY + slope3 * rayExtension))
                 );
-
-                // Dashed backtraces to virtual image
-                animateBacktrace(ray1Refracted, lensX, objTopY, imageX, imageY, Color.RED, animPane, phase2, speed + 0.8);
-                animateBacktrace(ray2Refracted, lensX, lensY, imageX, imageY, Color.BLUE, animPane, phase2, speed + 1.0);
-                animateBacktrace(ray3Refracted, lensX, targetY, imageX, imageY, Color.GREEN, animPane, phase2, speed + 1.2);
-
-            } else {
-                // Real image: rays converge to image then extend
-                slope1 = (imageY - objTopY) / (imageX - lensX);
-                slope2 = (imageY - lensY) / (imageX - lensX);
-                slope3 = (imageY - targetY) / (imageX - lensX);
-
-                // Step 1: animate to image
-                phase2.getKeyFrames().addAll(
-                        new KeyFrame(Duration.seconds(speed + 0.2),
-                                new KeyValue(ray1Refracted.endXProperty(), imageX),
-                                new KeyValue(ray1Refracted.endYProperty(), imageY)),
-                        new KeyFrame(Duration.seconds(speed + 0.4),
-                                new KeyValue(ray2Refracted.endXProperty(), imageX),
-                                new KeyValue(ray2Refracted.endYProperty(), imageY)),
-                        new KeyFrame(Duration.seconds(speed + 0.6),
-                                new KeyValue(ray3Refracted.endXProperty(), imageX),
-                                new KeyValue(ray3Refracted.endYProperty(), imageY))
-                );
-
-                // Step 2: extend beyond image if rayLength > 0
-                if (getRayLengthFactor() > 0) {
-                    phase2.getKeyFrames().addAll(
-                            new KeyFrame(Duration.seconds(speed + 0.8),
-                                    new KeyValue(ray1Refracted.endXProperty(), imageX + rayExtension),
-                                    new KeyValue(ray1Refracted.endYProperty(), imageY + slope1 * rayExtension)),
-                            new KeyFrame(Duration.seconds(speed + 1.0),
-                                    new KeyValue(ray2Refracted.endXProperty(), imageX + rayExtension),
-                                    new KeyValue(ray2Refracted.endYProperty(), imageY + slope2 * rayExtension)),
-                            new KeyFrame(Duration.seconds(speed + 1.2),
-                                    new KeyValue(ray3Refracted.endXProperty(), imageX + rayExtension),
-                                    new KeyValue(ray3Refracted.endYProperty(), imageY + slope3 * rayExtension))
-                    );
-                }
             }
-
-            phase2.play();
-        });
+        }
 
         // Draw image arrow
         Line imageArrow = new Line(imageX, lensY, imageX, imageY);
@@ -1109,12 +1109,9 @@ public class LensView extends BaseView {
         arrowHead.setFill(Color.BLACK);
         animPane.getChildren().addAll(imageArrow, arrowHead);
 
-        phase1.play();
-
         lastImageX = imageX;
         lastImageY = imageY;
     }
-
 
     private void animateBacktrace(Line baseRay, double startX, double startY, double imageX, double imageY,
                                   Color color, Pane animPane, Timeline timeline, double delay) {
@@ -1152,79 +1149,7 @@ public class LensView extends BaseView {
     }
 
     //Test cases
-    public void runRayIntersectionTest() {
-        System.out.println("Running ray-image intersection tests...");
 
-        int passed = 0;
-        int failed = 0;
-
-        passed += runTest("Converging, real image",
-                8.0, 2.0, 10.0, 4.0,
-                new Point2D(6.0, 4.0));
-
-        passed += runTest("Converging, virtual image",
-                9.5, 2.0, 10.0, 4.0,
-                new Point2D(20.57, -11.43));
-
-        passed += runTest("Diverging lens",
-                8.0, 2.0, 10.0, -4.0,
-                new Point2D(11.33, -0.67));
-
-        // CASE 4: Object at focal point (v = ∞)
-        Point2D infResult = computeImagePosition(6.0, 2.0, 10.0, 4.0);  // u = f
-        if (infResult == null || Double.isInfinite(infResult.getX()) || Double.isNaN(infResult.getX())) {
-            System.out.println("Focal point test passed (infinite or null image position)");
-            passed++;
-        } else {
-            System.out.println("Focal point test failed: expected image at infinity/null but got " + infResult);
-            failed++;
-        }
-
-        System.out.println("good " + passed + " passed");
-        System.out.println("bad  " + failed + " failed");
-    }
-
-
-    private int runTest(String label, double objX, double objY, double lensX, double focalLength, Point2D expected) {
-        Point2D actual = computeImagePosition(objX, objY, lensX, focalLength);
-
-        if (actual == null || expected == null) {
-            if (actual == expected) {
-                System.out.println(label + " passed (null as expected)");
-                return 1;
-            } else {
-                System.out.println(label + " failed (expected: " + expected + ", got: " + actual + ")");
-                return 0;
-            }
-        }
-
-        if (isClose(actual, expected, 0.05)) {
-            System.out.println(label + " passed");
-            return 1;
-        } else {
-            System.out.println(label + " failed");
-            System.out.println("Expected: " + expected);
-            System.out.println("Actual  : " + actual);
-            return 0;
-        }
-    }
-
-
-    private Point2D computeImagePosition(double objX, double objY, double lensX, double focalLength) {
-        double u = objX - lensX;
-        if (u == 0) return null;
-
-        double v = 1 / ((1 / focalLength) + (1 / u));
-        double imageX = lensX + v;
-        double magnification = -v / u;
-        double imageY = objY * magnification;
-
-        return new Point2D(imageX, imageY);
-    }
-
-    private boolean isClose(Point2D a, Point2D b, double tolerance) {
-        return Math.abs(a.getX() - b.getX()) < tolerance && Math.abs(a.getY() - b.getY()) < tolerance;
-    }
 
     public void resetDragOffset() {
         offsetX = 0;
