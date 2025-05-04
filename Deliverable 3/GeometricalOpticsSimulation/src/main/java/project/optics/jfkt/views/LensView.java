@@ -1,6 +1,7 @@
 package project.optics.jfkt.views;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -8,6 +9,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -27,8 +29,10 @@ import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.models.LensMath;
 import project.optics.jfkt.models.LensesModel;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class LensView extends BaseView {
@@ -90,6 +94,21 @@ public class LensView extends BaseView {
 
     public LensView() {
         super("Lenses");
+
+        Platform.runLater(() -> {
+            ImageView concaveView = new ImageView(new Image(getClass().getResource("/images/concave.png").toExternalForm()));
+            concaveView.fitWidthProperty().bind(getOptionbutton1().widthProperty().subtract(10));
+            concaveView.fitHeightProperty().bind(getOptionbutton1().heightProperty().subtract(10));
+            concaveView.setPreserveRatio(true);
+            getOptionbutton1().setGraphic(concaveView);
+
+            ImageView convexView = new ImageView(new Image(getClass().getResource("/images/convexe.png").toExternalForm()));
+            convexView.fitWidthProperty().bind(getOptionbutton2().widthProperty().subtract(10));
+            convexView.fitHeightProperty().bind(getOptionbutton2().heightProperty().subtract(10));
+            convexView.setPreserveRatio(true);
+            getOptionbutton2().setGraphic(convexView);
+        });
+
         getSlowbutton().setVisible(false);
         getFastbutton().setVisible(false);
 
@@ -451,6 +470,14 @@ public class LensView extends BaseView {
 
         Line lens = new Line(adjustedCenterX, adjustedCenterY - lensHalfHeight,
                 adjustedCenterX, adjustedCenterY + lensHalfHeight);
+
+        if (showLabelsCheckBox == null || showLabelsCheckBox.isSelected()) {
+            Text lensLabel = new Text(adjustedCenterX - 30, adjustedCenterY - lensHalfHeight - 10, "Main Lens");
+            lensLabel.setFill(Color.BLACK);
+            lensLabel.getStyleClass().add("lensview-ray-length-label");
+            pane.getChildren().add(lensLabel);
+        }
+
 
         lens.setStrokeWidth(3);
         pane.getChildren().add(lens);
