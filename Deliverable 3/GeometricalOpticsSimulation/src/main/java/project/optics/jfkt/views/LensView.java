@@ -552,9 +552,9 @@ public class LensView extends BaseView {
         double imageY = LensMath.calculateImageY(lensY, objTopY, m);
 
         double extension = getRayExtension(); // scaled
-        boolean isVirtual = (isConverging && u < f) || (!isConverging);
+        boolean isVirtual = LensMath.isVirtual(u, f);
 
-        // === RED RAY: Parallel to axis → refracted through/away from focal point ===
+        // === RED RAY: Parallel to axis ; refracted through/away from focal point
         Line ray1 = new Line(objX, objTopY, lensX, objTopY);
         Line ray1Refracted;
         ray1.setStroke(Color.RED);
@@ -1068,8 +1068,8 @@ public class LensView extends BaseView {
         double imageX = LensMath.calculateImageX(lensX, v);
         double imageY = LensMath.calculateImageY(lensY, objTopY, m);
 
-        boolean isConverging = f > 0;
-        boolean isVirtual = (isConverging && u < f) || (!isConverging);
+        //boolean isConverging = f > 0;
+        boolean isVirtual = LensMath.isVirtual(u, f);
 
         double rayExtension = getRayExtension();
         Pane animPane = getAnimpane();

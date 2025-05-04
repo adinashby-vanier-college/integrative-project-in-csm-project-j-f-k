@@ -20,5 +20,6 @@ public class LensMath {
     public static boolean isVirtual(double u, double f) {
         return (f > 0 && u < f) || f < 0;
     }
+
 }
 
