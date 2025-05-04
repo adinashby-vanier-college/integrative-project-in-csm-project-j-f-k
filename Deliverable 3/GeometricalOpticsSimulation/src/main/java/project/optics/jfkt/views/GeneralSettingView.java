@@ -48,7 +48,7 @@ public class GeneralSettingView extends BorderPane {
         Label languageLabel = new Label(GeneralSetting.getString("label.language"));
         ComboBox<String> languageComboBox = new ComboBox<>();
         languageComboBox.getItems().addAll(GeneralSetting.getString("comboBoxItem.english"), GeneralSetting.getString("comboBoxItem.french")); // Add English and French options
-        languageComboBox.setValue("English"); // Set default language
+        languageComboBox.setValue(""); // Set default language
         languageComboBox.setVisibleRowCount(2);
         languageComboBox.setOnAction(event -> generalSettingsController.onLanguageChanged(languageComboBox.getValue()));
 

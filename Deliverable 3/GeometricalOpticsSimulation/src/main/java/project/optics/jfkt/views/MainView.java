@@ -14,6 +14,8 @@
     import javafx.stage.Stage;
     import project.optics.jfkt.controllers.MainController;
     import project.optics.jfkt.controllers.ThemeController;
+    import project.optics.jfkt.models.GeneralSetting;
+    import project.optics.jfkt.utils.Util;
 
     import java.io.IOException;
 
@@ -39,7 +41,7 @@
             });
 
             this.setCenter(createContent());
-            this.setTop(createMenu());
+            this.setTop(new Util().createMenu());
         }
 
         private void applyCurrentFont() {
@@ -52,40 +54,10 @@
                     "-fx-font-size: 35px; -fx-font-weight: bold;");
         }
 
-        private MenuBar createMenu() {
-            MenuBar menuBar = new MenuBar();
-            Menu fileMenu = new Menu("File");
-            MenuItem quit = new MenuItem("Quit");
-            MenuItem aboutUs = new MenuItem("About Us");
-            MenuItem help = new MenuItem("Help");
-            Menu settings = new Menu("Settings");
-
-            MenuItem theme = new MenuItem("Theme");
-            MenuItem animation = new MenuItem("Animation");
-            MenuItem general = new MenuItem("General");
-
-            quit.setOnAction(e -> mainController.onQuitButtonPressed());
-            aboutUs.setOnAction(e -> mainController.onAboutUsPressed());
-            help.setOnAction(e -> mainController.onHelpPressed());
-
-            theme.setOnAction(e->mainController.onThemeButtonPressed());
-            animation.setOnAction(e->mainController.onAnimationButtonPressed());
-            general.setOnAction(event -> mainController.onGeneralSettingsButtonPressed());
-
-            fileMenu.getItems().addAll(quit,aboutUs, help);
-
-            settings.getItems().addAll(theme, animation, general);
-
-            menuBar.getMenus().addAll(fileMenu,settings );
-
-            return menuBar;
-        }
-
-
         private Region createContent() {
             VBox container = new VBox(30);
 
-            title = new Label("Geometric Optics Simulation");
+            title = new Label(GeneralSetting.getString("title"));
             title.getStyleClass().add("main-title");
             updateTitleFont(); // Initialize the font with current settings
             title.setPadding(new Insets(0, 0, 80, 0));
@@ -115,15 +87,15 @@
             mirrorImageView.setPreserveRatio(true);
 
 
-            Button educationGameButton = new Button("Education Game");
+            Button educationGameButton = new Button(GeneralSetting.getString("button.education"));
             educationGameButton.setPrefSize(200, 20);
             educationGameButton.setOnAction(event -> mainController.onEducationButtonPressed());
 
-            Button refractionButton = new Button("Refraction");
+            Button refractionButton = new Button(GeneralSetting.getString("button.refraction"));
             refractionButton.setPrefSize(200, 20);
             refractionButton.setOnAction(event -> mainController.onRefractionButtonPressed());
 
-            Button thinLensesButton = new Button("Thin Lenses");
+            Button thinLensesButton = new Button(GeneralSetting.getString("button.lenses"));
             thinLensesButton.setPrefSize(200, 20);
             thinLensesButton.setOnAction(e-> {
                 try {
@@ -134,7 +106,7 @@
             });
 
 
-            Button mirrorButton = new Button("Mirror");
+            Button mirrorButton = new Button(GeneralSetting.getString("button.mirror"));
             mirrorButton.setPrefSize(200, 20);
             mirrorButton.setOnAction(e-> mainController.onMirrorPressed());
 

@@ -3,12 +3,9 @@ package project.optics.jfkt.views;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,6 +21,7 @@ import project.optics.jfkt.controllers.RefractionController;
 import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.enums.AnimationStatus;
 import project.optics.jfkt.enums.Material;
+import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.models.Refraction;
 import project.optics.jfkt.utils.Util;
 
@@ -301,9 +299,9 @@ public class RefractionView extends Pane {
     }
 
     private Region createAnimationSpeedButtons() {
-        RadioButton slow = new RadioButton("Slow");
-        RadioButton normal = new RadioButton("Normal");
-        RadioButton fast = new RadioButton("Fast");
+        RadioButton slow = new RadioButton(GeneralSetting.getString("button.slow"));
+        RadioButton normal = new RadioButton(GeneralSetting.getString("button.normal"));
+        RadioButton fast = new RadioButton(GeneralSetting.getString("button.fast"));
         normal.setSelected(true);
 
         slow.getStyleClass().addAll("refraction-text", "refraction-radio-text");
@@ -330,15 +328,15 @@ public class RefractionView extends Pane {
         GridPane parameters = new GridPane(5, 10);
         parameters.getStyleClass().addAll("refraction-parameters", "refraction-text");
 
-        parameterLbl = new Label("Parameters");
+        parameterLbl = new Label(GeneralSetting.getString("text.parameters"));
         parameterLbl.getStyleClass().addAll("refraction-header", "refraction-parameters-header", "parameter-label");
         parameters.add(parameterLbl, 0, 0, 2, 1);
 
-        angleLbl = new Label("Incident angle (to vertical)");
+        angleLbl = new Label(GeneralSetting.getString("label.incidentAngle"));
         angleLbl.getStyleClass().addAll("refraction-label", "refraction-parameters-label", "parameter-label");
         parameters.add(angleLbl, 0, 1);
 
-        incidentPointLbl = new Label("Incident location");
+        incidentPointLbl = new Label(GeneralSetting.getString("label.incidentLocation"));
         incidentPointLbl.getStyleClass().addAll("refraction-label", "refraction-parameters-label", "parameter-label");
         parameters.add(incidentPointLbl, 0, 2);
 
