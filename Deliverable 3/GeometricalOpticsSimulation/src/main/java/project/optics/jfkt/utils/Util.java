@@ -15,11 +15,10 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import project.optics.jfkt.MainApp;
-import project.optics.jfkt.controllers.AnimationController;
 import project.optics.jfkt.controllers.GeneralSettingsController;
 import project.optics.jfkt.controllers.ThemeController;
 import project.optics.jfkt.models.GeneralSetting;
-import project.optics.jfkt.views.AnimationView;
+
 import project.optics.jfkt.views.GeneralSettingView;
 import project.optics.jfkt.views.MainView;
 import project.optics.jfkt.views.ThemeView;
@@ -35,7 +34,7 @@ public class Util {
     private Scene helpScene;
     private ThemeController themeController = new ThemeController();
     private GeneralSettingsController generalSettingsController = new GeneralSettingsController();
-    private AnimationController animationController = new AnimationController();
+
     public void switchScene(Scene newScene) {
         ThemeController.applyTheme(newScene);
         primaryStage.setScene(newScene);
@@ -59,7 +58,6 @@ public class Util {
         Menu settings = new Menu(GeneralSetting.getString("menu.settings"));
 
         MenuItem theme = new MenuItem(GeneralSetting.getString("menuItem.themeSetting"));
-        MenuItem animation = new MenuItem(GeneralSetting.getString("menuItem.animationSetting"));
         MenuItem general = new MenuItem(GeneralSetting.getString("menuItem.generalSetting"));
 
         quit.setOnAction(e -> onQuitButtonPressed());
@@ -67,12 +65,11 @@ public class Util {
         help.setOnAction(e -> onHelpPressed());
 
        theme.setOnAction(e->onThemeButtonPressed());
-        animation.setOnAction(e->onAnimationButtonPressed());
         general.setOnAction(event -> onGeneralSettingsButtonPressed());
 
         fileMenu.getItems().addAll(quit,aboutUs, help);
 
-        settings.getItems().addAll(theme, animation, general);
+        settings.getItems().addAll(theme, general);
 
         menuBar.getMenus().addAll(fileMenu,settings );
 
@@ -83,11 +80,7 @@ public class Util {
         Scene scene = new Scene(themeView);
         switchScene(scene);
     }
-    public void onAnimationButtonPressed() {
-        AnimationView animationView = new AnimationView(animationController);
-        Scene scene = new Scene(animationView);
-        switchScene(scene);
-    }
+
     public void onGeneralSettingsButtonPressed() {
         GeneralSettingView generalSettingView = new GeneralSettingView(generalSettingsController);
         Scene scene = new Scene(generalSettingView);

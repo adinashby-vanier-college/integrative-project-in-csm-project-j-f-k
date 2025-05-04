@@ -40,7 +40,7 @@ public class MainController {
     private final Util util = new Util();
     private ThemeController themeController = new ThemeController();
     private GeneralSettingsController generalSettingsController = new GeneralSettingsController();
-    private AnimationController animationController = new AnimationController();
+
 
     private void applyFontToScene(Scene scene) {
         if (scene != null) {
@@ -163,24 +163,6 @@ public class MainController {
             text.setUnderline(true);
         }
         return text;
-    }
-
-    public void onThemeButtonPressed() {
-        ThemeView themeView = new ThemeView(themeController);
-        Scene scene = new Scene(themeView);
-        util.switchScene(scene);
-    }
-
-    public void onAnimationButtonPressed() {
-        AnimationView animationView = new AnimationView(animationController);
-        Scene scene = new Scene(animationView);
-        util.switchScene(scene);
-    }
-
-    public void onGeneralSettingsButtonPressed() {
-        GeneralSettingView generalSettingView = new GeneralSettingView(generalSettingsController);
-        Scene scene = new Scene(generalSettingView);
-        util.switchScene(scene);
     }
 
 
