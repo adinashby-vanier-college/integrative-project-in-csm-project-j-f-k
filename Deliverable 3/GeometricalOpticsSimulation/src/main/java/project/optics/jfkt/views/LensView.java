@@ -387,6 +387,12 @@ public class LensView extends BaseView {
             } else {
                 drawVirtualImageArrow(imageX, adjustedCenterY, imageHeight, animPane);
             }
+            if (showLabelsCheckBox == null || showLabelsCheckBox.isSelected()) {
+                String labelText = "Image\nM=" + String.format("%.2f", magnification);
+                Text label = new Text(imageX + 10, adjustedCenterY - imageHeight / 2, labelText);
+                label.getStyleClass().add("lensview-ray-length-label");
+                animPane.getChildren().add(label);
+            }
         } else {
             //System.out.println("Skipping drawing image arrow because out of bounds");
         }

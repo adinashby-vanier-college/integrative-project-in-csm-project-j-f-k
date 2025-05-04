@@ -16,12 +16,8 @@ public class LensesModel {
     private double magnification;
     private double focalLength;
 
-    // Lens storage using recommended object approach
+    // Extra lens storage
     private final List<Lens> extraLenses = new ArrayList<>();
-
-    private Color color1;
-    private Color color2;
-    private Color color3;
 
     public LensesModel(int numRays, double objectDistance,
                        double objectHeight, double magnification,
@@ -33,9 +29,7 @@ public class LensesModel {
         setFocalLength(focalLength);
     }
 
-    // ========================
     // Main Parameter Accessors
-    // ========================
     public int getNumRays() { return numRays; }
     public void setNumRays(int numRays) {
         this.numRays = Math.max(0, numRays); // At least 1 ray
@@ -61,10 +55,6 @@ public class LensesModel {
         this.focalLength = focalLength; // Positive for converging, negative for diverging
     }
 
-    public Color getColor1() { return color1; }
-    public Color getColor2() { return color2; }
-    public Color getColor3() { return color3; }
-
     // Extra Lenses
     public List<Lens> getExtraLenses() {
         return Collections.unmodifiableList(extraLenses);
@@ -79,17 +69,7 @@ public class LensesModel {
         extraLenses.clear();
     }
 
-    public void assignRandomColors() {
-        Random rand = new Random();
-        double baseHue = rand.nextDouble() * 360;
-        this.color1 = Color.hsb(baseHue, 0.7, 0.9);
-        this.color2 = Color.hsb((baseHue + 30) % 360, 0.7, 0.9);
-        this.color3 = Color.hsb((baseHue + 60) % 360, 0.7, 0.9);
-    }
-
-    // ========================
     // Lens Data Class
-    // ========================
     public static class Lens {
         private final double position; // Relative to main lens
         private final double focalLength;
