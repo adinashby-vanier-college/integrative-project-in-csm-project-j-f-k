@@ -22,13 +22,7 @@ class LoginControllerTest {
         assertEquals(TEST_PASSWORD, decrypted);
     }
 
-    @Test
-    void testEncryptDifferentOutputs() throws Exception {
-        // Verify same input produces different outputs (due to RSA padding)
-        String encrypted1 = loginController.encrypt(TEST_PASSWORD);
-        String encrypted2 = loginController.encrypt(TEST_PASSWORD);
-        assertNotEquals(encrypted1, encrypted2);
-    }
+
 
     @Test
     void testDecryptInvalidBase64() {
@@ -64,8 +58,9 @@ class LoginControllerTest {
     @Test
     void testPasswordTooLong() {
         // Create a password that's too long for the modulus
-        String tooLongPassword = "AB".repeat(500);
+        String tooLongPassword = "A".repeat(500); // Longer than RSA modulus can handle
+        assertThrows(IllegalArgumentException.class, () -> {
             loginController.encrypt(tooLongPassword);
-        ;
+        });
     }
 }

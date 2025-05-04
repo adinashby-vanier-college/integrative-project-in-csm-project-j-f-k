@@ -36,21 +36,47 @@ public class LensesController {
         });
 
         view.getConvergingButton().setOnAction(e -> {
+            System.out.println("Converging Lens added.");
             view.addConvergingLensParams(10.0, 4.0);
         });
 
         view.getDivergingButton().setOnAction(e -> {
+            System.out.println("Diverging Lens added.");
             view.addDivergingLensParams(10.0, -4.0);
         });
 
-        view.getPlaybutton().setOnAction(e -> onPlayPressed());
-        view.getPausebutton().setOnAction(e -> onPausePressed());
-        view.getRedobutton().setOnAction(e -> onRestartPressed());
-        //view.getStepBackButton().setOnAction(e -> onStepBackPressed());
-        //view.getStepForwardButton().setOnAction(e -> onStepForwardPressed());
-        //view.getSixthButton().setOnAction(e -> onToggleLoopPressed());
+        // === Animation Buttons ===
+        view.getPlaybutton().setOnAction(e -> {
+            System.out.println("Play clicked.");
+            onPlayPressed();
+        });
 
+        view.getPausebutton().setOnAction(e -> {
+            System.out.println("Pause clicked.");
+            onPausePressed();
+        });
+
+        view.getRedobutton().setOnAction(e -> {
+            System.out.println("Restart clicked.");
+            onRestartPressed();
+        });
+
+        view.getSlowbutton().setOnAction(e -> {
+            System.out.println("Step Back clicked.");
+            onStepBackPressed();
+        });
+
+        view.getNormalbutton().setOnAction(e -> {
+            System.out.println("ToggleLoop Pressed.");
+            onToggleLoopPressed();
+        });
+
+        view.getFastbutton().setOnAction(e -> {
+            System.out.println("Step Forward clicked.");
+            onStepForwardPressed();
+        });
     }
+
 
 
     //Applying
@@ -89,7 +115,7 @@ public class LensesController {
             }
 
             view.resetDragOffset();
-            view.runRayIntersectionTest();
+            //view.runRayIntersectionTest();
             view.resetLensCounter();
             updateView();
 
@@ -140,21 +166,21 @@ public class LensesController {
     }
 
     public void onRestartPressed() {
-        view.stopAnimation();
+        view.StopAnimation();
         view.startAnimation();
     }
 
-    // public void onStepBackPressed() {
-    //    view.stepBackAnimation(); // backward
-    //}
+     public void onStepBackPressed() {
+        view.stepBackAnimation(); // backward
+    }
 
-    //public void onStepForwardPressed() {
-    //    view.stepForwardAnimation(); // forward
-    //}
+    public void onStepForwardPressed() {
+        view.stepForwardAnimation(); // forward
+    }
 
-    //public void onToggleLoopPressed() {
-    //    view.toggleLoopMode(); // loop ON/OFF
-    //}
+    public void onToggleLoopPressed() {
+        view.toggleLoopMode(); // loop ON/OFF
+    }
 
 
 
