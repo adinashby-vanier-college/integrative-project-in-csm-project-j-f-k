@@ -804,10 +804,12 @@ public class LensView extends BaseView {
                 }
             }
             // Label the image
-            String info = String.format("Image %d\nM=%.2f", imageCounter++, m);
-            Text label = new Text(imageX + 10, currBaseY - imageHeight / 2, info);
-            label.getStyleClass().add("lensview-ray-length-label");
-            pane.getChildren().add(label);
+            if (showLabelsCheckBox != null && showLabelsCheckBox.isSelected()) {
+                String info = String.format("Image %d\nM=%.2f", imageCounter++, m);
+                Text label = new Text(imageX + 10, currBaseY - imageHeight / 2, info);
+                label.getStyleClass().add("lensview-ray-length-label");
+                pane.getChildren().add(label);
+            }
 
             //For next lens
             currObjX = imageX;
@@ -860,11 +862,13 @@ public class LensView extends BaseView {
         label.setFill(isConverging ? Color.BLUE : Color.RED);
         label.getStyleClass().add("lensview-ray-length-label");
 
-        if (showLabelsCheckBox != null) {
-            label.visibleProperty().bind(showLabelsCheckBox.selectedProperty());
+        pane.getChildren().add(lensLine);
+
+        // Only add label if checkbox exists AND is selected
+        if (showLabelsCheckBox != null && showLabelsCheckBox.isSelected()) {
+            pane.getChildren().add(label);
         }
 
-        pane.getChildren().addAll(lensLine, label);
     }
 
 
