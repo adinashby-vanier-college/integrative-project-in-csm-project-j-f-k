@@ -23,7 +23,7 @@ public class GeneralSettingView extends BorderPane {
         settingsBox.setPadding(new Insets(20)); // Add padding around the VBox
 
         // Add a heading for the settings page
-        Label settingsHeading = new Label("General Settings");
+        Label settingsHeading = new Label(GeneralSetting.getString("label.generalSetting"));
         settingsHeading.setFont(Font.font(18)); // Set font size
         settingsHeading.setStyle("-fx-font-weight: bold;"); // Make the text bold
 
@@ -45,14 +45,14 @@ public class GeneralSettingView extends BorderPane {
         volumeBox.setAlignment(Pos.CENTER);
 
         // Language Selection
-        Label languageLabel = new Label("Language:");
+        Label languageLabel = new Label(GeneralSetting.getString("label.language"));
         ComboBox<String> languageComboBox = new ComboBox<>();
-        languageComboBox.getItems().addAll("English", "French"); // Add English and French options
+        languageComboBox.getItems().addAll(GeneralSetting.getString("comboBoxItem.english"), GeneralSetting.getString("comboBoxItem.french")); // Add English and French options
         languageComboBox.setValue("English"); // Set default language
         languageComboBox.setVisibleRowCount(2);
         languageComboBox.setOnAction(event -> generalSettingsController.onLanguageChanged(languageComboBox.getValue()));
 
-        Button backButton = new Button("Back");
+        Button backButton = new Button(GeneralSetting.getString("button.back"));
         backButton.setOnAction(e -> controller.onBackButtonPressed());
 
         // Add components to the VBox

@@ -25,6 +25,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import project.optics.jfkt.controllers.LensesController;
 import project.optics.jfkt.controllers.ThemeController;
+import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.models.LensesModel;
 
 import java.util.ArrayList;
@@ -177,18 +178,18 @@ public class LensView extends BaseView {
             paramVBox.getChildren().clear();
 
             // === Static Fields ===
-            parametersHeader = new Text("Parameters:");
+            parametersHeader = new Text(GeneralSetting.getString("text.parameters"));
             parametersHeader.setFont(new Font(40));
             parametersHeader.setTextAlignment(TextAlignment.CENTER);
             parametersHeader.setUnderline(true);
             parametersHeader.getStyleClass().add("lensview-parameters-header");
             VBox.setMargin(parametersHeader, new Insets(0, 0, 20, 0));
 
-            HBox objectDistanceHBox = createParameterHBox("Object Distance", "8.0");
-            HBox objectHeightHBox = createParameterHBox("Object Height", "2.0");
-            HBox focalLengthHBox = createParameterHBox("Focal Length", "4.0");
-            HBox magnificationHBox = createParameterHBox("Magnification", "-0.5");
-            HBox numExtraRaysHBox = createParameterHBox("Number of Extra Rays", "0");
+            HBox objectDistanceHBox = createParameterHBox(GeneralSetting.getString("text.objectDistance"), "8.0");
+            HBox objectHeightHBox = createParameterHBox(GeneralSetting.getString("text.objectHeight"), "2.0");
+            HBox focalLengthHBox = createParameterHBox(GeneralSetting.getString("text.focalLength"), "4.0");
+            HBox magnificationHBox = createParameterHBox(GeneralSetting.getString("text.magnification"), "-0.5");
+            HBox numExtraRaysHBox = createParameterHBox(GeneralSetting.getString("text.rays"), "0");
 
             objectDistanceField = (TextField) objectDistanceHBox.getChildren().get(1);
             objectHeightField = (TextField) objectHeightHBox.getChildren().get(1);
@@ -197,7 +198,7 @@ public class LensView extends BaseView {
             numRaysField = (TextField) numExtraRaysHBox.getChildren().get(1);
 
             // === Ray Length Slider ===
-            rayLengthLabel = new Text("Ray Length:");
+            rayLengthLabel = new Text(GeneralSetting.getString("text.rayLength"));
             rayLengthLabel.setFont(new Font(20));
             rayLengthLabel.getStyleClass().add("lensview-ray-length-label");
             rayLengthSlider = new Slider(0, 100, 100);
@@ -211,14 +212,14 @@ public class LensView extends BaseView {
             VBox.setMargin(rayLengthBox, new Insets(10, 0, 0, 0));
 
             // === Apply Button ===
-            applyButton = new Button("Apply");
+            applyButton = new Button(GeneralSetting.getString("button.apply"));
             applyButton.setStyle("-fx-font-size: 16; -fx-pref-width: 120; -fx-pref-height: 40;");
             HBox buttonHBox = new HBox(applyButton);
             buttonHBox.setAlignment(Pos.CENTER);
             VBox.setMargin(buttonHBox, new Insets(20, 0, 0, 0));
 
             //Checkbox
-            showLabelsCheckBox = new CheckBox("Show Image/Focal Labels");
+            showLabelsCheckBox = new CheckBox(GeneralSetting.getString("label.show"));
             showLabelsCheckBox.setSelected(true); // default ON
 
             // === Rebuild scrollable VBox ===
@@ -491,7 +492,7 @@ public class LensView extends BaseView {
 
 
         // Label
-        Text label = new Text(x - 30, baseY - heightPx/2, "Object");
+        Text label = new Text(x - 30, baseY - heightPx/2, GeneralSetting.getString("text.object"));
         label.getStyleClass().add("lensview-ray-length-label");
 
         pane.getChildren().addAll(objLine, arrowHead);
@@ -819,7 +820,7 @@ public class LensView extends BaseView {
         if (!isConverging) lensLine.getStrokeDashArray().addAll(5d, 5d);
 
         Text label = new Text(lensX - 25, lensY - maxDeviation - 10,
-                isConverging ? "Converging" : "Diverging");
+                isConverging ? GeneralSetting.getString("label.converging") : GeneralSetting.getString("label.diverging"));
         label.setFill(isConverging ? Color.BLUE : Color.RED);
         label.getStyleClass().add("lensview-ray-length-label");
 
@@ -850,13 +851,13 @@ public class LensView extends BaseView {
             lensGroup.setStyle("-fx-border-color: grey; -fx-border-width: 1;");
 
 
-            String labelText = (focalLength > 0 ? "Converging" : "Diverging") + " Lens #" + lensCounter++;
+            String labelText = (focalLength > 0 ? GeneralSetting.getString("label.converging") : GeneralSetting.getString("label.diverging")) + GeneralSetting.getString("label.lens#") + lensCounter++;
 
             Label lensLabel = new Label(labelText);
             lensLabel.getStyleClass().add("lensview-ray-length-label");
 
-            HBox lensPositionBox = createParameterHBox("Position", String.valueOf(position));
-            HBox lensFocalLengthBox = createParameterHBox("Focal Length", String.valueOf(focalLength));
+            HBox lensPositionBox = createParameterHBox(GeneralSetting.getString("label.position"), String.valueOf(position));
+            HBox lensFocalLengthBox = createParameterHBox(GeneralSetting.getString("text.focalLength"), String.valueOf(focalLength));
 
             TextField positionField = (TextField) lensPositionBox.getChildren().get(1);
             TextField focalField = (TextField) lensFocalLengthBox.getChildren().get(1);
@@ -889,9 +890,9 @@ public class LensView extends BaseView {
                     if (inner instanceof HBox header) {
                         for (Node labelNode : header.getChildren()) {
                             if (labelNode instanceof Label label) {
-                                if (label.getText().contains("Lens #")) {
-                                    boolean isConverging = label.getText().contains("Converging");
-                                    label.setText((isConverging ? "Converging" : "Diverging") + " Lens #" + lensCounter++);
+                                if (label.getText().contains("Len")) {
+                                    boolean isConverging = label.getText().contains("Con");
+                                    label.setText((isConverging ? GeneralSetting.getString("label.converging") : GeneralSetting.getString("label.diverging")) + GeneralSetting.getString("label.lens#") + lensCounter++);
                                 }
                             }
                         }
@@ -1296,8 +1297,8 @@ public class LensView extends BaseView {
 
     public void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Input Error");
-        alert.setHeaderText("Invalid Parameter Values");
+        alert.setTitle(GeneralSetting.getString("title.inputErr"));
+        alert.setHeaderText(GeneralSetting.getString("text.invalidPar"));
         alert.setContentText(message);
         alert.showAndWait();
     }

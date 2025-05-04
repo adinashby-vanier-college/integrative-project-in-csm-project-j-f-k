@@ -8,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import project.optics.jfkt.controllers.CreateAccountController;
 import project.optics.jfkt.controllers.LoginController;
+import project.optics.jfkt.models.GeneralSetting;
 
 public class CreateAccountView extends VBox {
     private final CreateAccountController controller;
@@ -25,7 +26,7 @@ public class CreateAccountView extends VBox {
         setSpacing(20);
         setPadding(new Insets(30));
 
-        Label titleLabel = new Label("Create Account");
+        Label titleLabel = new Label(GeneralSetting.getString("label.createAccount"));
         titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
         GridPane grid = new GridPane();
@@ -42,17 +43,17 @@ public class CreateAccountView extends VBox {
         grid.getColumnConstraints().addAll(col1, col2);
 
         // Username field
-        grid.add(new Label("Username:"), 0, 0);
+        grid.add(new Label(GeneralSetting.getString("label.userName")), 0, 0);
         usernameField = new TextField();
         grid.add(usernameField, 1, 0);
 
         // Password field
-        grid.add(new Label("Password:"), 0, 1);
+        grid.add(new Label(GeneralSetting.getString("label.password")), 0, 1);
         passwordField = new PasswordField();
         grid.add(passwordField, 1, 1);
 
         // Confirm password field
-        Label passAgainLabel = new Label("Confirm Password:");
+        Label passAgainLabel = new Label(GeneralSetting.getString("label.confirmPassword"));
         passAgainLabel.setWrapText(true);
         passAgainLabel.setMaxWidth(140);
         grid.add(passAgainLabel, 0, 2);
@@ -62,10 +63,10 @@ public class CreateAccountView extends VBox {
         // Buttons
         HBox buttonBox = new HBox(15);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        Button backButton = new Button("Back");
+        Button backButton = new Button(GeneralSetting.getString("button.back"));
         backButton.setOnAction(event -> controller.onBackButtonPressed());
 
-        Button submitButton = new Button("Submit");
+        Button submitButton = new Button(GeneralSetting.getString("button.submit"));
         submitButton.setOnAction(event -> handleRegistration());
 
         buttonBox.getChildren().addAll(backButton, submitButton);
@@ -80,17 +81,17 @@ public class CreateAccountView extends VBox {
         String confirmPassword = confirmPasswordField.getText();
 
         if (!password.equals(confirmPassword)) {
-            showAlert("Password Mismatch", "The passwords you entered do not match.");
+            showAlert(GeneralSetting.getString("title.mismatch"), GeneralSetting.getString("text.mismatch"));
             return;
         }
 
         try {
             if (controller.registerUser(username, password)) {
-                showAlert("Success", "Account created successfully!");
+                showAlert(GeneralSetting.getString("title.success"), GeneralSetting.getString("text.success"));
                 controller.onBackButtonPressed();
             }
         } catch (Exception e) {
-            showAlert("Registration Error", e.getMessage());
+            showAlert(GeneralSetting.getString("title.registrationError"), e.getMessage());
         }
     }
 

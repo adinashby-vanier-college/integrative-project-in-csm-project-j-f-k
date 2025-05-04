@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import project.optics.jfkt.controllers.BaseViewController;
 import project.optics.jfkt.controllers.ThemeController;
+import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.utils.Util;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class BaseView extends BorderPane {
         mainpane.setPrefSize(1920, 1080);
 
         VBox paramvbox = new VBox();
-        parametersHeader = new Text("Parameters:");
+        parametersHeader = new Text(GeneralSetting.getString("text.parameters"));
         parametersHeader.setFont(new Font(40));
         parametersHeader.setTextAlignment(TextAlignment.CENTER);
         parametersHeader.setUnderline(true);
@@ -99,7 +100,7 @@ public class BaseView extends BorderPane {
         parametersHeader.setUnderline(true);
         paramvbox.setPrefSize(420, 720);
         paramvbox.getChildren().add(parametersHeader);
-        paramvbox.getChildren().addAll(createParamHbox("Focal Length"), createParamHbox("Object Distance"), createParamHbox("Object Height"));
+        paramvbox.getChildren().addAll(createParamHbox(GeneralSetting.getString("text.focalLength")), createParamHbox(GeneralSetting.getString("text.objectDistance")), createParamHbox(GeneralSetting.getString("text.objectHeight")));
 
         animpane = new Pane();
         animpane.getStyleClass().add("animation-pane");
@@ -220,7 +221,7 @@ public class BaseView extends BorderPane {
         choicehbox.setLayoutX(choicetext.getBoundsInLocal().getWidth());
         choicepane.getChildren().addAll(choicetext, choicehbox);
 
-        Button backmenu = new Button("Back To Main Menu");
+        Button backmenu = new Button(GeneralSetting.getString("button.back"));
         backmenu.setPrefSize(150, 50);
         backmenu.setPadding(new Insets(20));
         backmenu.setOnAction(e -> {

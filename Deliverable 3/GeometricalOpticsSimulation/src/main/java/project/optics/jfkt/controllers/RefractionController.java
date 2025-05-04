@@ -81,7 +81,7 @@ public class RefractionController {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setResizable(false); // Disable resizing
             stage.initStyle(StageStyle.UTILITY); // Hide minimize/maximize buttons
-            stage.setTitle("Material selection");
+            stage.setTitle(GeneralSetting.getString("title.materialSelection"));
             stage.setScene(new Scene(new LayerChoosingView(refractionView, stage, layers, frame, refraction.getLayerCount(), plusSignLayer, refraction)));
             stage.setFullScreen(false);
             stage.show();

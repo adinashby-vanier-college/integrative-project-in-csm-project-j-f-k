@@ -18,6 +18,7 @@ import project.optics.jfkt.MainApp;
 import project.optics.jfkt.controllers.AnimationController;
 import project.optics.jfkt.controllers.GeneralSettingsController;
 import project.optics.jfkt.controllers.ThemeController;
+import project.optics.jfkt.models.GeneralSetting;
 import project.optics.jfkt.views.AnimationView;
 import project.optics.jfkt.views.GeneralSettingView;
 import project.optics.jfkt.views.MainView;
@@ -51,15 +52,15 @@ public class Util {
     }
     public Region createMenu() {
         MenuBar menuBar = new MenuBar();
-        Menu fileMenu = new Menu("File");
-        MenuItem quit = new MenuItem("Quit");
-        MenuItem aboutUs = new MenuItem("About Us");
-        MenuItem help = new MenuItem("Help");
-        Menu settings = new Menu("Settings");
+        Menu fileMenu = new Menu(GeneralSetting.getString("menu.file"));
+        MenuItem quit = new MenuItem(GeneralSetting.getString("menuItem.quit"));
+        MenuItem aboutUs = new MenuItem(GeneralSetting.getString("menuItem.aboutUs"));
+        MenuItem help = new MenuItem(GeneralSetting.getString("menuItem.help"));
+        Menu settings = new Menu(GeneralSetting.getString("menu.settings"));
 
-        MenuItem theme = new MenuItem("Theme");
-        MenuItem animation = new MenuItem("Animation");
-        MenuItem general = new MenuItem("General");
+        MenuItem theme = new MenuItem(GeneralSetting.getString("menuItem.themeSetting"));
+        MenuItem animation = new MenuItem(GeneralSetting.getString("menuItem.animationSetting"));
+        MenuItem general = new MenuItem(GeneralSetting.getString("menuItem.generalSetting"));
 
         quit.setOnAction(e -> onQuitButtonPressed());
         aboutUs.setOnAction(e -> onAboutUsPressed());
@@ -95,9 +96,9 @@ public class Util {
 
     public void onQuitButtonPressed() {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirmation");
-        confirmationAlert.setHeaderText("Exit Application");
-        confirmationAlert.setContentText("Are you sure you want to quit ?");
+        confirmationAlert.setTitle(GeneralSetting.getString("text.confirmation"));
+        confirmationAlert.setHeaderText(GeneralSetting.getString("text.exitApplication"));
+        confirmationAlert.setContentText(GeneralSetting.getString("text.sureToExit"));
 
         confirmationAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -112,19 +113,16 @@ public class Util {
             aboutUsContainer.setPadding(new Insets(20));
 
             // Create the UI elements
-            Label aboutUsText = new Label("About Us");
+            Label aboutUsText = new Label(GeneralSetting.getString("menuItem.aboutUs"));
             aboutUsText.getStyleClass().add("about-us-title"); // Add style class
 
             Label fillerText = new Label(
-                    "Welcome to our application!\n\n" +
-                            "We are a team of passionate developers dedicated to creating amazing software.\n" +
-                            "Our mission is to provide users with the best experience possible.\n\n" +
-                            "Thank you for using our app!"
+                    GeneralSetting.getString("menuItem.aboutUs.content")
             );
             fillerText.getStyleClass().add("about-us-content"); // Add style class
             fillerText.setTextAlignment(TextAlignment.CENTER);
 
-            Button backButton = new Button("Back");
+            Button backButton = new Button(GeneralSetting.getString("button.back"));
             backButton.getStyleClass().add("about-us-button"); // Add style class
             backButton.setOnAction(e -> {
                 switchScene(new Scene(new MainView(MainApp.primaryStage)));
@@ -157,7 +155,7 @@ public class Util {
             helpContainer.setPadding(new Insets(20));
             helpContainer.getStyleClass().add("help-container");
 
-            Label helpHeading = new Label("Help - Geometric Optics Formulas");
+            Label helpHeading = new Label(GeneralSetting.getString("text.help.title"));
             helpHeading.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
             helpHeading.getStyleClass().add("help-heading");
 
@@ -166,20 +164,20 @@ public class Util {
 
             // Create all text elements with style classes
             Text[] textElements = {
-                    createHelpText("Welcome to the Help section!\n\n", false),
-                    createHelpText("This program is designed to help you learn and visualize geometric optics concepts.\n\n", false),
-                    createHelpText("Refraction (Snell's Law):\n", true),
-                    createHelpText("   n₁ sin(θ₁) = n₂ sin(θ₂)\n", false),
-                    createHelpText("   - n₁, n₂: Refractive indices of the two media\n   - θ₁, θ₂: Angles of incidence and refraction\n\n", false),
-                    createHelpText("Thin Lens Formula:\n", true),
-                    createHelpText("   1/f = 1/v - 1/u\n", false),
-                    createHelpText("   - f: Focal length of the lens\n   - v: Image distance\n   - u: Object distance\n\n", false),
-                    createHelpText("Mirror Formula:\n", true),
-                    createHelpText("   1/f = 1/v + 1/u\n", false),
-                    createHelpText("   - f: Focal length of the mirror\n   - v: Image distance\n   - u: Object distance\n\n", false),
-                    createHelpText("Magnification (m):\n", true),
-                    createHelpText("   m = h'/h = -v/u\n", false),
-                    createHelpText("   - h': Height of the image\n   - h: Height of the object\n\n", false)
+                    createHelpText(GeneralSetting.getString("help.welcome"), false),
+                    createHelpText(GeneralSetting.getString("help.programDescription"), false),
+                    createHelpText(GeneralSetting.getString("help.refraction.heading"), true),
+                    createHelpText(GeneralSetting.getString("help.refraction.formula"), false),
+                    createHelpText(GeneralSetting.getString("help.refraction.points"), false),
+                    createHelpText(GeneralSetting.getString("help.thinLens.heading"), true),
+                    createHelpText(GeneralSetting.getString("help.thinLens.formula"), false),
+                    createHelpText(GeneralSetting.getString("help.thinLens.points"), false),
+                    createHelpText(GeneralSetting.getString("help.mirror.heading"), true),
+                    createHelpText(GeneralSetting.getString("help.mirror.formula"), false),
+                    createHelpText(GeneralSetting.getString("help.mirror.points"), false),
+                    createHelpText(GeneralSetting.getString("help.magnification.heading"), true),
+                    createHelpText(GeneralSetting.getString("help.magnification.formula"), false),
+                    createHelpText(GeneralSetting.getString("help.magnification.points"), false)
             };
 
             helpTextFlow.getChildren().addAll(textElements);
@@ -213,9 +211,9 @@ public class Util {
     public HBox createZoomAndBackButtons() {
         HBox container = new HBox(20);
 
-        Button zoomIn = new Button("Zoom In");
-        Button zoomOut = new Button("Zoom Out");
-        Button back = new Button("Back");
+        Button zoomIn = new Button(GeneralSetting.getString("button.zoomIn"));
+        Button zoomOut = new Button(GeneralSetting.getString("button.zoomOut"));
+        Button back = new Button(GeneralSetting.getString("button.back"));
         back.setOnAction(event -> switchScene(new Scene(new MainView(primaryStage))));
 
         container.getChildren().addAll(zoomIn, zoomOut, back);

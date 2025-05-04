@@ -84,7 +84,7 @@ public class EducationModeController {
         }
         if (availableQuestions.isEmpty()) {
             if (questionBank.isEmpty()) {
-                view.getQuestionText().setText("No questions available for this difficulty");
+                view.getQuestionText().setText(GeneralSetting.getString("text.noQuestion"));
                 return;
             }
             availableQuestions = new ArrayList<>(questionBank);

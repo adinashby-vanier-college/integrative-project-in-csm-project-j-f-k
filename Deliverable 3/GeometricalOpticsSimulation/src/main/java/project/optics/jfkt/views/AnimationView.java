@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import project.optics.jfkt.controllers.AnimationController;
+import project.optics.jfkt.models.GeneralSetting;
 
 public class AnimationView extends BorderPane {
 
@@ -19,19 +20,19 @@ public class AnimationView extends BorderPane {
         settingsBox.setPadding(new Insets(20)); // Add padding around the VBox
 
         // Add a heading for the settings page
-        Label settingsHeading = new Label("Animation Settings");
+        Label settingsHeading = new Label(GeneralSetting.getString("heading.animationSetting"));
         settingsHeading.setFont(Font.font(18)); // Set font size
         settingsHeading.setStyle("-fx-font-weight: bold;"); // Make the text bold
 
         // Zoom In Button
-        Button zoomInButton = new Button("Zoom In");
+        Button zoomInButton = new Button(GeneralSetting.getString("button.zoomIn"));
         zoomInButton.setOnAction(e -> {
             // Handle zoom in logic
             System.out.println("Zooming In");
         });
 
         // Zoom Out Button
-        Button zoomOutButton = new Button("Zoom Out");
+        Button zoomOutButton = new Button(GeneralSetting.getString("button.zoomOut"));
         zoomOutButton.setOnAction(e -> {
             // Handle zoom out logic
             System.out.println("Zooming Out");
@@ -40,13 +41,13 @@ public class AnimationView extends BorderPane {
 
 
         // Rotate Screen Button
-        Button rotateButton = new Button("Rotate Screen");
+        Button rotateButton = new Button(GeneralSetting.getString("button.rotate"));
         rotateButton.setOnAction(e -> {
             // Handle screen rotation logic
             System.out.println("Rotating Screen");
         });
 
-        Button backButton = new Button("Back");
+        Button backButton = new Button(GeneralSetting.getString("button.back"));
         backButton.setOnAction(e -> controller.onBackButtonPressed());
 
 
