@@ -232,7 +232,17 @@ public class LensView extends BaseView {
 
             //Checkbox
             showLabelsCheckBox = new CheckBox(GeneralSetting.getString("label.show"));
-            showLabelsCheckBox.setSelected(true); // default ON
+            showLabelsCheckBox.setSelected(true);
+            showLabelsCheckBox.setOnAction(e -> {
+                updateView(
+                        lastNumRays,
+                        lastObjectDistance,
+                        lastObjectHeight,
+                        lastMagnification,
+                        lastFocalLength,
+                        lastExtraLenses
+                );
+            });
 
             // === Rebuild scrollable VBox ===
             VBox scrollContent = new VBox(10);
@@ -406,14 +416,15 @@ public class LensView extends BaseView {
             } else {
                 drawVirtualImageArrow(imageX, adjustedCenterY, imageHeight, animPane);
             }
-            if (showLabelsCheckBox == null || showLabelsCheckBox.isSelected()) {
-                String labelText = "Image\nM=" + String.format("%.2f", magnification);
-                Text label = new Text(imageX + 10, adjustedCenterY - imageHeight / 2, labelText);
-                label.getStyleClass().add("lensview-ray-length-label");
-                animPane.getChildren().add(label);
+            String labelText = "Image\nM=" + String.format("%.2f", magnification);
+            Text label = new Text(imageX + 10, adjustedCenterY - imageHeight / 2, labelText);
+            label.getStyleClass().add("lensview-ray-length-label");
+
+            if (showLabelsCheckBox != null) {
+                label.visibleProperty().bind(showLabelsCheckBox.selectedProperty());
             }
-        } else {
-            //System.out.println("Skipping drawing image arrow because out of bounds");
+
+            animPane.getChildren().add(label);
         }
 
 
@@ -849,10 +860,11 @@ public class LensView extends BaseView {
         label.setFill(isConverging ? Color.BLUE : Color.RED);
         label.getStyleClass().add("lensview-ray-length-label");
 
-        pane.getChildren().addAll(lensLine);
-        if (showLabelsCheckBox == null || showLabelsCheckBox.isSelected()) {
-            pane.getChildren().add(label);
+        if (showLabelsCheckBox != null) {
+            label.visibleProperty().bind(showLabelsCheckBox.selectedProperty());
         }
+
+        pane.getChildren().addAll(lensLine, label);
     }
 
 
