@@ -51,13 +51,13 @@ class LensMathTest {
     }
 
     @Test
-    void testZeroObjectDistanceThrows() {
+    void testZeroObjectDistanceReturnsInfinity() {
         double u = 0;
         double f = 50.0;
-        assertThrows(ArithmeticException.class, () -> {
-            LensMath.calculateImageDistance(u, f);
-        });
+        double result = LensMath.calculateImageDistance(u, f);
+        assertTrue(Double.isInfinite(result));
     }
+
 
 
 }

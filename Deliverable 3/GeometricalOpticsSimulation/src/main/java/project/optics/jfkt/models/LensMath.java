@@ -2,8 +2,10 @@ package project.optics.jfkt.models;
 
 public class LensMath {
     public static double calculateImageDistance(double u, double f) {
-        return 1.0 / ((1.0 / f) - (1.0 / u));
+        if (u == 0) return Double.POSITIVE_INFINITY; // or throw if preferred
+        return 1 / ((1 / f) - (1 / u));
     }
+
 
     public static double calculateMagnification(double v, double u) {
         return -v / u;
